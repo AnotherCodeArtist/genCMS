@@ -1,4 +1,22 @@
-This is your new Play application
-=====================================
+#genCMS
+genCMS is a generic CMS based on play framework 2.2.1 (scala), mongoDB, securesocial plugin, knockout.js, sammy.js, leaflet.js, bootstrap,...
 
-This file will be packaged with your application, when using `play dist`.
+#run the application
+in order to run the application you will need to install play framework (v 2.2.1) & mongoDB (v 2.4.8)
+--> http://www.playframework.com/documentation/2.2.x/PlayConsole 
+
+#configuration
+	/conf/application.conf
+		Logging Configuration
+	/conf/reactive-mongo.conf
+		URI & authentication settings of your mongoDB instance
+	/conf/securesocial.conf
+		Smtp Settings used by the SecureSocial Plugin for sending Registration / Password E-Mails
+		
+#first start
+you have to register a user using the registration form which can be found on the login page (“If you don't have an account with…”).
+You have to provide a valid email address to finish the registration (a mail with a link will be send from the account configured in securesocial.conf).
+The created user will not be administrator – the first administrator has to be set directly in the database by setting the users value “admin” to “true”.
+Once you have an administrator in place you can add other registered users to the group of administrators using the Users Administration page.
+
+
