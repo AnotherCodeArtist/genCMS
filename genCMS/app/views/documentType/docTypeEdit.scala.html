@@ -1,0 +1,716 @@
+@(user: String="")(implicit request:Request[Any], lang: play.api.i18n.Lang)
+<div class="container">
+	 <div id="docTypeList" visible = "true">
+	<!--  <pre data-bind="text: ko.toJSON(docTypes, null, 2)"></pre>-->
+	  <!-- 
+	   <pre data-bind="text: ko.toJSON(selectedDocType, null, 2)"></pre>
+	   -->
+	    <div class="page-header">
+			<h1>@Messages("genCMS.doctype.listTitle"):</h1>
+		</div>
+		 <!-- <input id="allProjectsSelector" type="checkbox" /> -->
+		 <!-- <label for="allProjectsSelector">All Projects</label> -->
+		 <!-- <pre data-bind="text: ko.toJSON(docTypes, null, 2)"></pre>  -->
+		 <div data-bind="if: messageShown">
+			<div  data-bind="attr: {class: messageClass()}">
+	  			<button type="button" class="close" data-bind="click: deleteMessage">&times;</button>
+	  			<span data-bind="text: message"></span>
+			</div>
+		</div>
+   		<div class="checkbox">
+   			<label>
+     			<input type="checkbox" data-bind="checked: searchProjectOnly"> @Messages("genCMS.doctype.projectOnly")
+   			</label>
+   		</div>
+   		<div class="checkbox">
+  			<label>
+    			<input type="checkbox" data-bind="checked: searchUserOnly"> @Messages("genCMS.doctype.userOnly")
+  			</label>
+   		</div>
+		<div class="table-responsive">
+			<table class="doctypes table table-hover">
+			    <thead>
+			    	<tr>
+			    		<th><a href="#" data-bind="click: function(){ $root.sortDocTypePage('name')}">@Messages("genCMS.doctype.name")
+				    		<!-- ko if: sortBy()=='name' -->
+				    			<i data-bind="attr: {'class': sortAsc()==true ? 'fa fa-caret-down fa-lg' : 'fa fa-caret-up fa-lg'}"/>
+				    		<!-- /ko -->
+			    		</a></th>
+			    		<th><a href="#" data-bind="click: function(){ $root.sortDocTypePage('author')}">@Messages("genCMS.doctype.author")
+				    		<!-- ko if: sortBy()=='author' -->
+				    			<i data-bind="attr: {'class': sortAsc()==true ? 'fa fa-caret-down fa-lg' : 'fa fa-caret-up fa-lg'}"/>
+				    		<!-- /ko -->
+			    		</a></th>
+			    		<th></th><th></th><th></th><th>@Messages("genCMS.doctype.copy")</th><th>@Messages("genCMS.doctype.connect")</th></tr>
+		    	</thead>
+			    <tbody data-bind="foreach: docTypes">
+			        <tr data-bind="click: $root.goToEditDocType">
+			            <td data-bind="text: name"></td>
+			            <td data-bind="text: author"></td>
+			            <td><button type="button" class="btn btn-primary" data-bind="click: $root.goToEditDocType, clickBubble: false"><i class="fa fa-pencil-square-o fa-lg"/></button> </td>
+			            <td><button type="button" class="btn btn-primary" data-bind="click: $root.goToEditDocTypeDesign, clickBubble: false"><i class="fa fa-pencil-square-o fa-lg"/> @Messages("genCMS.doctype.detailDesign")</button> </td>
+			            <td><button type="button" class="btn btn-primary" data-bind="click: $root.goToEditDocTypeListDesign, clickBubble: false"><i class="fa fa-pencil-square-o fa-lg"/> @Messages("genCMS.doctype.listDesign")</button> </td>
+			            <td><button type="button" class="btn btn-primary" data-bind="click: $root.copyDocType, clickBubble: false"><i class="fa fa-copy fa-lg"/></button></td>
+			           	<!-- ko if: (typeof connectedProjects == 'undefined')-->
+							<td><button type="button" class="btn btn-primary" data-bind="click: $root.goToConnectDocTypeToProject, clickBubble: false"><i class="fa fa-unlink fa-lg"/></button></td>
+			            <!-- /ko -->
+			            <!-- ko if: (typeof connectedProjects == 'object') -->
+							 <td><button type="button" data-bind="click: $root.goToConnectDocTypeToProject, clickBubble: false, attr:{ class: (typeof connectedProjects[$root.projectID()] === 'undefined' || connectedProjects[$root.projectID()]().length == 0) ? 'btn btn-primary' : 'btn btn-info'}"><i class="fa fa-unlink fa-lg"/></button></td>
+			            <!-- /ko -->
+			        </tr>     
+			    </tbody>
+			</table>
+			<!-- ko if: availablePages() > 1 -->
+			<ul class="pagination">
+			  <li data-bind="attr: {'class': currentPage() == 0 ? 'disabled' : ''}"><a href="#" data-bind="click: function() { if(currentPage()==0) return; else $root.loadDocTypePage(currentPage()-1); }">&laquo;</a></li>
+		  	  <!-- ko foreach: new Array(availablePages()) -->
+				  <li data-bind="attr: {'class': $parent.currentPage() == $index() ? 'active' : ''}"><a href="#" data-bind="text: $index()+1, click: function() { $root.loadDocTypePage($index()); }"></a></li>
+   			  <!-- /ko -->
+			  <li data-bind="attr: {'class': currentPage() == availablePages()-1 ? 'disabled' : ''}"><a href="#" data-bind="click: function() { if (currentPage() == availablePages()-1) return; else $root.loadDocTypePage(currentPage()+1); }">&raquo;</a></li>
+			</ul>
+			<!-- /ko -->
+		</div>
+		<button type="button" class="btn btn-success" data-bind="click: $root.goToEditNewDocType">@Messages("genCMS.doctype.new")</button>
+	</div>
+	
+	<!-- ################################################################################################################################## -->
+	
+	<div id="docTypeEdit" style="display: none">
+		 <!-- <pre data-bind="text: ko.toJSON(selectedDocType, null, 2)"></pre>-->
+		<!-- 
+		<pre data-bind="text: ko.toJSON(selectedDocType().singleLineElems, null, 2)"></pre>-->
+ 		<div class="page-header">
+        	<h1>@Messages("genCMS.doctype.editTitle") "<strong data-bind="text: selectedDocType().name"></strong>":</h1>
+        </div>
+        <!-- "<strong data-bind="text: selectedDocType().name"></strong>"
+        "<strong data-bind="text: selectedDocType().author"></strong>"
+        "<strong data-bind="text: selectedDocType().createdAt ? selectedDocType().createdAt.$date : ''" ></strong>"
+        "<strong data-bind="text: selectedDocType().createdAt ? selectedDocType().modifiedAt.$date : ''"></strong>"
+        -->
+        <div class="form-horizontal" role="form">
+			<div class="form-group">
+				<label for="docTypeName" class="col-sm-2 control-label">@Messages("genCMS.doctype.docTypeName"):</label>
+				<div class="col-sm-5">
+					<input id="docTypeName" type="text" class="form-control" data-bind="value: selectedDocType().name, valueUpdate: 'afterkeydown'" placeholder="Fieldname"/>
+				</div>
+			</div>
+		</div>
+		<div data-bind="if: messageShown">
+			<div  data-bind="attr: {class: messageClass()}">
+	  			<button type="button" class="close" data-bind="click: deleteMessage">&times;</button>
+	  			<span data-bind="text: message"></span>
+			</div>
+		</div>
+        <div class="panel-group" id="accordionDocTypeElements">
+		<!-- ko foreach: {data: selectedDocType().elems, as:'element'} -->
+			<!-- ko if: type() == "std" -->
+				<div class="panel panel-info">
+				    <div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordionDocTypeElements" data-bind="attr: {href: '#coll'+fname().replace(/\s/g,'-')}"">
+				      <h4 class="panel-title accordion-toggle">      
+				          <button type="button" class="btn btn-info" data-bind="click: $root.moveFieldUp, clickBubble: false" ><i class="fa fa-caret-square-o-up"/></button>
+				      	  <button type="button" class="btn btn-info" data-bind="click: $root.moveFieldDown, clickBubble: false"><i class="fa fa-caret-square-o-down"/></button>
+				          @Messages("genCMS.doctype.stdField") "<strong data-bind="text: fname()"/>"
+				      </h4>
+				    </div>
+				    <div data-bind="attr: {id: 'coll'+fname().replace(/\s/g,'-')}" class="panel-collapse collapse">
+				      <div class="panel-body">
+							@Messages("genCMS.doctype.stdFieldMsg")
+							<div class="form-horizontal" role="form">
+							<!-- ko foreach: {data: locales, as:'locale'} -->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'locale'+$index}" class="col-sm-2 control-label">@Messages("genCMS.doctype.locale") "<span data-bind="text: locale.loc"></span>"</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" data-bind="value: locale.val, attr: {id: 'locale'+$index}"/>
+									</div>
+									<div class="col-sm-1">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: function(data,event) { $root.deleteLocale(data, $parent) }" ><i class="fa fa-trash-o fa-lg"/></button>
+									</div>
+								</div>
+							<!-- /ko -->
+							<div class="form-group">
+								<label class="col-sm-2 control-label">@Messages("genCMS.doctype.addLocale")</label>
+								<div class="col-sm-3">
+									<select class="form-control" data-bind="options: $root.localeOptions, optionsText: 'text', optionsValue: 'val', value: $root.selectedLocaleOption"></select>
+									<!-- <select class="form-control" data-bind="options: $root.localeOptions, value: $root.selectedLocaleOption"></select> -->
+								</div>
+								<div class="col-sm-2">
+									<button type="button" class="form-control btn btn-success" data-bind="click: $root.addLocale" ><i class="fa fa-plus-square fa-lg"/> @Messages("genCMS.doctype.addLocale")</button>
+								</div>
+							</div>
+						</div>
+				      </div>
+				    </div>
+				</div>
+			<!-- /ko -->
+			<!-- ko if: type() == "textLine" -->
+				<div class="panel panel-info">
+				    <div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordionDocTypeElements" data-bind="attr: {href: '#coll'+fname().replace(/\s/g,'-')}"">
+				      <h4 class="panel-title accordion-toggle">      
+				      <button type="button" class="btn btn-info" data-bind="click: $root.moveFieldUp, clickBubble: false" ><i class="fa fa-caret-square-o-up"/></button>
+				      <button type="button" class="btn btn-info" data-bind="click: $root.moveFieldDown, clickBubble: false"><i class="fa fa-caret-square-o-down"/></button>
+			          Textline "<strong data-bind="text: fname"/>"
+				      </h4>
+				    </div>
+				    <div data-bind="attr: {id: 'coll'+fname().replace(/\s/g,'-')}" class="panel-collapse collapse">
+				      <div class="panel-body">
+							<div class="form-horizontal" role="form">
+								<div class="form-group">
+									<label data-bind="attr: {for: 'name'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.fieldname")</label>
+									<div class="col-sm-5">
+										<label class="formElement" data-bind="text: fname, attr: {id: 'name'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+							<!-- ko foreach: {data: locales, as:'locale'} -->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'locale'+$index}" class="col-sm-2 control-label">@Messages("genCMS.doctype.locale") "<span data-bind="text: locale.loc"></span>"</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" data-bind="value: locale.val, attr: {id: 'locale'+$index}"/>
+									</div>
+									<div class="col-sm-1">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: function(data,event) { $root.deleteLocale(data, $parent) }" ><i class="fa fa-trash-o fa-lg"/></button>
+									</div>
+								</div>
+							<!-- /ko -->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'min'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.minLength")</label>
+									<div class="col-sm-4">
+										<input type="number" class="form-control" data-bind="value: min, attr: {id: 'min'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label data-bind="attr: {for: 'max'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.maxLength")</label>
+									<div class="col-sm-4">
+										<input type="number" class="form-control" data-bind="value: max, attr: {id: 'max'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label data-bind="attr: {for: 'req'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.required")</label>
+									<div class="col-sm-1 formElement">
+										<input type="checkbox" data-bind="checked: element.required, attr: {id: 'req'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">@Messages("genCMS.doctype.addLocale")</label>
+									<div class="col-sm-3">
+										<select class="form-control" data-bind="options: $root.localeOptions, optionsText: 'text', optionsValue: 'val', value: $root.selectedLocaleOption"></select>
+										<!-- <select class="form-control" data-bind="options: $root.localeOptions, value: $root.selectedLocaleOption"></select> -->
+									</div>
+									<div class="col-sm-2">
+										<button type="button" class="form-control btn btn-success" data-bind="click: $root.addLocale" ><i class="fa fa-plus-square fa-lg"/> @Messages("genCMS.doctype.addLocale")</button>
+									</div>
+								</div>
+								<hr>
+								<div class="form-group">
+									<div class="col-sm-2">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: $root.deleteField"><i class="fa fa-trash-o fa-lg"/> @Messages("genCMS.doctype.delField")</button>
+									</div>
+								</div>
+							</div>
+				         <!-- <pre data-bind="text: ko.mapping.toJSON(element, null, 2)"></pre> -->
+				      </div>
+				    </div>
+				</div>
+			<!-- /ko -->
+			<!-- ko if: type() == "HTML" -->
+				<div class="panel panel-info">
+				    <div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordionDocTypeElements" data-bind="attr: {href: '#coll'+fname().replace(/\s/g,'-')}"">
+				      <h4 class="panel-title accordion-toggle">      
+				      <button type="button" class="btn btn-info" data-bind="click: $root.moveFieldUp, clickBubble: false" ><i class="fa fa-caret-square-o-up"/></button>
+				      <button type="button" class="btn btn-info" data-bind="click: $root.moveFieldDown, clickBubble: false"><i class="fa fa-caret-square-o-down"/></button>
+				          HTML "<strong data-bind="text: fname"/>"
+				      </h4>
+				    </div>
+				    <div data-bind="attr: {id: 'coll'+fname().replace(/\s/g,'-')}" class="panel-collapse collapse">
+						 <div class="panel-body">
+							<div class="form-horizontal" role="form">
+								<div class="form-group">
+									<label data-bind="attr: {for: 'name'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.fieldname")</label>
+									<div class="col-sm-5">
+										<label class="formElement" data-bind="text: fname, attr: {id: 'name'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+							<!-- ko foreach: {data: locales, as:'locale'} -->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'locale'+$index}" class="col-sm-2 control-label">@Messages("genCMS.doctype.locale") "<span data-bind="text: locale.loc"></span>"</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" data-bind="value: locale.val, attr: {id: 'locale'+$index}"/>
+									</div>
+									<div class="col-sm-1">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: function(data,event) { $root.deleteLocale(data, $parent) }" ><i class="fa fa-trash-o"/></button>
+									</div>
+								</div>
+							<!-- /ko -->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'req'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.required")</label>
+									<div class="col-sm-1 formElement">
+										<input type="checkbox" data-bind="checked: element.required, attr: {id: 'req'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">@Messages("genCMS.doctype.addLocale")</label>
+									<div class="col-sm-3">
+										<select class="form-control" data-bind="options: $root.localeOptions, optionsText: 'text', optionsValue: 'val', value: $root.selectedLocaleOption"></select>
+									</div>
+									<div class="col-sm-2">
+										<button type="button" class="form-control btn btn-success" data-bind="click: $root.addLocale" ><i class="fa fa-plus-square"/> @Messages("genCMS.doctype.addLocale")</button>
+									</div>
+								</div>
+								<hr>
+								<div class="form-group">
+									<div class="col-sm-2">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: $root.deleteField"><i class="fa fa-trash-o"/> @Messages("genCMS.doctype.delField")</button>
+									</div>
+								</div>
+							</div>
+				         <!-- <pre data-bind="text: ko.mapping.toJSON(element, null, 2)"></pre> -->
+				      </div>
+				    </div>
+				</div>
+			<!-- /ko -->
+			<!-- ko if: type() == "img" -->
+				<div class="panel panel-info">
+				    <div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordionDocTypeElements" data-bind="attr: {href: '#coll'+fname().replace(/\s/g,'-')}"">
+				      <h4 class="panel-title accordion-toggle">
+				      <button type="button" class="btn btn-info" data-bind="click: $root.moveFieldUp, clickBubble: false" ><i class="fa fa-caret-square-o-up"/></button>
+				      <button type="button" class="btn btn-info" data-bind="click: $root.moveFieldDown, clickBubble: false"><i class="fa fa-caret-square-o-down"/></button>
+				          Image "<strong data-bind="text: fname"/>"
+				      </h4>
+				    </div>
+				    <div data-bind="attr: {id: 'coll'+fname().replace(/\s/g,'-')}" class="panel-collapse collapse">
+						 <div class="panel-body">
+							<div class="form-horizontal" role="form">
+								<div class="form-group">
+									<label data-bind="attr: {for: 'name'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.fieldname")</label>
+									<div class="col-sm-5">
+										<label class="formElement" data-bind="text: fname, attr: {id: 'name'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+							<!-- ko foreach: {data: locales, as:'locale'} -->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'locale'+$index}" class="col-sm-2 control-label">@Messages("genCMS.doctype.locale") "<span data-bind="text: locale.loc"></span>"</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" data-bind="value: locale.val, attr: {id: 'locale'+$index}"/>
+									</div>
+									<div class="col-sm-1">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: function(data,event) { $root.deleteLocale(data, $parent) }" ><i class="fa fa-trash-o"/></button>
+									</div>
+								</div>
+							<!-- /ko -->
+								<!-- <div class="form-group">
+									<label data-bind="attr: {for: 'min'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.minWidth")</label>
+									<div class="col-sm-4">
+										<input type="number" class="form-control" data-bind="value: minWidth, attr: {id: 'min'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label data-bind="attr: {for: 'max'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.maxWidth")</label>
+									<div class="col-sm-4">
+										<input type="number" class="form-control" data-bind="value: maxWidth, attr: {id: 'max'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label data-bind="attr: {for: 'min'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.minHeight")</label>
+									<div class="col-sm-4">
+										<input type="number" class="form-control" data-bind="value: minHeight, attr: {id: 'min'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label data-bind="attr: {for: 'max'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.maxHeight")</label>
+									<div class="col-sm-4">
+										<input type="number" class="form-control" data-bind="value: maxHeight, attr: {id: 'max'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								-->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'req'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.required")</label>
+									<div class="col-sm-1 formElement">
+										<input type="checkbox" data-bind="checked: element.required, attr: {id: 'req'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">@Messages("genCMS.doctype.addLocale")</label>
+									<div class="col-sm-3">
+										<select class="form-control" data-bind="options: $root.localeOptions, optionsText: 'text', optionsValue: 'val', value: $root.selectedLocaleOption"></select>
+									</div>
+									<div class="col-sm-2">
+										<button type="button" class="form-control btn btn-success" data-bind="click: $root.addLocale" ><i class="fa fa-plus-square"/> @Messages("genCMS.doctype.addLocale")</button>
+									</div>
+								</div>
+								<hr>
+								<div class="form-group">
+									<div class="col-sm-2">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: $root.deleteField"><i class="fa fa-trash-o"/> @Messages("genCMS.doctype.delField")</button>
+									</div>
+								</div>
+							</div>
+				         <!-- <pre data-bind="text: ko.mapping.toJSON(element, null, 2)"></pre> -->
+				      </div>
+				    </div>
+				</div>
+			<!-- /ko -->
+			<!-- ko if: type() == "audio" -->
+				<div class="panel panel-info">
+				    <div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordionDocTypeElements" data-bind="attr: {href: '#coll'+fname().replace(/\s/g,'-')}"">
+				      <h4 class="panel-title accordion-toggle">
+				      <button type="button" class="btn btn-info" data-bind="click: $root.moveFieldUp, clickBubble: false" ><i class="fa fa-caret-square-o-up"/></button>
+				      <button type="button" class="btn btn-info" data-bind="click: $root.moveFieldDown, clickBubble: false"><i class="fa fa-caret-square-o-down"/></button>
+				          Audio "<strong data-bind="text: fname"/>"
+				      </h4>
+				    </div>
+				    <div data-bind="attr: {id: 'coll'+fname().replace(/\s/g,'-')}" class="panel-collapse collapse">
+						 <div class="panel-body">
+							<div class="form-horizontal" role="form">
+								<div class="form-group">
+									<label data-bind="attr: {for: 'name'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.fieldname")</label>
+									<div class="col-sm-5">
+										<label type="text" class="formElement" data-bind="text: fname, attr: {id: 'name'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+							<!-- ko foreach: {data: locales, as:'locale'} -->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'locale'+$index}" class="col-sm-2 control-label">@Messages("genCMS.doctype.locale") "<span data-bind="text: locale.loc"></span>"</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" data-bind="value: locale.val, attr: {id: 'locale'+$index}"/>
+									</div>
+									<div class="col-sm-1">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: function(data,event) { $root.deleteLocale(data, $parent) }" ><i class="fa fa-trash-o"/></button>
+									</div>
+								</div>
+							<!-- /ko -->
+								<!-- <div class="form-group">
+									<label data-bind="attr: {for: 'min'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.maxFileSize")</label>
+									<div class="col-sm-4">
+										<input type="number" class="form-control" data-bind="value: maxSize, attr: {id: 'min'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								-->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'req'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.required")</label>
+									<div class="col-sm-1 formElement">
+										<input type="checkbox" data-bind="checked: element.required, attr: {id: 'req'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">@Messages("genCMS.doctype.addLocale")</label>
+									<div class="col-sm-3">
+										<select class="form-control" data-bind="options: $root.localeOptions, optionsText: 'text', optionsValue: 'val', value: $root.selectedLocaleOption"></select>
+									</div>
+									<div class="col-sm-2">
+										<button type="button" class="form-control btn btn-success" data-bind="click: $root.addLocale" ><i class="fa fa-plus-square"/> @Messages("genCMS.doctype.addLocale")</button>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-2">
+									</div>
+									<div class="col-sm-2">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: $root.deleteField"><i class="fa fa-trash-o"/> @Messages("genCMS.doctype.delField")</button>
+									</div>
+								</div>
+							</div>
+				         <!-- <pre data-bind="text: ko.mapping.toJSON(element, null, 2)"></pre> -->
+				      </div>
+				    </div>
+				</div>
+			<!-- /ko -->
+			<!-- ko if: type() == "video" -->
+				<div class="panel panel-info">
+				    <div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordionDocTypeElements" data-bind="attr: {href: '#coll'+fname().replace(/\s/g,'-')}"">
+				      <h4 class="panel-title accordion-toggle">
+				      <button type="button" class="btn btn-info" data-bind="click: $root.moveFieldUp, clickBubble: false" ><i class="fa fa-caret-square-o-up"/></button>
+				      <button type="button" class="btn btn-info" data-bind="click: $root.moveFieldDown, clickBubble: false"><i class="fa fa-caret-square-o-down"/></button>
+				          Video "<strong data-bind="text: fname"/>"
+				      </h4>
+				    </div>
+				    <div data-bind="attr: {id: 'coll'+fname().replace(/\s/g,'-')}" class="panel-collapse collapse">
+						 <div class="panel-body">
+							<div class="form-horizontal" role="form">
+								<div class="form-group">
+									<label data-bind="attr: {for: 'name'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.fieldname")</label>
+									<div class="col-sm-5">
+										<label class="formElement" data-bind="text: fname, attr: {id: 'name'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+							<!-- ko foreach: {data: locales, as:'locale'} -->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'locale'+$index}" class="col-sm-2 control-label">@Messages("genCMS.doctype.locale") "<span data-bind="text: locale.loc"></span>"</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" data-bind="value: locale.val, attr: {id: 'locale'+$index}"/>
+									</div>
+									<div class="col-sm-1">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: function(data,event) { $root.deleteLocale(data, $parent) }" ><i class="fa fa-trash-o"/></button>
+									</div>
+								</div>
+							<!-- /ko -->
+								<!-- 
+								<div class="form-group">
+									<label data-bind="attr: {for: 'max'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.maxFileSize")</label>
+									<div class="col-sm-4">
+										<input type="number" class="form-control" data-bind="value: maxSize, attr: {id: 'max'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								-->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'req'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.required")</label>
+									<div class="col-sm-1 formElement">
+										<input type="checkbox" data-bind="checked: element.required, attr: {id: 'req'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">@Messages("genCMS.doctype.addLocale")</label>
+									<div class="col-sm-3">
+										<select class="form-control" data-bind="options: $root.localeOptions, optionsText: 'text', optionsValue: 'val', value: $root.selectedLocaleOption"></select>
+									</div>
+									<div class="col-sm-2">
+										<button type="button" class="form-control btn btn-success" data-bind="click: $root.addLocale" ><i class="fa fa-plus-square"/> @Messages("genCMS.doctype.addLocale")</button>
+									</div>
+								</div>
+								<hr>
+								<div class="form-group">
+									<div class="col-sm-2">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: $root.deleteField"><i class="fa fa-trash-o"/> @Messages("genCMS.doctype.delField")</button>
+									</div>
+								</div>
+							</div>
+				        <!--  <pre data-bind="text: ko.mapping.toJSON(element, null, 2)"></pre> -->
+				      </div>
+				    </div>
+				</div>
+			<!-- /ko -->
+			<!-- ko if: type() == "number" -->
+				<div class="panel panel-info">
+				    <div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordionDocTypeElements" data-bind="attr: {href: '#coll'+fname().replace(/\s/g,'-')}"">
+				      <h4 class="panel-title accordion-toggle">
+				      	<button type="button" class="btn btn-info" data-bind="click: $root.moveFieldUp, clickBubble: false" ><i class="fa fa-caret-square-o-up"/></button>
+				      	<button type="button" class="btn btn-info" data-bind="click: $root.moveFieldDown, clickBubble: false"><i class="fa fa-caret-square-o-down"/></button>
+						Number "<strong data-bind="text: fname"/>"
+				      </h4>
+				    </div>
+				    <div data-bind="attr: {id: 'coll'+fname().replace(/\s/g,'-')}" class="panel-collapse collapse">
+						 <div class="panel-body">
+							<div class="form-horizontal" role="form">
+								<div class="form-group">
+									<label data-bind="attr: {for: 'name'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.fieldname")</label>
+									<div class="col-sm-5">
+										<label class="formElement" data-bind="text: fname, attr: {id: 'name'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+							<!-- ko foreach: {data: locales, as:'locale'} -->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'locale'+$index}" class="col-sm-2 control-label">@Messages("genCMS.doctype.locale") "<span data-bind="text: locale.loc"></span>"</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" data-bind="value: locale.val, attr: {id: 'locale'+$index}"/>
+									</div>
+									<div class="col-sm-1">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: function(data,event) { $root.deleteLocale(data, $parent) }" ><i class="fa fa-trash-o"/></button>
+									</div>
+								</div>
+							<!-- /ko -->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'min'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.min")</label>
+									<div class="col-sm-4">
+										<input type="number" class="form-control" data-bind="value: min, attr: {id: 'min'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label data-bind="attr: {for: 'max'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.max")</label>
+									<div class="col-sm-4">
+										<input type="number" class="form-control" data-bind="value: max, attr: {id: 'max'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label data-bind="attr: {for: 'req'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.required")</label>
+									<div class="col-sm-1 formElement">
+										<input type="checkbox" data-bind="checked: element.required, attr: {id: 'req'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">@Messages("genCMS.doctype.addLocale")</label>
+									<div class="col-sm-3">
+										<select class="form-control" data-bind="options: $root.localeOptions, optionsText: 'text', optionsValue: 'val', value: $root.selectedLocaleOption"></select>
+									</div>
+									<div class="col-sm-2">
+										<button type="button" class="form-control btn btn-success" data-bind="click: $root.addLocale" ><i class="fa fa-plus-square"/> @Messages("genCMS.doctype.addLocale")</button>
+									</div>
+								</div>
+								<hr>
+								<div class="form-group">
+									<div class="col-sm-2">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: $root.deleteField"><i class="fa fa-trash-o"/> @Messages("genCMS.doctype.delField")</button>
+									</div>
+								</div>
+							</div>
+				         <!-- <pre data-bind="text: ko.mapping.toJSON(element, null, 2)"></pre>-->
+				      </div>
+				    </div>
+				</div>
+			<!-- /ko -->
+			<!-- ko if: type() == "boolean" -->
+				<div class="panel panel-info">
+				    <div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordionDocTypeElements" data-bind="attr: {href: '#coll'+fname().replace(/\s/g,'-')}"">
+				      <h4 class="panel-title accordion-toggle">
+				      	<button type="button" class="btn btn-info" data-bind="click: $root.moveFieldUp, clickBubble: false" ><i class="fa fa-caret-square-o-up"/></button>
+				      	<button type="button" class="btn btn-info" data-bind="click: $root.moveFieldDown, clickBubble: false"><i class="fa fa-caret-square-o-down"/></button>
+						Boolean "<strong data-bind="text: fname"/>"
+				      </h4>
+				    </div>
+				    <div data-bind="attr: {id: 'coll'+fname().replace(/\s/g,'-')}" class="panel-collapse collapse">
+ 						<div class="panel-body">
+							<div class="form-horizontal" role="form">
+								<div class="form-group">
+									<label data-bind="attr: {for: 'name'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.fieldname")</label>
+									<div class="col-sm-5">
+										<label class="formElement" data-bind="text: fname, attr: {id: 'name'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+							<!-- ko foreach: {data: locales, as:'locale'} -->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'locale'+$index}" class="col-sm-2 control-label">@Messages("genCMS.doctype.locale") "<span data-bind="text: locale.loc"></span>"</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" data-bind="value: locale.val, attr: {id: 'locale'+$index}"/>
+									</div>
+									<div class="col-sm-1">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: function(data,event) { $root.deleteLocale(data, $parent) }" ><i class="fa fa-trash-o"/></button>
+									</div>
+								</div>
+							<!-- /ko -->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'req'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.required")</label>
+									<div class="col-sm-1 formElement">
+										<input type="checkbox" data-bind="checked: element.required, attr: {id: 'req'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">@Messages("genCMS.doctype.addLocale")</label>
+									<div class="col-sm-3">
+										<select class="form-control" data-bind="options: $root.localeOptions, optionsText: 'text', optionsValue: 'val', value: $root.selectedLocaleOption"></select>
+									</div>
+									<div class="col-sm-2">
+										<button type="button" class="form-control btn btn-success" data-bind="click: $root.addLocale" ><i class="fa fa-plus-square"/> @Messages("genCMS.doctype.addLocale")</button>
+									</div>
+								</div>
+								<hr>
+								<div class="form-group">
+									<div class="col-sm-2">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: $root.deleteField"><i class="fa fa-trash-o"/> @Messages("genCMS.doctype.delField")</button>
+									</div>
+								</div>
+							</div>
+				         <!-- <pre data-bind="text: ko.mapping.toJSON(element, null, 2)"></pre>-->
+				      </div>
+				    </div>
+				</div>
+			<!-- /ko -->
+			<!-- ko if: type() == "geoLoc" -->
+				<div class="panel panel-info">
+				    <div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordionDocTypeElements" data-bind="attr: {href: '#coll'+fname().replace(/\s/g,'-')}"">
+				      <h4 class="panel-title accordion-toggle">
+				      	<button type="button" class="btn btn-info" data-bind="click: $root.moveFieldUp, clickBubble: false" ><i class="fa fa-caret-square-o-up"/></button>
+				      	<button type="button" class="btn btn-info" data-bind="click: $root.moveFieldDown, clickBubble: false"><i class="fa fa-caret-square-o-down"/></button>
+						Geo Location "<strong data-bind="text: fname"/>"
+				      </h4>
+				    </div>
+				    <div data-bind="attr: {id: 'coll'+fname().replace(/\s/g,'-')}" class="panel-collapse collapse">
+ 						<div class="panel-body">
+							<div class="form-horizontal" role="form">
+								<div class="form-group">
+									<label data-bind="attr: {for: 'name'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.fieldname")</label>
+									<div class="col-sm-5">
+										<label class="formElement" data-bind="text: fname, attr: {id: 'name'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+							<!-- ko foreach: {data: locales, as:'locale'} -->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'locale'+$index}" class="col-sm-2 control-label">@Messages("genCMS.doctype.locale") "<span data-bind="text: locale.loc"></span>"</label>
+									<div class="col-sm-4">
+										<input type="text" class="form-control" data-bind="value: locale.val, attr: {id: 'locale'+$index}"/>
+									</div>
+									<div class="col-sm-1">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: function(data,event) { $root.deleteLocale(data, $parent) }" ><i class="fa fa-trash-o"/></button>
+									</div>
+								</div>
+							<!-- /ko -->
+								<div class="form-group">
+									<label data-bind="attr: {for: 'req'+fname().replace(/\s/g,'-')}" class="col-sm-2 control-label">@Messages("genCMS.doctype.required")</label>
+									<div class="col-sm-1 formElement">
+										<input type="checkbox" data-bind="checked: element.required, attr: {id: 'req'+fname().replace(/\s/g,'-')}"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">@Messages("genCMS.doctype.addLocale")</label>
+									<div class="col-sm-3">
+										<select class="form-control" data-bind="options: $root.localeOptions, optionsText: 'text', optionsValue: 'val', value: $root.selectedLocaleOption"></select>
+									</div>
+									<div class="col-sm-2">
+										<button type="button" class="form-control btn btn-success" data-bind="click: $root.addLocale" ><i class="fa fa-plus-square"/> @Messages("genCMS.doctype.addLocale")</button>
+									</div>
+								</div>
+								<hr>
+								<div class="form-group">
+									<div class="col-sm-2">
+										<button type="button" class="form-control btn btn-danger" data-bind="click: $root.deleteField"><i class="fa fa-trash-o"/> @Messages("genCMS.doctype.delField")</button>
+									</div>
+								</div>
+							</div>
+				         <!-- <pre data-bind="text: ko.mapping.toJSON(element, null, 2)"></pre>-->
+				      </div>
+				    </div>
+				</div>
+			<!-- /ko -->
+		<!-- /ko -->
+		</div>
+		<div class="well">
+			<div class="panel-heading"><h4>@Messages("genCMS.doctype.addField"):</h4></div>
+  			<div class="panel-body">
+  				<div class="form-horizontal" role="form">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">@Messages("genCMS.doctype.fieldname")</label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" data-bind="value: $root.newFieldName, valueUpdate: 'afterkeydown'" placeholder="@Messages("genCMS.doctype.fieldname")"/>
+							<span id="fieldNameInputHelpUnique" data-bind="attr: {class: ($root.newFieldNameUnique()==false && $root.newFieldName()!='') ? 'help-inline' : 'help-inline hidden'}">@Messages("constraint.uniqueAndAZ")</span>
+							<span id="fieldNameInputHelpRequired" data-bind="attr: {class: $root.newFieldName()=='' ? 'help-inline' : 'help-inline hidden'}">@Messages("constraint.required")</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">@Messages("genCMS.doctype.fieldtype")</label>
+						<div class="col-sm-10">
+			    			<button type="button" class="btn btn-primary" data-bind="click: $root.addTextLineField, enable: $root.newFieldNameUnique">@Messages("genCMS.doctype.txt")</button>
+			    			<button type="button" class="btn btn-primary" data-bind="click: $root.addHtmlField, enable: $root.newFieldNameUnique">@Messages("genCMS.doctype.html")</button>
+			    			<button type="button" class="btn btn-primary" data-bind="click: $root.addImageField, enable: $root.newFieldNameUnique">@Messages("genCMS.doctype.img")</button>
+			    			<button type="button" class="btn btn-primary" data-bind="click: $root.addAudioField, enable: $root.newFieldNameUnique">@Messages("genCMS.doctype.audio")</button>
+			    			<button type="button" class="btn btn-primary" data-bind="click: $root.addVideoField, enable: $root.newFieldNameUnique">@Messages("genCMS.doctype.video")</button>
+			    			<button type="button" class="btn btn-primary" data-bind="click: $root.addNumberField, enable: $root.newFieldNameUnique">@Messages("genCMS.doctype.number")</button>
+			    			<button type="button" class="btn btn-primary" data-bind="click: $root.addBooleanField, enable: $root.newFieldNameUnique">@Messages("genCMS.doctype.boolean")</button>
+						</div>
+					</div>
+					<hr>
+				<!-- ko if: typeof selectedDocType().isPOI != 'undefined' -->
+	    			<!-- ko if: selectedDocType().isPOI() == false -->
+					<div class="form-group">
+						<label class="col-sm-2 control-label">@Messages("genCMS.doctype.turnGEO")</label>
+						<div class="col-sm-5">
+		    				<button type="button" class="btn btn-primary" data-bind="click: $root.addLocationField">@Messages("genCMS.doctype.geoLoc")</button>
+		    			</div>
+					</div>
+	    			<!-- /ko -->
+   				<!-- /ko -->
+				</div>
+  			
+  			
+  			
+  			
+  			
+    			
+  			</div>
+		</div>
+		<button type="button" class="btn btn-success" data-bind="click: $root.saveDocType"><i class="fa fa-save fa-lg"/> @Messages("genCMS.doctype.save")</button>
+		<button type="button" class="btn btn-warning" data-bind="click: $root.goToDocTypesList"> <i class="fa fa-reply fa-lg"/> @Messages("genCMS.doctype.discardBack")</button>
+		<button type="button" class="btn btn-danger" data-bind="click: $root.deleteDocType, clickBubble: false"><i class="fa fa-trash-o fa-lg"/> @Messages("genCMS.doctype.delete")</button>
+		<div data-bind="if: messageShown">
+			<div  class="alert alert-success alert-dismissable">
+	  			<button type="button" class="close" data-bind="click: deleteMessage">&times;</button>
+	  			<span data-bind="text: message"></span>
+			</div>
+		</div>
+	</div>
+	
+</div>

@@ -1,0 +1,27 @@
+@(user: String="")(implicit request:Request[Any], lang: play.api.i18n.Lang)
+<div class="container">
+	 <div id="newProject">
+	<!--  <pre data-bind="text: ko.toJSON(docTypes, null, 2)"></pre>-->
+	 <!-- <pre data-bind="text: ko.toJSON(selectedDocType, null, 2)"></pre> -->
+		 <h2>Create New Project:</h2>
+		 <!-- <input id="allProjectsSelector" type="checkbox" /> -->
+		 <!-- <label for="allProjectsSelector">All Projects</label> -->
+		 <!-- <pre data-bind="text: ko.toJSON(docTypes, null, 2)"></pre>  -->
+		 <div data-bind="if: messageShown">
+			<div  data-bind="attr: {class: messageClass()}">
+	  			<button type="button" class="close" data-bind="click: deleteMessage">&times;</button>
+	  			<span data-bind="text: message"></span>
+			</div>
+		</div>
+		<form class="form-horizontal" role="form">
+			<div class="form-group">
+				<label for="projectName" class="col-sm-2 control-label">Projectname</label>
+				<div class="col-sm-5">
+					<input type="text" id="projectName" class="form-control" data-bind="value: newProject().title, valueUpdate: 'afterkeydown'" placeholder="Projectname"/>
+				</div>
+			</div>
+		</form>
+		<button type="button" class="btn btn-success" data-bind="click: $root.saveProject"><i class="fa fa-save fa-lg"/> Create New Project</button>
+		<button type="button" class="btn btn-warning" onClick="history.back();"> <i class="fa fa-reply fa-lg"/> Cancel & Back</button>
+	</div>
+</div>

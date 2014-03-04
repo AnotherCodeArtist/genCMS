@@ -1,0 +1,32 @@
+@()(implicit request:Request[Any], lang: play.api.i18n.Lang)
+
+@import helper._
+
+@import securesocial.core.SecureSocial
+@import service.GenUser
+
+<div class="container">
+    <div class="page-header">
+        <h1>@Messages("genCMS.forbidden.title")</h1>
+    </div>
+
+    @request.flash.get("success").map { msg =>
+        <div class="alert alert-info">
+            @msg
+        </div>
+    }
+
+    @request.flash.get("error").map { msg =>
+        <div class="alert alert-danger">
+            @msg
+        </div>
+    }
+
+	<div class="alert alert-danger">
+		@if(!SecureSocial.currentUser.isDefined){
+			@Messages("genCMS.forbidden.loginMsg")
+		}else{
+			@Messages("genCMS.forbidden.authorizationMsg")
+		}
+	</div>
+</div>

@@ -1,0 +1,188 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET      /                                                                                                controllers.Application.index
+GET      /html/index                                                                                      controllers.Application.indexplain
+
+#POST     /                                                               controllers.Application.sendMail
+
+# Login and Registration
+#GET      /html/loginOLD                                                     controllers.Application.loginplain
+#GET      /loginOLD                                                          controllers.Application.login(email = "")
+#POST     /loginOLD                                                       controllers.Application.authenticate
+#GET      /registerOLD                                                    controllers.Application.register
+#POST     /registerOLD                                                    controllers.Application.sendRegistration
+#GET      /logoutOLD                                                      controllers.Application.logout
+##GET      /notFound                     controllers.Application.notFound
+
+#Internationalization
+
+GET      /lang/:lang                                                                                      controllers.Application.changeLanguage(lang:String)
+
+# Login page
+GET      /login                                                                                           securesocial.controllers.LoginPage.login
+GET      /logout                                                                                          securesocial.controllers.LoginPage.logout
+
+
+# Administration routes
+
+GET      /set/admin/:email                                                                                controllers.Application.setAdmin(email:String)
+GET      /remove/admin/:email                                                                             controllers.Application.removeAdmin(email:String)
+
+GET      /set/projectadmin/:email/:projectID                                                              controllers.Application.setProjectadmin(email:String, projectID:String)
+GET      /set/projectadmin/:email                                                                         controllers.Application.setProjectadmin(email:String, projectID:String="")
+GET      /remove/projectadmin/:email/:projectID                                                           controllers.Application.removeProjectadmin(email:String, projectID:String)
+GET      /remove/projectadmin/:email                                                                      controllers.Application.removeProjectadmin(email:String, projectID:String="")
+
+GET      /set/author/:email/:role/:projectID                                                              controllers.Application.setAuthor(email:String, role:String, projectID:String)
+GET      /set/author/:email/:role                                                                         controllers.Application.setAuthor(email:String, role:String, projectID:String)
+GET      /set/author/:email                                                                               controllers.Application.setAuthor(email:String, role:String="default", projectID:String="")
+GET      /remove/author/:email/:projectID                                                                 controllers.Application.removeAuthor(email:String, projectID:String)
+GET      /remove/author/:email                                                                            controllers.Application.removeAuthor(email:String, projectID:String="")
+
+
+
+# User Registration and password handling (only needed if you are using UsernamePasswordProvider)
+GET      /signup                                                                                          securesocial.controllers.Registration.startSignUp
+POST     /signup                                                                                          securesocial.controllers.Registration.handleStartSignUp
+GET      /signup/:token                                                                                   securesocial.controllers.Registration.signUp(token)
+POST     /signup/:token                                                                                   securesocial.controllers.Registration.handleSignUp(token)
+GET      /reset                                                                                           securesocial.controllers.Registration.startResetPassword
+POST     /reset                                                                                           securesocial.controllers.Registration.handleStartResetPassword
+GET      /reset/:token                                                                                    securesocial.controllers.Registration.resetPassword(token)
+POST     /reset/:token                                                                                    securesocial.controllers.Registration.handleResetPassword(token)
+GET      /password                                                                                        securesocial.controllers.PasswordChange.page
+POST     /password                                                                                        securesocial.controllers.PasswordChange.handlePasswordChange
+
+# Providers entry points
+GET      /authenticate/:provider                                                                          securesocial.controllers.ProviderController.authenticate(provider)
+POST     /authenticate/:provider                                                                          securesocial.controllers.ProviderController.authenticateByPost(provider)
+GET      /not-authorized                                                                                  securesocial.controllers.ProviderController.notAuthorized
+
+
+# GET HTML Parts
+GET      /html/docTypeEditor                                                                              controllers.Application.getDocTypeEditorPage
+GET      /html/forbidden                                                                                  controllers.Application.getForbiddenPage
+GET      /html/docTypeDesignEditor                                                                        controllers.Application.getDocTypeDesignEditor(listDesign:Boolean ?=false)
+GET      /html/docTypeListDesignEditor                                                                    controllers.Application.getDocTypeDesignEditor(listDesign:Boolean ?= true)
+GET      /html/userSettings                                                                               controllers.Application.getUserAccountPage
+GET      /html/manageUsers                                                                                controllers.Application.getUserManagementPage
+GET      /html/404                                                                                        controllers.Application.getNotFoundPage
+GET      /html/newProject                                                                                 controllers.Application.getProjectNewPage
+GET      /html/projectEdit                                                                                controllers.Application.getProjectEditPage
+GET      /html/projects                                                                                   controllers.Application.getProjectsList
+GET      /html/header                                                                                     controllers.Application.getHeader
+GET      /html/docTypeConnecter                                                                           controllers.Application.getDocTypeConnector
+GET      /html/selectNewDocument                                                                          controllers.Application.getSelectNewDocument
+GET      /html/documentEditor                                                                             controllers.Application.getDocumentEditor
+GET      /html/documentList                                                                               controllers.Application.getDocumentList
+GET      /html/documentListUnreleased                                                                     controllers.Application.getDocumentListUnreleased
+# documenttypes
+#GET    /doctypes                                                        controllers.DocumentController.getDocTypes(page: Int ?= 0, perPage: Int ?= 10, projectOnly: Boolean ?= false, userOnly: Boolean ?= false, orderBy:String ?= "_id", order:Int ?=-1)
+GET      /doctype/styles/full                                                                             controllers.DocumentController.getDocTypeStylesFull()
+GET      /doctype/styles                                                                                  controllers.DocumentController.getDocTypeStylesKeyValue()
+GET      /doctypes/:perPage/:page/:projectOnly/:userOnly/:orderBy/:asc                                    controllers.DocumentController.getDocTypes(page: Int, perPage: Int, projectOnly: Boolean, userOnly: Boolean, orderBy, asc: Boolean)
+#GET      /doctype/all/:page/:perPage   controllers.DocumentController.getDocTypes(page: Int, perPage: Int)
+#GET     /doctype/new               controllers.DocumentController.showCreationForm
+POST     /new/doctype                                                                                     controllers.DocumentController.createDocType
+GET      /doctype/connected                                                                               controllers.DocumentController.getConnectedDocumentTypes()
+POST     /doctype/connect/:id                                                                             controllers.DocumentController.connectDocTypeToProject(id)
+DELETE   /doctype/connect/:docTypeID/:connectionID                                                        controllers.DocumentController.disconnectDocTypeFromProject(docTypeID : String, connectionID:String)
+GET      /doctype/:id                                                                                     controllers.DocumentController.getDocType(id)
+POST     /doctype/:id                                                                                     controllers.DocumentController.updateDocType(id)
+GET      /del/doctype/:id                                                                                 controllers.DocumentController.deleteDocType(id)
+POST     /doctypeDesign/:id                                                                               controllers.DocumentController.saveDocTypeDesign(id)
+GET      /doctypeDesign/:id                                                                               controllers.DocumentController.getDocTypeDesign(id)
+POST     /doctypeListDesign/:id                                                                           controllers.DocumentController.saveDocTypeListDesign(id)
+GET      /doctypeListDesign/:id                                                                           controllers.DocumentController.getDocTypeListDesign(id)
+GET      /copy/doctype/:id                                                                                controllers.DocumentController.copyDocType(id)
+GET      /new/doctype/style/:name                                                                         controllers.DocumentController.createDocTypeStyle(name:String)
+POST     /update/doctype/style                                                                            controllers.DocumentController.updateDocTypeStyle()
+GET      /delete/doctype/style/:id                                                                        controllers.DocumentController.deleteDocTypeStyle(id:String)
+#documents
+GET      /new/document/:connectionID/:connectToDoc                                                        controllers.DocumentController.createDocument(connectionID: String, connectToDoc: String)
+GET      /new/document/:connectionID                                                                      controllers.DocumentController.createDocument(connectionID: String, connectToDoc:String ?= "")
+#reject hast to be posted with a message why it is rejected
+POST     /document/publish/reject/:id                                                                     controllers.DocumentController.rejectPublishDocument(id:String)
+GET      /document/publish/confirm/:id                                                                    controllers.DocumentController.confirmPublishDocument(id:String)
+GET      /document/publish/:id                                                                            controllers.DocumentController.publishDocument(id:String)
+GET      /document/unpublish/:id                                                                          controllers.DocumentController.unpublishDocument(id:String)
+GET      /document/delete/:id                                                                             controllers.DocumentController.deleteDocument(id:String)
+GET      /document/tag/add/:id/:tag                                                                       controllers.DocumentController.addTag(id: String, tag: String)
+GET      /document/tag/remove/:id/:tag                                                                    controllers.DocumentController.removeTag(id: String, tag: String)
+
+GET      /document/:id                                                                                    controllers.DocumentController.getDocument(id: String)
+GET      /doc/:id                                                                                         controllers.DocumentController.getDocumentDetailView(id: String)
+GET      /docL/:id                                                                                        controllers.DocumentController.getDocumentListView(id: String)
+#GET      /docs/:perPage/:page/:filteredOnly/:connectionID/:tag/:orderBy/:asc                              controllers.DocumentController.getDocumentsList(page: Int, perPage: Int, filteredOnly:Boolean, connectionID: String, tag: String, orderBy: String, asc: Boolean)
+POST     /docs/:perPage/:page                                                                             controllers.DocumentController.getDocumentsList(page: Int, perPage: Int)
+POST     /document/:id                                                                                    controllers.DocumentController.updateDocument(id: String)
+GET      /documents/:perPage/:page/:projectOnly/:filteredOnly/:inEdit/:published/:deleted/:orderBy/:asc   controllers.DocumentController.getMyDocuments(page: Int, perPage: Int, projectOnly: Boolean,filteredOnly:Boolean, inEdit: Boolean, published: Boolean, deleted: Boolean, orderBy: String, asc: Boolean)
+GET      /unreleaseddocuments/:perPage/:page/:orderBy/:asc                                                controllers.DocumentController.getUnreleasedDocuments(page: Int, perPage: Int, orderBy: String, asc: Boolean)
+
+GET      /mapBox/:minLon/:minLat/:maxLon/:maxLat                                                          controllers.DocumentController.findDocsByMapBox(minLon: Double, minLat: Double, maxLon: Double, maxLat: Double)
+
+POST     /img/:documentID                                                                                 controllers.DocumentController.saveImage(documentID)
+GET      /img/:id                                                                                         controllers.DocumentController.getImage(id)
+GET      /thumb/img/:id                                                                                   controllers.DocumentController.getThumb(id)
+DELETE   /img/:id                                                                                         controllers.DocumentController.removeImage(id)
+
+#GeoCoding
+GET      /geocodeAddress/:address                                                                         controllers.DocumentController.geocodeAddress(address:String)
+
+POST     /audio/:documentID                                                                               controllers.DocumentController.saveAudio(documentID)
+GET      /audio/:id                                                                                       controllers.DocumentController.getAudio(id)
+#DELETE   /audio/:id                                                      controllers.DocumentController.removeAudio(id)
+
+POST     /video/:documentID                                                                               controllers.DocumentController.saveVideo(documentID)
+GET      /video/:id                                                                                       controllers.DocumentController.getVideo(id)
+
+#Projects
+GET      /headerInfos                                                                                     controllers.ProjectController.getHeaderInfos()
+GET      /projects/titles                                                                                 controllers.ProjectController.getProjectTitles()
+GET      /projects/roles                                                                                  controllers.ProjectController.getProjectAuthorRoles()
+GET      /projects/tags                                                                                   controllers.ProjectController.getProjectTags()
+GET      /projects                                                                                        controllers.ProjectController.getProjects(page: Int ?= 0, perPage: Int ?= 10)
+GET      /projects/:perPage/:page                                                                         controllers.ProjectController.getProjects(page: Int, perPage: Int)
+POST     /project/tags                                                                                    controllers.ProjectController.getSelectedProjectTags()
+POST     /project/saveTags                                                                                controllers.ProjectController.saveSelectedProjectTagsStructure()
+POST     /project/connections                                                                             controllers.ProjectController.getSelectedProjectConnections()
+GET      /project/tag/add/:tag                                                                            controllers.ProjectController.addTag(tag: String)
+GET      /project/tag/remove/:tag                                                                         controllers.ProjectController.removeTag(tag: String)
+GET      /project/authorrole/setJobDesc/:role/:docID                                                      controllers.ProjectController.setAuthorRoleJobDescription(role: String, docID:String)
+GET      /project/authorrole/add/:role                                                                    controllers.ProjectController.addAuthorRole(role: String)
+GET      /project/authorrole/remove/:role                                                                 controllers.ProjectController.removeAuthorRole(role: String)
+GET      /project/settings/:id                                                                            controllers.ProjectController.getProjectSettings(id)
+GET      /project/newDocument                                                                             controllers.ProjectController.getNewDocument()
+GET      /project/checktitle/:title                                                                       controllers.ProjectController.checkTitle(title)
+#GET      /project/:id                                                                                     controllers.ProjectController.getProject(id)
+POST     /project/basicSettings                                                                           controllers.ProjectController.updateBasicSettings()
+GET      /project/select/:id                                                                              controllers.ProjectController.selectProject(id)
+GET      /project/releaseDocuments                                                                        controllers.ProjectController.releaseDocuments()
+GET      /project/templates                                                                               controllers.ProjectController.getTemplatesSelectedProject()
+GET      /project/editorial/:docID                                                                        controllers.ProjectController.setEditorial(docID:String)
+GET      /project                                                                                         controllers.ProjectController.getSelectedProject()
+POST     /new/project                                                                                     controllers.ProjectController.createProject
+
+GET      /dummy/:id                                                                                       controllers.DocumentController.DUMMY(id:String)
+
+GET      /users/:perPage/:page/:projectOnly/:filteredOnly/:admin/:projectAdmin/:author/:orderBy/:asc      controllers.Application.getUsers(page: Int, perPage: Int, projectOnly: Boolean,filteredOnly:Boolean, admin: Boolean, projectAdmin: Boolean, author: Boolean, orderBy: String, asc: Boolean)
+GET      /user/:email                                                                                     controllers.Application.getUser(email:String)
+GET      /user                                                                                            controllers.Application.getUser(email:String="")
+POST     /user                                                                                            controllers.Application.updateUser()
+
+GET      /projectstyle                                                                                    controllers.ProjectController.getProjectStyle()
+#User Test
+#GET		/createUser					controllers.Application.createUser
+#GET		/findUser/:name				controllers.Application.findUsers(name: String)
+
+#Task Page
+#GET		/tasks						controllers.Application.tasks
+#POST	/tasks						controllers.Application.newTask
+#POST    /tasks/:id/delete       controllers.Application.deleteTask(id: Long)
+
+# Map static resources from the /public folder to the /assets URL path
+GET      /assets/*file                                                                                    controllers.Assets.at(path="/public", file)
+

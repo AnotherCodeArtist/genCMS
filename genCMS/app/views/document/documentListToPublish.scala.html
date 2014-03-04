@@ -1,0 +1,66 @@
+@(user: String="")(implicit request:Request[Any], lang: play.api.i18n.Lang)
+<div class="container">
+	<div id="documentList" visible = "true">
+	<!--  <pre data-bind="text: ko.toJSON(docTypes, null, 2)"></pre>-->
+	  <!-- 
+	   <pre data-bind="text: ko.toJSON(selectedDocType, null, 2)"></pre>
+	   -->
+	    <div class="page-header">
+			<h1>@Messages("genCMS.document.listTitle"):</h1>
+		</div>
+		 <!-- <input id="allProjectsSelector" type="checkbox" /> -->
+		 <!-- <label for="allProjectsSelector">All Projects</label> -->
+		 <!-- <pre data-bind="text: ko.toJSON(docTypes, null, 2)"></pre>  -->
+		 <div data-bind="if: messageShown">
+			<div  data-bind="attr: {class: messageClass()}">
+	  			<button type="button" class="close" data-bind="click: deleteMessage">&times;</button>
+	  			<span data-bind="text: message"></span>
+			</div>
+		</div>
+   		 		
+ 		<div class="table-responsive">
+			<table class="doctypes table table-hover">
+			    <thead>
+			    	<tr>
+			    		<th>
+			    			<a href="#" data-bind="click: function(){ $root.sortDocumentPage('title')}">@Messages("genCMS.document.docTitle")
+				    		<!-- ko if: sortBy()=='title' -->
+				    			<i data-bind="attr: {'class': sortAsc()==true ? 'fa fa-caret-down fa-lg' : 'fa fa-caret-up fa-lg'}"/>
+				    		<!-- /ko -->
+			    			</a>
+			    		</th>
+			    		<th>
+			    			<a href="#" data-bind="click: function(){ $root.sortDocumentPage('fields.modifiedAt')}">@Messages("genCMS.document.modDate")
+				    		<!-- ko if: sortBy()=='fields.modifiedAt' -->
+				    			<i data-bind="attr: {'class': sortAsc()==true ? 'fa fa-caret-down fa-lg' : 'fa fa-caret-up fa-lg'}"/>
+				    		<!-- /ko -->
+			    			</a>
+			    		</th>
+			    		<th>@Messages("genCMS.document.status")</th>
+			    	</tr>
+		    	</thead>
+			    <tbody data-bind="foreach: unreleasedDocuments">
+			        <tr data-bind="click: $root.goToEditDocument">
+			            <td data-bind="text: title"></td>
+			            <td data-bind="text: timeStampToDate(fields.modifiedAt.$date(), '@Messages("genCMS.locale")')"></td>
+			            <td>
+			            	<!-- ko if: inEdit -->@Messages("genCMS.document.statusEdit")<!-- /ko -->
+			            	<!-- ko if: published -->@Messages("genCMS.document.statusPub")<!-- /ko -->
+			            	<!-- ko if: deleted -->@Messages("genCMS.document.statusDel")<!-- /ko -->
+			            	<!-- ko if: (!inEdit() && !deleted() && !published()) -->@Messages("genCMS.document.statusWaitPub")<!-- /ko -->
+			            </td>
+			        </tr>     
+			    </tbody>
+			</table>
+			<!-- ko if: availablePages() > 1 -->
+			<ul class="pagination">
+			  <li data-bind="attr: {'class': currentPage() == 0 ? 'disabled' : ''}"><a href="#" data-bind="click: function() { if(currentPage()==0) return; else $root.loadUnreleasedDocumentsPage(currentPage()-1); }">&laquo;</a></li>
+		  	  <!-- ko foreach: new Array(availablePages()) -->
+				  <li data-bind="attr: {'class': $parent.currentPage() == $index() ? 'active' : ''}"><a href="#" data-bind="text: $index()+1, click: function() { $root.loadUnreleasedDocumentsPage($index()); }"></a></li>
+   			  <!-- /ko -->
+			  <li data-bind="attr: {'class': currentPage() == availablePages()-1 ? 'disabled' : ''}"><a href="#" data-bind="click: function() { if (currentPage() == availablePages()-1) return; else $root.loadUnreleasedDocumentsPage(currentPage()+1); }">&raquo;</a></li>
+			</ul>
+			<!-- /ko -->
+		</div>
+	</div>	
+</div>

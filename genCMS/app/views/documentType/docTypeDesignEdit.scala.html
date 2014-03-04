@@ -1,0 +1,303 @@
+@(listDesign: Boolean)(implicit request:Request[Any], lang: play.api.i18n.Lang)
+@columnConfiguration() = {
+	<span class="configuration">
+		<span class="btn-group btn-group-xs"> 
+			<a class="btn btn-default dropdown-toggle columnStyleDropdown" data-toggle="dropdown">@Messages("genCMS.docTypeDesign.style") <i class="fa fa-caret-down"/></a>
+			<ul class="dropdown-menu columnStyleDropdown">
+				<!-- TODO: get possible CSS Classes from Sever, assign CSS to element -->
+				<li><input type="checkbox" value="TMPvisible-xs"> Show Extra Small</li>
+				<li><input type="checkbox" value="TMPvisible-sm"> Show Small</li>
+				<li><input type="checkbox" value="TMPvisible-md"> Show Medium</li>
+				<li><input type="checkbox" value="TMPvisible-lg"> Show Large</li>
+				<li><input type="checkbox" value="TMPhidden-xs"> Hide Extra Small</li>
+				<li><input type="checkbox" value="TMPhidden-sm"> Hide Small</li>
+				<li><input type="checkbox" value="TMPhidden-md"> Hide Medium</li>
+				<li><input type="checkbox" value="TMPhidden-lg"> Hide Large</li>
+			</ul>
+		</span>
+	</span>
+}
+	
+
+							
+	<div class="container edit" id="docTypeDesignEditor">
+	
+	<div class="page-header">
+		<h1>@if(listDesign){
+			@Messages("genCMS.docTypeDesign.listTitle")
+			}else{
+			@Messages("genCMS.docTypeDesign.title")
+			}
+		</h1>
+	</div>
+		<div class="btn-group">
+			<button type="button" id="editDesign" class="active btn btn-primary">
+				@Messages("genCMS.docTypeDesign.edit") <i class="fa fa-pencil-square-o fa-lg"/>
+			</button>
+			<button type="button" id="previewDesign" class="btn btn-primary" >
+				@Messages("genCMS.docTypeDesign.preview") <i class="fa fa-eye fa-lg"/>
+			</button>
+		</div>
+		<div data-bind="if: messageShown">
+			<div  class="alert alert-success alert-dismissable">
+	  			<button type="button" class="close" data-bind="click: deleteMessage">&times;</button>
+	  			<span data-bind="text: message"></span>
+			</div>
+		</div>
+		<div id="edit-Layout" class="row">
+			<!-- Sidebar NAV -->
+			<div class="col-md-2">
+				<div class="sidebar-nav">
+					
+					<!-- GRID SYSTEM -->
+					<ul class="nav nav-list accordion-group">
+						<li class="nav-header">
+							<div class="pull-right popover-info">
+								<i class="fa fa-question-circle fa-lg"/>
+								<div class="popover fade right">
+									<div class="arrow"></div>
+									<h3 class="popover-title">@Messages("genCMS.docTypeDesign.help")</h3>
+									<div class="popover-content">
+										@Messages("genCMS.docTypeDesign.columnCnfgHelp")
+									</div>
+								</div>
+							</div> <i class="fa fa-plus-square"/> @Messages("genCMS.docTypeDesign.grid")
+						</li>
+						<li style="display: block;" class="rows" id="estRows">
+
+
+							<div class="lyrow ui-draggable">
+								<a href="#close" class="remove label label-danger"><i class="fa fa-trash-o fa-lg"/> @Messages("genCMS.docTypeDesign.remove")</a> <span class="drag label label-default"><i class="fa fa-arrows fa-lg"/> @Messages("genCMS.docTypeDesign.drag")</span>
+								<div class="preview">
+									<input value="12" class="form-control" type="text">
+								</div>
+								<div class="view">
+									<div class="row clearfix">
+										<div class="col-md-12 column">@columnConfiguration</div>
+									</div>
+								</div>
+							</div>
+
+
+
+							<div class="lyrow ui-draggable">
+								<a href="#close" class="remove label label-danger"><i class="fa fa-trash-o fa-lg"/> @Messages("genCMS.docTypeDesign.remove")</a> <span class="drag label label-default"><i class="fa fa-arrows fa-lg"/> @Messages("genCMS.docTypeDesign.drag")</span>
+								<div class="preview">
+									<input value="6 6" class="form-control" type="text">
+								</div>
+								<div class="view">
+									<div class="row clearfix">
+										<div class="col-md-6 column">@columnConfiguration</div>
+										<div class="col-md-6 column">@columnConfiguration</div>
+									</div>
+								</div>
+							</div>
+
+
+
+							<div class="lyrow ui-draggable">
+								<a href="#close" class="remove label label-danger"><i class="fa fa-trash-o fa-lg"/> @Messages("genCMS.docTypeDesign.remove")</a> <span class="drag label label-default"><i class="fa fa-arrows fa-lg"/> @Messages("genCMS.docTypeDesign.drag")</span>
+								<div class="preview">
+									<input value="8 4" class="form-control" type="text">
+								</div>
+								<div class="view">
+									<div class="row clearfix">
+										<div class="col-md-8 column">@columnConfiguration</div>
+										<div class="col-md-4 column">@columnConfiguration</div>
+									</div>
+								</div>
+							</div>
+
+
+
+							<div class="lyrow ui-draggable">
+								<a href="#close" class="remove label label-danger"><i class="fa fa-trash-o fa-lg"/> @Messages("genCMS.docTypeDesign.remove")</a> <span class="drag label label-default"><i class="fa fa-arrows fa-lg"/> @Messages("genCMS.docTypeDesign.drag")</span>
+								<div class="preview">
+									<input value="4 4 4" class="form-control" type="text">
+								</div>
+								<div class="view">
+									<div class="row clearfix">
+										<div class="col-md-4 column">@columnConfiguration</div>
+										<div class="col-md-4 column">@columnConfiguration</div>
+										<div class="col-md-4 column">@columnConfiguration</div>
+									</div>
+								</div>
+							</div>
+
+
+
+							<div class="lyrow ui-draggable">
+								<a href="#close" class="remove label label-danger"><i class="fa fa-trash-o fa-lg"/> @Messages("genCMS.docTypeDesign.remove")</a>
+								<span class="drag label label-default"><i class="fa fa-arrows fa-lg"/> @Messages("genCMS.docTypeDesign.drag")</span>
+								
+								<div class="preview">
+									<input value="2 6 4" class="form-control" type="text">
+								</div>
+								<div class="view">
+									<div class="row clearfix">
+										<div class="col-md-2 column">@columnConfiguration</div>
+										<div class="col-md-6 column">@columnConfiguration</div>
+										<div class="col-md-4 column">@columnConfiguration</div>
+									</div>
+								</div>
+							</div>
+							
+							<div id="restoreLayout" class="lyrow ui-draggable">
+									<a href="#close" class="remove label label-danger"><i class="fa fa-trash-o fa-lg"/> @Messages("genCMS.docTypeDesign.remove")</a> <span class="drag label label-default"><i class="fa fa-arrows fa-lg"/> @Messages("genCMS.docTypeDesign.drag")</span>
+									<div class="preview">
+										<input id="restoreLayoutInput" value="12" class="form-control" type="text">
+									</div>
+									<div class="view">
+										<div class="row clearfix">
+											<div class="col-md-12 column">@columnConfiguration</div>
+										</div>
+									</div>
+							</div>
+
+
+						</li>
+					</ul>
+
+					<!--  Elements  -->
+					<ul class="nav nav-list accordion-group">
+						<li class="nav-header"><i class="fa fa-plus-square"/>
+							@Messages("genCMS.docTypeDesign.elmt")
+							<div class="pull-right popover-info">
+								<i class="fa fa-question-circle fa-lg"/>
+								<div class="popover fade right">
+									<div class="arrow"></div>
+									<h3 class="popover-title">@Messages("genCMS.docTypeDesign.help")</h3>
+									<div class="popover-content">
+										@Messages("genCMS.docTypeDesign.elmtHelp")
+									</div>
+								</div>
+							</div></li>
+						<li style="display: none;" class="boxes" id="elements">
+							
+							
+							<!--  Knockout for each! -->
+							<!-- ko foreach: {data: selectedDocType().elems, as:'element'} -->
+								<div class="box box-element ui-draggable">
+									<a href="#close" class="remove label label-danger"><i class="fa fa-trash-o fa-lg"/> @Messages("genCMS.docTypeDesign.remove")</a> 
+									<span class="drag label label-default"><i class="fa fa-arrows fa-lg"/> @Messages("genCMS.docTypeDesign.drag")</span> 
+									<span class="configuration">
+										<span class="btn-group btn-group-xs"> 
+											<a class="btn btn-default dropdown-toggle elementStyleDropdown" data-toggle="dropdown">@Messages("genCMS.docTypeDesign.style") <i class="fa fa-caret-down"/></a>
+												<ul class="dropdown-menu elementStyleDropdown" data-bind="foreach: {data:$root.availableStyles, as:'style'}">
+													<!-- TODO: get possible CSS Classes from Sever, assign CSS to element -->
+													<li><input type="checkbox" data-bind="value: 'genCMS'+style._id.$oid"/><span data-bind="text: ' '+style.name"></span></li>
+												</ul>
+										</span>
+									</span>
+									<div class="preview"><span data-bind="text: $root.helperGetFieldLocale(fname())"></span></div>
+									<div class="view">
+										<span class="" data-bind="text: $root.helperGetFieldLocale(fname()), attr: {'fieldname': fname(), 'type':'element', 'ftype':type()}"/>
+									</div>
+								</div>
+							<!-- /ko -->
+							
+						</li>
+					</ul>
+					
+					<!--  Labels  -->
+					<ul class="nav nav-list accordion-group">
+						<li class="nav-header"><i class="fa fa-plus-square"/>
+							@Messages("genCMS.docTypeDesign.lbls")
+							<div class="pull-right popover-info">
+								<i class="fa fa-question-circle fa-lg"/>
+								<div class="popover fade right">
+									<div class="arrow"></div>
+									<h3 class="popover-title">@Messages("genCMS.docTypeDesign.help")</h3>
+									<div class="popover-content">
+										@Messages("genCMS.docTypeDesign.lblsHelp")
+									</div>
+								</div>
+							</div>
+						</li>
+						<li style="display: none;" class="boxes" id="labels">
+							
+							
+							<!--  Knockout for each! -->
+							<!-- ko foreach: {data: selectedDocType().elems, as:'element'} -->
+								<div class="box box-element ui-draggable">
+									<a href="#close" class="remove label label-danger"><i class="fa fa-trash-o fa-lg"/> @Messages("genCMS.docTypeDesign.remove")</a> 
+									<span class="drag label label-default"><i class="fa fa-arrows fa-lg"/> @Messages("genCMS.docTypeDesign.drag")</span> 
+									<span class="configuration">
+										<span class="btn-group btn-group-xs"> 
+											<a class="btn btn-default dropdown-toggle elementStyleDropdown" data-toggle="dropdown">@Messages("genCMS.docTypeDesign.style") <i class="fa fa-caret-down"/></a>
+												<ul class="dropdown-menu elementStyleDropdown" data-bind="foreach: {data:$root.availableStyles, as:'style'}">
+													<!-- TODO: get possible CSS Classes from Sever, assign CSS to element -->
+													<li><input type="checkbox" data-bind="value: 'genCMS'+style._id.$oid"/><span data-bind="text: ' '+style.name"></span></li>
+												</ul>
+										</span>
+									</span>
+									<div class="preview"><span data-bind="text: fname()"></span></div>
+									<div class="view">
+										<span class="" type="value" data-bind="text: $root.helperGetFieldLocale(fname())()+': ', attr: {'fieldname': fname(), 'type':'label', 'ftype':type()}"/>
+									</div>
+								</div>
+							<!-- /ko -->
+							
+						</li>
+					</ul>
+
+							
+					<button type="button" class="btn btn-success" data-bind="click: @if(listDesign){$root.saveListDesignLayout}else{$root.saveDesignLayout}"><i class="fa fa-save fa-lg"/> @Messages("genCMS.docTypeDesign.save")</button>
+					<button type="button" class="btn btn-warning" data-bind="click: $root.goToDocTypesList"> <i class="fa fa-reply fa-lg"/> @Messages("genCMS.docTypeDesign.discardBack")</button>
+					<!-- 
+					<button type="button" class="btn btn-danger" data-bind="click: $root.deleteDesignLayout, clickBubble: false"><i class="fa fa-trash-o fa-lg"/> Delete</button>
+					-->
+					<div data-bind="if: messageShown">
+						<div  class="alert alert-success alert-dismissable">
+				  			<button type="button" class="close" data-bind="click: deleteMessage">&times;</button>
+				  			<span data-bind="text: message"></span>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<!--/span-->
+			
+			<!-- Edit DIV -->
+			<div class="col-md-10">
+				<div style="min-height: 1272px;" id="edit-Container" class="demo ui-sortable">
+					
+				</div>
+				
+			</div>
+			</div>
+			<div id="download-Layout" class="row">
+					<div class="container"></div>
+			</div>
+			<!-- <div id="restore-Layout">
+				<div id="restore-ColumnConfig">
+				</div>
+			</div>
+			-->
+			<div id="defaultColumnConfig"  class="hidden">@columnConfiguration</div>
+	
+		<script type="text/javascript">
+			$(document).ready(function() {
+				    $(".lyrow .preview input").bind("keyup", function () {
+				        var e = 0;
+				        var t = "";
+				        var n = false;
+				        var r = $(this).val().split(" ", 12);
+				        $.each(r, function (r, i) {
+				            if (!n) {
+				                if (parseInt(i) <= 0) n = true;
+				                e = e + parseInt(i);
+				                t += '<div class="col-md-' + i + ' column">'+$('#defaultColumnConfig').html()+'</div>'
+				            }
+				        });
+				        if (e == 12 && !n) {
+				            $(this).parent().next().children().html(t);
+				            $(this).parent().prev().show();
+				        } else {
+				            $(this).parent().prev().hide();
+				        }
+				    })
+			});
+		</script>
+	</div>

@@ -1,0 +1,374 @@
+genCMS.locale=de
+genCMS.validationFailed=Validierung fehlgeschlagen
+
+#sidebar
+genCMS.sidebar.title=Dokumente Filtern
+genCMS.sidebar.map=Auf Karte suchen
+genCMS.sidebar.typ=Dokument Art
+genCMS.sidebar.tags=Themen
+genCMS.sidebar.jobDocument=Meine Aufgabe
+
+# Header
+genCMS.header.title=Anmeldung
+genCMS.header.selectProject=Projekt wählen
+genCMS.header.manageDocTypes=Dokumenttypen verwalten
+genCMS.header.createDocument=Dokument erstellen
+genCMS.header.myDocuments=Meine Dokumente
+genCMS.header.releaseDocuments=Freizugebende Dokumente
+genCMS.header.projectSettings=Projekt bearbeiten
+genCMS.header.changeProject=Projekt wechseln
+genCMS.header.newProject=Projekt erstellen
+genCMS.header.notifications=Benachrichtigungen
+genCMS.header.accountSettings=Profil bearbeiten
+genCMS.header.manageUsers=Benutzer verwalten
+genCMS.header.changePassword=Password ändern
+genCMS.header.logout=Abmeldung
+genCMS.header.project=Projekt
+genCMS.header.navigation=Artikel
+
+# Project Settings
+genCMS.project.settings.title=Projekt Einstellungen
+genCMS.project.settings.basicSettings=Basis Einstellungen
+genCMS.project.settings.tags=Themen
+genCMS.project.settings.authorRoles=Autor Rollen
+genCMS.project.settings.members=Projekt Mitglieder
+genCMS.project.settings.reportedContent=Gemeldete Inhalte
+genCMS.project.settings.projectStyle=Projekt Styles
+genCMS.project.settings.docStyles=Dokument Typ Styles
+
+# Project Tags
+genCMS.project.tags.tags=Themen
+genCMS.project.tags.tagName=Thema
+genCMS.project.tags.removeTag=Thema entfernen
+genCMS.project.tags.addTag=Thema hinzufügen
+genCMS.project.tags.saveTag=Menü speichern
+
+# Project Styles
+genCMS.project.styles.styleName=Style Name
+genCMS.project.styles.addStyle=Style hinzufügen
+genCMS.project.styles.style=Style Eigenschaften
+genCMS.project.styles.save=Speichern
+genCMS.project.styles.delete=Löschen
+
+# Project Roles
+genCMS.project.role.name=Rollen Name
+genCMS.project.role.jobDesc=Rollen Aufgabe
+genCMS.project.role.remove=Rolle entfernen
+genCMS.project.role.add=Rolle hinzufügen
+genCMS.project.role.notEmtpy=Der Rollen Name muss ausgefüllt werden
+genCMS.project.role.unique=Der Rollen Name muss einzigartig sein
+genCMS.project.role.noJobDesc=Keine Aufgabe gesetzt
+genCMS.project.role.openJobDesc=Aufgabe öffnen
+
+# User
+genCMS.user.listTitle=User verwalten
+genCMS.user.projectOnly=Nur mit Projekt Verbundene
+genCMS.user.filterOpts=Filter Optionen
+genCMS.user.textFilters=Text Filter
+genCMS.user.unfiltered=Nicht Gefiltert
+genCMS.user.admin=Nur Administratoren
+genCMS.user.projectAdmin=Nur Projekt Administratoren
+genCMS.user.author=Nur Autoren
+genCMS.user.lbl.userid=Email
+genCMS.user.lbl.admin=Admin
+genCMS.user.lbl.projectAdmin=Projekt Admin
+genCMS.user.lbl.author=Autor
+genCMS.user.lbl.firstname=Vorname
+genCMS.user.lbl.lastname=Nachname
+genCMS.user.lbl.lastlogin=Letzter Login
+genCMS.user.role.admin=Admin
+genCMS.user.role.projectAdmin=Projekt Admin
+genCMS.user.role.author=Autor
+genCMS.user.search=Suche
+genCMS.user.accountSettings=User Account Einstellungen
+genCMS.user.lbl.changePWD=Password ändern
+genCMS.user.save=Änderungen speichern
+genCMS.user.lbl.avatar=Avatar
+genCMS.user.mgmt.author=Autoren Management
+genCMS.user.mgmt.projectadmin=Projekt Administratoren Management
+genCMS.user.mgmt.admin=Administratoren Management
+genCMS.user.lbl.isAdmin=User ist Admin
+genCMS.user.lbl.makeAdmin=Zu Admins hinzufügen
+genCMS.user.lbl.removeAdmin=Von Admins entfernen
+genCMS.user.lbl.removePrAdmin=Von Projekt Admins entfernen
+genCMS.user.lbl.addPrAdmin=Zu Projekt Admins hinzufügen
+genCMS.user.lbl.project=Projekt
+genCMS.user.lbl.authorRole=Autor Rolle
+genCMS.user.lbl.removeAuthor=Von Autoren entfernen
+genCMS.user.lbl.addAuthor=Zu Autoren hinzufügen
+
+
+# Document
+genCMS.document.listTitle=Meine Dokumente
+genCMS.document.projectOnly=Mit Projekt verbunden
+genCMS.document.filterOpts=Filteroptionen
+genCMS.document.unfiltered=Ungefiltert
+genCMS.document.inEdit=In Bearbeitung
+genCMS.document.published=Veröffentlicht
+genCMS.document.deleted=Gelöscht
+genCMS.document.changeAuthor=Geändert von
+genCMS.document.status=Status
+genCMS.document.statusDel=Gelöscht
+genCMS.document.statusEdit=In Bearbeitung
+genCMS.document.statusPub=Veröffentlicht
+genCMS.document.statusWaitPub=Wartet auf Freigabe
+genCMS.document.release=Veröffentlichen
+genCMS.document.unrelease=Zurückziehen
+genCMS.document.delete=Löschen
+genCMS.document.docTitle=Titel
+genCMS.document.project=Projekt
+genCMS.document.modDate=Letzte Änderung
+genCMS.document.createDate=Erstellt
+
+# Document Edit
+genCMS.docView.adminSection=Administrations Bereich
+genCMS.docView.isEditorial=Dokument ist Leitartikel
+genCMS.docView.setEditorial=Als Leitartikel setzen
+genCMS.docView.editorial=Leitartikel
+genCMS.docView.authorJob=Autoren Rolle
+genCMS.docView.setAuthorJob=Als Aufgabe setzen
+genCMS.docView.clearFilter=Filter zurücksetzen
+genCMS.docView.geoLoc.select=Artikel öffnen
+genCMS.docView.newestDocs=Kürzlich veröffentlichte Artikel:
+genCMS.docView.newestDocsPreTag=In Kategorie "
+genCMS.docView.newestDocsPostTag=" veröffentlichte Artikel:
+genCMS.docView.editDoc=Artikel bearbeiten
+genCMS.docView.connectedDocuments=Verknüpfte Artikel
+genCMS.docView.createConnectedDocument=Verknüpften Artikel erstellen
+
+# Document Edit
+genCMS.docEdit.title=Dokument bearbeiten
+genCMS.docEdit.docName=Dokumentname
+genCMS.docEdit.createDate=Erstellt am
+genCMS.docEdit.modDate=Zuletzt geändert
+genCMS.docEdit.fields=Dokumentfelder
+genCMS.docEdit.uploadImg=Bild hochladen...
+genCMS.docEdit.uploadAudio=Audio hochladen...
+genCMS.docEdit.uploadVideo=Video hochladen...
+genCMS.docEdit.addYoutube=Youtube Video hinzufügen
+genCMS.docEdit.geoLoc.required=Breite, Länge und Anzeigename sind erforderlich
+genCMS.docEdit.geoLoc.display=Anzeigename
+genCMS.docEdit.geoLoc.lat=Breite
+genCMS.docEdit.geoLoc.lon=Länge
+genCMS.docEdit.geoLoc.select=Auswählen
+genCMS.docEdit.geoLoc.show=Zeigen
+genCMS.docEdit.geoLoc.lookup=Adresse suchen
+genCMS.docEdit.geoLoc.takeCords=Koordinaten übernehmen
+genCMS.docEdit.geoLoc.showCurrPos=Aktuelle Position anzeigen
+genCMS.docEdit.previewDoc=Dokumentvorschau
+genCMS.docEdit.previewDocList=Vorschau Listendarstellung
+genCMS.docEdit.save=Dokument speichern
+genCMS.docEdit.discardBack=Verwerfen / Zurück
+genCMS.docEdit.delete=Dokument löschen
+genCMS.docEdit.backEdit=Zurück zur Bearbeitung
+genCMS.docEdit.geoLoc.searchAdr=Suche nach Adresse
+genCMS.docEdit.geoLoc.noMatches=Leider keine Ergebnisse gefunden
+genCMS.docEdit.geoLoc.noLatLon=Muss "Breitengrad, Längengrad" (zB "47,0786521, 15,4070155") sein
+genCMS.docEdit.status=Dokument Status
+genCMS.docEdit.statusEdit=Dokument ist in Bearbeitung
+genCMS.docEdit.statusPub=Dokument ist Publiziert - Bearbeitung nicht möglich
+genCMS.docEdit.statusWaitPub=Dokument wartet auf Freigabe - Bearbeitung nicht möglich
+genCMS.docEdit.release=Dokument publizieren
+genCMS.docEdit.unrelease=Dokument zurückziehen
+genCMS.docEdit.reject=Publizierung verweigern
+genCMS.docEdit.rejectMsg=Ablehnungsgrund
+genCMS.docEdit.confirm=Dokument freigeben
+genCMS.docEdit.rejectConfirm=Publizierung freigeben oder ablehnen
+
+# Doc Types
+genCMS.doctype.listTitle=Verfügbare Dokumenttypen
+genCMS.doctype.projectOnly=Mit Projekt verknüpft
+genCMS.doctype.userOnly=Selbst erstellt
+genCMS.doctype.name=Name
+genCMS.doctype.author=Autor
+genCMS.doctype.copy=Kopieren
+genCMS.doctype.connect=Verknüpfen
+genCMS.doctype.detailDesign=Detail-Design
+genCMS.doctype.listDesign=Listen-Design
+genCMS.doctype.new=Neuer Dokumenttyp
+genCMS.doctype.editTitle=Dokumenttyp bearbeiten
+genCMS.doctype.docTypeName=Dokument Typ Name
+genCMS.doctype.stdField=Standardfeld
+genCMS.doctype.stdFieldMsg=Standardfelder können nicht geändert oder gelöscht werden
+genCMS.doctype.fieldname=Feldname
+genCMS.doctype.locale=Lokalisierung
+genCMS.doctype.minLength=Mindestlänge
+genCMS.doctype.maxLength=Maximale Länge
+genCMS.doctype.required=Erforderlich
+genCMS.doctype.addLocale=Lokalisierung hinzufügen
+genCMS.doctype.delField=Feld löschen
+genCMS.doctype.minWidth=Minimale Breite
+genCMS.doctype.maxWidth=Maximale Breite
+genCMS.doctype.minHeight=Minimale Höhe
+genCMS.doctype.maxHeight=Maximale Höhe
+genCMS.doctype.maxFileSize=Maximale Dateigröße [B]
+genCMS.doctype.min=Minimum
+genCMS.doctype.max=Maximum
+genCMS.doctype.txt=Textzeile
+genCMS.doctype.html=HTML
+genCMS.doctype.img=Bild
+genCMS.doctype.audio=Audio
+genCMS.doctype.video=Video
+genCMS.doctype.number=Anzahl
+genCMS.doctype.boolean=Boole'scher Wert
+genCMS.doctype.geoLoc=Geolokation
+genCMS.doctype.save=Dokumenttyp Speichern
+genCMS.doctype.discardBack=Änderungen verwerfen / Zurück
+genCMS.doctype.delete=Dokumenttyp Löschen
+genCMS.doctype.addField=Feld hinzufügen
+genCMS.doctype.turnGEO=Geolokation hinzufügen
+genCMS.doctype.fieldtype=Feldtyp
+
+# DocTypeDesign
+genCMS.docTypeDesign.title=Dokumenttyp Design bearbeiten
+genCMS.docTypeDesign.listTitle=Dokumenttyp Listendesign bearbeiten
+genCMS.docTypeDesign.edit=Bearbeiten
+genCMS.docTypeDesign.preview=Vorschau
+genCMS.docTypeDesign.help=Hilfe
+genCMS.docTypeDesign.columnCnfgHelp=Die Spaltenkonfiguration kann durch Eingabe von verschiedenen Werten bearbeitet werden (Die Summe muss 12 ergeben).
+genCMS.docTypeDesign.grid=Gridsystem
+genCMS.docTypeDesign.remove=entfernen
+genCMS.docTypeDesign.drag=Drag
+genCMS.docTypeDesign.elmt=Elemente
+genCMS.docTypeDesign.elmtHelp=Drag & Drop die Elemente innerhalb der Spalten, in denen Sie sie einfügen möchten. Und von dort aus können Sie den Stil der Elemente konfigurieren.
+genCMS.docTypeDesign.lbls=Labels
+genCMS.docTypeDesign.lblsHelp=Drag & Drop die Elemente innerhalb der Spalten, in denen Sie sie einfügen möchten. Und von dort aus können Sie den Stil der Elemente konfigurieren.
+genCMS.docTypeDesign.style=Stil
+genCMS.docTypeDesign.save=Speichern
+genCMS.docTypeDesign.discardBack=Verwerfen / Zurück
+
+# DocType Connect
+genCMS.docTypeConnect.title=Dokumenttyp mit ausgewähltem Projekt verbinden
+genCMS.docTypeConnect.existingCon=Vorhandene Verbindungen
+genCMS.docTypeConnect.name=Name
+genCMS.docTypeConnect.desc=Beschreibung
+genCMS.docTypeConnect.active=Aktiv
+genCMS.docTypeConnect.updateConn=Verbindung aktualisieren
+genCMS.docTypeConnect.delConn=Verbindung löschen
+genCMS.docTypeConnect.connect=Mit Projekt verbinden
+genCMS.docTypeConnect.discardBack=Änderungen verwerfen / Zurück
+
+# Forbidden
+genCMS.forbidden.title=Fehlende Berechtigung
+genCMS.forbidden.loginMsg=Die anzuzeigende Seite ist nur für angemeldete Benutzer zugänglich. Bitte melden Sie sich an!
+genCMS.forbidden.authorizationMsg=Sie sind nicht berechtigt, diese Seite zu besuchen! Bitte wenden Sie sich an einen Administrator, falls Sie Hilfe benötigen.
+
+hello.world=HALLO WELT
+genCMS.index.title=HALLO WELT
+
+# App name
+securesocial.appName=SecureSocial 2
+
+# Login page
+securesocial.login.title=Anmeldung
+securesocial.login.instructions=Nutzen Sie ihr bestehendes Benutzerkonto bei einem der Folgenden Anbieter.
+securesocial.login.accessDenied=Sie haben den Zugang zu ihrem Konto verwehrt. Bitte erlauben Sie den Zugang um sich anmelden zu können.
+securesocial.login.errorLoggingIn=Bei der Anmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es noch ein mal.
+securesocial.login.useEmailAndPassword=Oder melden Sie sich mit ihrem Benutzername und Passwort an.
+securesocial.login.useEmailAndPasswordOnly=Anmeldung mit Benutzername und Passwort
+securesocial.login.signUp=Sollten Sie noch kein Benutzerkonto haben, können Sie hier ein neues registrieren.
+securesocial.login.here=hier
+securesocial.login.invalidCredentials=Ihre Anmeldedaten sind ungültig
+securesocial.login.forgotPassword=Haben Sie ihr Passwort vergessen?
+
+# Sign up page
+securesocial.signup.title=Registrierung
+securesocial.signup.username=Benutzername
+securesocial.signup.firstName=Vorname
+securesocial.signup.lastName=Nachname
+securesocial.signup.email1=E-Mail
+securesocial.signup.email2=E-Mail Bestätigung
+securesocial.signup.password1=Passwort
+securesocial.signup.password2=Passwort Bestätigung
+securesocial.signup.createAccount=Benutzerkonto anlegen
+securesocial.signup.cancel=Abbrechen
+securesocial.signup.userNameAlreadyTaken=Benutzername bereits vergeben
+securesocial.signup.passwordsDoNotMatch=Die Passwörter stimmen nicht überein
+securesocial.signup.thankYouCheckEmail=Vielen Dank. Bitte prüfen Sie ihr E-Mail Konto für weitere Schritte.
+securesocial.signup.invalidLink=Der Link ist ungültig
+securesocial.signup.signUpDone=Vielen Dank für Ihre Registrierung. Sie können sich nun anmelden.
+securesocial.signup.invalidPassword=Geben Sie mindestens {0} Zeichen ein
+
+# Password reset
+securesocial.password.title=Passwort zurücksetzen
+securesocial.password.passwordUpdated=Ihr Passwort wurde erfolgreich geändert.
+securesocial.password.reset=Zurücksetzen
+securesocial.password.error=Das Passwort konnte nicht geändert werden. Bitte versuchen Sie es erneut.
+
+# Password change
+securesocial.passwordChange.title=Passwort ändern
+securesocial.passwordChange.currentPassword=Aktuelles Passwort
+securesocial.passwordChange.newPassword1=Neues Passwort
+securesocial.passwordChange.newPassword2=Neues Passwort Bestätitung
+securesocial.passwordChange.changeButton=Ändern
+securesocial.passwordChange.invalidPassword=Das Passwort ist ungültig
+securesocial.passwordChange.ok=Ihr Passwort wurde erfolgreich geändert
+securesocial.passwordChange.okButton=Ok
+
+# Not authorized page
+securesocial.notAuthorized.title=Nicht angemeldet
+securesocial.notAuthorized.message=Sie müssen angemeldet sein um diese Seite zu sehen.
+
+#
+securesocial.loginRequired=Sie müssen angemeldet sein um diese Seite zu sehen.
+
+# Mails
+#
+mails.sendAlreadyRegisteredEmail.subject=Ihre Registrierung
+mails.sendSignUpEmail.subject=Ihre Registrierung
+mails.welcomeEmail.subject=Herzlich Willkommen
+mails.passwordResetEmail.subject=Zurücksetzen ihres Passworts
+mails.unknownEmail.subject=Passwort zurücksetzen
+mails.passwordResetOk.subject=Ihr Passwort wurde erfolgreich zurück gesetzt
+
+#
+# Copyright (C) 2009-2013 Typesafe Inc. <http://www.typesafe.com>
+#
+
+# Default messages
+
+# --- Constraints
+constraint.required=Pflichtfeld
+constraint.unique=Darf nicht bereits vorhanden sein
+constraint.uniqueAndAZ=Darf nicht vorhanden sein und nur aus Buchstaben bestehen!
+constraint.min=Mindestens: {0}
+constraint.max=Maximal: {0}
+constraint.minLength=Mindestlänge: {0}
+constraint.maxLength=Maximallänge: {0}
+constraint.email=Email
+
+# --- Formats
+format.date=Datum (''{0}'')
+format.numeric=Numerisch
+format.real=Real
+
+# --- Errors
+error.invalid=Ungültiger Wert
+error.invalid.java.util.Date=Ungültiges Datum
+error.required=Dieses Feld ist erforderlich
+error.number=Numerischer Wert erwartet
+error.real=Reelle Zahl erwartet
+error.real.precision=Reelle Zahl mit maximal {0} Stellen inklusiv {1} Nachkommastellen erwartet
+error.min=Muss größer oder gleich {0} sein
+error.min.strict=Muss größer als {0} sein
+error.max=Muss kleiner oder gleich {0} sein
+error.max.strict=Muss kleiner als {0} sein
+error.minLength=Mindestlänge {0}
+error.maxLength=Maximallänge {0}
+error.email=Gültige Email Adresse erwartet
+error.pattern=Muss Muster {0} entsprechen
+
+error.expected.date=Datum erwartet
+error.expected.date.isoformat=Iso date value expected
+error.expected.jodadate.format=Joda date value expected
+error.expected.jsarray=Array value expected
+error.expected.jsboolean=Boolean value expected
+error.expected.jsnumber=Number value expected
+error.expected.jsobject=Object value expected
+error.expected.jsstring=String value expected
+error.expected.jsnumberorjsstring=String or number expected
+error.expected.keypathnode=Node value expected
+
+error.path.empty=Empty path
+error.path.missing=Missing path
+error.path.result.multiple=Multiple results for the given path

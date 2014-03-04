@@ -1,0 +1,47 @@
+.default {
+	font-family: "Lucida Grande", Tahoma;
+	font-size: 1em;
+	font-variant: normal;
+	color: #666666;
+	margin-top: 10px;
+	letter-spacing: 0.3em;
+}
+
+.important{
+  color: #FF1100;
+  font-size: 2em;	
+}
+
+.headline{
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size:2em;
+	margin-top: 5px; margin-bottom: 0px;
+	text-align: center;
+	font-weight: normal;
+	color: #222;
+}
+
+.subheadline{
+	font-family: "Lucida Grande", Tahoma;
+	font-size: 1.3em;
+	font-weight: lighter;
+	font-variant: normal;
+	text-transform: uppercase;
+	color: #666666;
+	margin-top: 10px;
+	text-align: center!important;
+	letter-spacing: 0.3em;
+}
+
+.quote{
+	text-align: center;
+	width: 80%;
+	font-size: 0.75em;
+	font-style: italic;
+}
+
+.singleLine{
+	display: block;	
+}
+
+.contentCenter

@@ -1,0 +1,141 @@
+@(projectID:String)(implicit request:Request[Any], lang: play.api.i18n.Lang)
+<!-- Loading jQuery TinyMCE -->
+<script src="@routes.Assets.at("javascript/tinymce/jquery.tinymce.min.js")" type="text/javascript"></script>
+<!-- Loading TinyMCE -->
+<script src="@routes.Assets.at("javascript/tinymce/tinymce.min.js")" type="text/javascript"></script>
+<!-- Starting the TinyMCE -->
+<script type="text/javascript">
+$(function(){
+    $('.tinymce').tinymce({
+    	selector: "textarea",
+        theme: "modern",
+        plugins: [
+            "code, emoticons, table, textcolor"
+        ],
+        toolbar1: "code | undo redo | styleselect | bold italic | textcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table",
+        toolbar2: "forecolor backcolor | emoticons",
+        menubar: false,
+    });
+});
+
+</script>
+
+<div class="container">
+	<div class="page-header">
+		<h1>@Messages("genCMS.docTypeConnect.title")</h1>
+	</div>
+	<div data-bind="if: messageShown">
+		<div  data-bind="attr: {class: messageClass()}">
+  			<button type="button" class="close" data-bind="click: deleteMessage">&times;</button>
+  			<span data-bind="text: message"></span>
+		</div>
+	</div>
+	<!-- 
+	<pre data-bind="text: ko.mapping.toJSON(selectedDocType(), null, 2)"></pre>	
+	-->
+	<!-- ko if: selectedDocType().connectedProjects -->
+		<!-- ko if: selectedDocType().connectedProjects['@projectID'] && selectedDocType().connectedProjects['@projectID']().length!=0 -->
+		<div class="well well-sm">
+			<!-- 
+			<pre data-bind="text: ko.mapping.toJSON(selectedDocType().connectedProjects['@projectID'], null, 2)"></pre>
+			-->
+			<h2>@Messages("genCMS.docTypeConnect.existingCon"):</h2>
+				<div class="panel-group" id="accordionExistingConnections">
+					<!-- ko foreach: {data: selectedDocType().connectedProjects['@projectID'], as:'projectConnection'} -->
+					<div class="panel panel-info">
+						<div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordionExistingConnections" data-bind="attr: {href: '#'+projectConnection._id.$oid()}"">
+						  <h4 class="panel-title accordion-toggle">      
+							  <strong data-bind="text: projectConnection.name"/>
+						  </h4>
+						</div>
+						<div data-bind="attr: {id: projectConnection._id.$oid}" class="panel-collapse collapse">
+						  <div class="panel-body">
+								<form class="form-horizontal" role="form">
+									<div class="form-group">
+										<label data-bind="attr: {for:'nameInProject'+$index()}" class="col-sm-2 control-label">@Messages("genCMS.docTypeConnect.name")</label>
+										<div class="col-sm-5">
+											<input type="text" class="form-control" data-bind="value: projectConnection.name, valueUpdate: 'afterkeydown', attr: {id:'nameInProject'+$index()}" placeholder="Name in Project"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label data-bind="attr: {for:'descriptionInProject'+$index()}" class="col-sm-2 control-label">@Messages("genCMS.docTypeConnect.desc")</label>
+										<div class="col-sm-10">
+											<textarea data-bind="attr: {id:'descriptionInProject'+$index()}, wysiwyg: projectConnection.description" placeholder="Name in Project"/>
+											<!-- 
+											<input id="descriptionInProject" type="text" class="form-control" data-bind="value: projectConnection.description" placeholder="Description of Document Type"/>
+											-->
+										</div>
+									</div>
+									<div class="form-group">
+									   <div class="col-sm-offset-2 col-sm-10">
+									     <div class="checkbox">
+									       <label>
+									         <input type="checkbox" data-bind="checked: projectConnection.active"> @Messages("genCMS.docTypeConnect.active")
+									       </label>
+									     </div>
+									   </div>
+									</div>
+									<hr>
+									<div class="form-group">
+										<div class="col-sm-offset-2 col-sm-10">
+											<button type="button" class="btn btn-success" data-bind="click: $root.updateDocTypeToProjectConnection"><i class="fa fa-save fa-lg"></i> @Messages("genCMS.docTypeConnect.updateConn")</button>
+											<button type="button" class="btn btn-danger" data-bind="click: $root.disconnectDocTypeFromProject"><i class="fa fa-trash-o fa-lg"></i> @Messages("genCMS.docTypeConnect.delConn")</button>
+										</div>
+									</div>
+								</form>
+								<div data-bind="if: $root.messageShown">
+									<div  data-bind="attr: {class: $root.messageClass()}">
+							  			<button type="button" class="close" data-bind="click: $root.deleteMessage">&times;</button>
+							  			<span data-bind="text: $root.message"></span>
+									</div>
+								</div>
+						  </div>
+						</div>
+					</div>
+					<!-- /ko -->
+				</div>
+		</div>
+		<!-- /ko -->
+	<!-- /ko -->
+	<div class="well well-sm">
+		<h2>Create new Connection:</h2>
+		<form class="form-horizontal" role="form">
+			<div class="form-group">
+				<label for="nameInProject" class="col-sm-2 control-label">@Messages("genCMS.docTypeConnect.name")</label>
+				<div class="col-sm-5">
+					<input id="newNameInProject" type="text" class="form-control" data-bind="value: docTypeConnection().name" placeholder="Name in Project"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="descriptionInProject" class="col-sm-2 control-label">@Messages("genCMS.docTypeConnect.desc")</label>
+				<div class="col-sm-10">
+					<textarea id="newDescriptionInProject" data-bind="wysiwyg: $root.docTypeConnection().description" placeholder="Description of Document Type"/>
+				</div>
+			</div>
+			<div class="form-group">
+			   <div class="col-sm-offset-2 col-sm-10">
+			     <div class="checkbox">
+			       <label>
+			         <input type="checkbox" data-bind="checked: docTypeConnection().active"> @Messages("genCMS.docTypeConnect.active")
+			       </label>
+			     </div>
+			   </div>
+			</div>
+			<hr>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-2">
+					<button type="button" class="form-control btn btn-success" data-bind="click: $root.connectDocTypeToProject"><i class="fa fa-plus fa-lg"/> @Messages("genCMS.docTypeConnect.connect")</button>
+				</div>
+			</div>
+		</form>
+		<div data-bind="if: messageShown">
+			<div  data-bind="attr: {class: messageClass()}">
+	  			<button type="button" class="close" data-bind="click: deleteMessage">&times;</button>
+	  			<span data-bind="text: message"></span>
+			</div>
+		</div>
+	</div>
+	<button type="button" class="btn btn-warning" data-bind="click: $root.goToDocTypesList"> <i class="fa fa-reply fa-lg"/> @Messages("genCMS.docTypeConnect.discardBack")</button>
+</div>
+
+		

@@ -1,0 +1,199 @@
+@* userAccountSettings Template File *@
+@()(implicit request:Request[Any], lang: play.api.i18n.Lang)
+@import securesocial.core.SecureSocial
+@import service.GenUser
+
+<div class="container">
+	@if(SecureSocial.currentUser.isDefined){
+		<div id="userAccount" visible = "true">
+		<!--  <pre data-bind="text: ko.toJSON(docTypes, null, 2)"></pre>-->
+		  <!-- 
+		   <pre data-bind="text: ko.toJSON(selectedDocType, null, 2)"></pre>
+		   -->
+		    <div class="page-header">
+				<h1>@Messages("genCMS.user.accountSettings"):</h1>
+			</div>
+			 <!-- <input id="allProjectsSelector" type="checkbox" /> -->
+			 <!-- <label for="allProjectsSelector">All Projects</label> -->
+			 <!-- <pre data-bind="text: ko.toJSON(docTypes, null, 2)"></pre>  -->
+			 <div data-bind="if: messageShown">
+				<div  data-bind="attr: {class: messageClass()}">
+		  			<button type="button" class="close" data-bind="click: deleteMessage">&times;</button>
+		  			<span data-bind="text: message"></span>
+				</div>
+			</div>
+	   		   		
+	  		<form class="form-horizontal well well-sm" role="form">
+		  		<div class="form-group">
+					<label for="firstNameInput" class="col-sm-2 control-label">@Messages("genCMS.user.lbl.firstname")</label>
+					<div class="col-sm-5">
+						<input id="firstNameInput" type="text" class="form-control" data-bind="value: selectedUser().firstname, valueUpdate: 'afterkeydown'" placeholder=""/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="lastNameInput" class="col-sm-2 control-label">@Messages("genCMS.user.lbl.lastname")</label>
+					<div class="col-sm-5">
+						<input id="lastNameInput" type="text" class="form-control" data-bind="value: selectedUser().lastname, valueUpdate: 'afterkeydown'" placeholder=""/>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="avatar" class="col-sm-2 control-label">@Messages("genCMS.user.lbl.avatar")</label>
+					<div class="col-sm-5">
+						<div data-bind="attr:{class: selectedUser().avatar()!='N/A' ? '' : 'hidden'}">
+							<input id="avatarIMG" class="hidden" type="text" data-bind="value: selectedUser().avatar"/>
+							<img class="img-thumbnail" data-bind="attr:{ src: selectedUser().avatar()!='N/A' ? 'thumb/img/' + selectedUser().avatar() : '' }"/>
+						</div>
+						<div data-bind="if: headVM.loggedInUser().userid == mainVM.selectedUser().userid() || headVM.loggedInUser().admin">
+							<span class="btn btn-success fileinput-button"><i class="fa fa-plus"></i><span> @Messages("genCMS.docEdit.uploadImg")</span>
+		    						<input id="avatarUpload" type="file" file-accept="jpeg, jpg" name="image">
+		   					</span>
+		   					<div id="progressAvatar" class="progress progress-striped"><div class="progress-bar progress-bar-success"></div></div>
+		   				</div>
+					</div>
+					<!-- ko text: initImageUpload('avatarUpload','progressAvatar','avatarIMG'); --><!-- /ko -->
+				</div>
+				<div data-bind="if: headVM.loggedInUser().userid == mainVM.selectedUser().userid()">
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<a class="btn btn-info" href="@securesocial.core.providers.utils.RoutesHelper.changePasswordPage.absoluteURL()">@Messages("genCMS.header.changePassword")</a>
+						</div>
+					</div>
+				</div>
+				<div data-bind="if: headVM.loggedInUser().userid == mainVM.selectedUser().userid() || headVM.loggedInUser().admin">
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<button type="button" class="btn btn-success" data-bind="click: $root.updateSelectedUser"><i class="fa fa-save fa-lg"></i> @Messages("genCMS.user.save")</button>
+						</div>
+					</div>
+				</div>
+	  		</form>
+		@if(SecureSocial.currentUser.get.asInstanceOf[GenUser].isAdmin || !SecureSocial.currentUser.get.asInstanceOf[GenUser].projectAdmin.getOrElse(Nil).isEmpty){
+			<form class="form-horizontal well well-sm" role="form">
+				<h2>@Messages("genCMS.user.mgmt.author")</h2>
+				<div class="table-responsive">
+					<table class="table table-hover table-striped">
+					    <thead>
+					    	<tr>
+					    		<th>@Messages("genCMS.user.lbl.project")</th>
+					    		<th>@Messages("genCMS.user.lbl.authorRole")</th>
+					    		
+					    		<th>@Messages("genCMS.user.lbl.removeAuthor")</th>
+					    	</tr>
+				    	</thead>
+					    <tbody data-bind="foreach: selectedUser().author">
+					        <tr>
+					            <td data-bind="text: headVM.getProjectTitle(projectID())"></td>
+					            <td data-bind="text: role"></td>
+					            <td><button type="button" data-bind="click: function(){ $root.removeAuthor(projectID()) }, clickBubble: false, enable: (headVM.loggedInUser().admin || headVM.isCurrentUserProjectAdminFor(projectID()))" class="btn btn-danger" ><i class="fa fa-trash-o fa-lg"/></button></td>
+					            
+					            <!-- 
+					            data-bind="click: $root.deleteDocument, clickBubble: false"
+					             -->
+					        </tr>     
+					    </tbody>
+					</table>
+				</div>
+				<hr>
+				<div class="form-group">
+					<label for="projectAuthorDD" class="col-sm-2 control-label">@Messages("genCMS.user.lbl.project")</label>
+					<div class="col-sm-5">
+						<select id="projectAuthorDD" class="form-control" data-bind="
+							    options: headVM.getProjectTitleArrayAdmin(),
+							    optionsText: 'title',
+							    optionsValue: 'id',
+							    value: headVM.selectedProjectDD
+							    ">
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="authorRoleDD" class="col-sm-2 control-label">@Messages("genCMS.user.lbl.authorRole")</label>
+					<div class="col-sm-5">
+						 <div class="input-group">
+	      					<select id="authorRoleDD" class="form-control" data-bind="
+								    options: headVM.getProjectAuthorRoles(headVM.selectedProjectDD()),
+								    optionsText: 'name',
+								    optionsValue: 'name',
+								    value: headVM.selectedAuthorRoleDD"
+								    >
+							</select>
+					      <span class="input-group-btn">
+					        <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" data-content="Roles can only be assigned and will only be shown here if there is a job description document linked to the role! This can be done on every published, open document"><i class="fa fa-question-circle fa-lg"></i></button>
+					      </span>
+					    </div><!-- /input-group -->
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="button" class="btn btn-success" data-bind="click: function(){addAuthor(headVM.selectedProjectDD(),headVM.selectedAuthorRoleDD())}"><i class="fa fa-plus fa-lg"></i> @Messages("genCMS.user.lbl.addAuthor")</button>
+					</div>
+				</div>
+				
+				
+			</form>	   
+			<form class="form-horizontal well well-sm" role="form">
+				<h2>@Messages("genCMS.user.mgmt.projectadmin")</h2>
+				<div class="table-responsive">
+					<table class="table table-hover table-striped">
+					    <thead>
+					    	<tr>
+					    		<th>@Messages("genCMS.user.lbl.project")</th>
+					    		<th>@Messages("genCMS.user.lbl.removePrAdmin")</th>
+					    	</tr>
+				    	</thead>
+					    <tbody data-bind="foreach: selectedUser().projectadmin">
+					        <tr>
+					            <td data-bind="text: headVM.getProjectTitle(projectID())"></td>
+					            <td><button type="button" data-bind="click: function(){ $root.removeProjectAdmin(projectID()) }, clickBubble: false, enable: (headVM.loggedInUser().admin || headVM.isCurrentUserProjectAdminFor(projectID()))" class="btn btn-danger" ><i class="fa fa-trash-o fa-lg"/></button></td>
+					        </tr>     
+					    </tbody>
+					</table>
+				</div>
+				<hr>
+				<div class="form-group">
+					<label for="projectAdminDD" class="col-sm-2 control-label">@Messages("genCMS.user.lbl.project")</label>
+					<div class="col-sm-5">
+						<select id="projectAdminDD" class="form-control" data-bind="
+							    options: headVM.getProjectTitleArrayAdmin(),
+							    optionsText: 'title',
+							    optionsValue: 'id',
+							    value: headVM.selectedProjectDD
+							    ">
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						
+						<button type="button" class="btn btn-success" data-bind="click: function(){addProjectAdmin(headVM.selectedProjectDD())}"><i class="fa fa-plus fa-lg"></i> @Messages("genCMS.user.lbl.addPrAdmin")</button>
+					</div>
+				</div>
+				
+				
+			</form>	   
+		}
+		@if(SecureSocial.currentUser.get.asInstanceOf[GenUser].isAdmin){
+			<form class="form-horizontal well well-sm" role="form">
+				<h2>@Messages("genCMS.user.mgmt.admin")</h2>
+				<div class="form-group">
+					<label for="isAdminCHBX" class="col-sm-2 control-label">@Messages("genCMS.user.lbl.isAdmin")</label>
+					<div class="col-sm-3 formElement">
+						<input id="isAdminCHBX" type="checkbox" data-bind="checked: selectedUser().admin" disabled/>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<!-- ko ifnot: selectedUser().admin -->
+						<button type="button" class="btn btn-success" data-bind="click: function(){turnAdmin(true)}"><i class="fa fa-save fa-lg"></i> @Messages("genCMS.user.lbl.makeAdmin")</button>
+						<!-- /ko -->
+						<!-- ko if: selectedUser().admin -->
+						<button type="button" class="btn btn-success" data-bind="click: function(){turnAdmin(false)}"><i class="fa fa-save fa-lg"></i> @Messages("genCMS.user.lbl.removeAdmin")</button>
+						<!-- /ko -->
+					</div>
+				</div>
+			</form>	   
+		}
+		</div>	
+	}
+</div>

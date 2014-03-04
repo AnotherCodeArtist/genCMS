@@ -1,0 +1,91 @@
+@()(implicit request:Request[Any], lang: play.api.i18n.Lang)
+<!-- ko if: selectedDocument -->
+	<div>
+	  <div data-bind="genCMStemplateFull: selectedDocument"></div>
+	  <hr>
+	  <!--  ko if: ((headVM.isCurrentUserProjectAuthor()!="") || headVM.isCurrentUserAdmin()) -->
+		  <div>
+		  	<button type="button" class="btn btn-default" data-bind="click: goToCreateConnectedDocument"><i class="fa fa-plus fa-lg"></i> @Messages("genCMS.docView.createConnectedDocument")</button>
+		  </div>
+	  <!-- /ko -->
+	  <hr>
+	  <div id="connectedDocuments" class="hidden">
+	  <!--  ko if: (connectedDocs() != null && connectedDocs().length > 0) -->
+	  	<div class="panel panel-default">
+		    <div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordionDocTypeElements" href="#connectedDocs">
+		      <h3 class="panel-title accordion-toggle">      
+				@Messages("genCMS.docView.connectedDocuments")
+		      </h3>
+		    </div>
+		    <div id="connectedDocs" class="panel-collapse collapse">
+		      <div class="panel-body">
+					<!-- ko foreach: {data: connectedDocs, as: 'document'}-->
+						<!-- ko if: ($index()>0) -->
+							<hr>
+						<!-- /ko -->
+						<p class="genListDocument" data-bind="genCMStemplateList: document, click: $root.openDoc"></p>
+					<!-- /ko -->
+					<!-- ko if: availablePages() > 1 -->
+						<ul class="pagination">
+						  <li data-bind="attr: {'class': $root.connectedDocsCurrentPage() == 0 ? 'disabled' : ''}"><a href="#" data-bind="click: function() { if($root.connectedDocsCurrentPage()==0) return; else $root.loadNewestConnectedDocuments($root.connectedDocsCurrentPage()-1); }">&laquo;</a></li>
+					  	  <!-- ko foreach: new Array(connectedDocsAvailablePages()) -->
+							  <li data-bind="attr: {'class': $root.connectedDocsCurrentPage() == $index() ? 'active' : ''}"><a href="#" data-bind="text: $index()+1, click: function() { $root.loadNewestConnectedDocuments($index()); }"></a></li>
+			   			  <!-- /ko -->
+						  <li data-bind="attr: {'class': $root.connectedDocsCurrentPage() == $root.connectedDocsAvailablePages()-1 ? 'disabled' : ''}"><a href="#" data-bind="click: function() { if ($root.connectedDocsCurrentPage() == $root.connectedDocsAvailablePages()-1) return; else $root.loadNewestConnectedDocuments($root.connectedDocsCurrentPage()+1); }">&raquo;</a></li>
+						</ul>
+					<!-- /ko -->
+		      </div>
+		    </div>
+		</div>
+	  <!-- /ko -->
+	   
+	  </div>
+		
+		
+		
+		
+	  <!-- ko if: headVM.isCurrentUserProjectAdmin() -->
+		<hr>
+		<div class="page-header">
+	        <h3>@Messages("genCMS.docView.adminSection")</h3>
+		</div>
+		<div class="form-horizontal well well-sm">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">@Messages("genCMS.docView.editorial")</label>
+				<div class="col-sm-5">
+					<!-- ko if: (headVM.selectedProjectEditorial() != selectedDocument().id()) -->
+						<button type="button" class="btn btn-success" data-bind="click: setSelectedDocEditorial"><i class="fa fa-plus fa-lg"></i> @Messages("genCMS.docView.setEditorial")</button>
+					<!-- /ko -->
+					<!-- ko if: (headVM.selectedProjectEditorial() == selectedDocument().id()) -->
+						<label class="formElement">@Messages("genCMS.docView.isEditorial")</label>
+					<!-- /ko -->
+				</div>
+			</div>
+			<hr>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">@Messages("genCMS.docView.authorJob")</label>
+				<div class="col-sm-5">
+					<div class="input-group">
+      					<select id="authorRoleDD" class="form-control" data-bind="
+						    options: headVM.getProjectAuthorRoles(headVM.selectedProject(),true),
+						    optionsText: 'name',
+						    optionsValue: 'name',
+						    value: headVM.selectedAuthorRoleDD">
+						</select>
+						<span class="input-group-btn">
+				    	 	<button type="button" class="btn btn-success" data-bind="click: function(){$root.setAuthorRoleJobDescription(headVM.selectedAuthorRoleDD())}"><i id="addJobDocIcon" class="fa fa-plus fa-lg"></i> @Messages("genCMS.docView.setAuthorJob")</button>
+						</span>
+					</div><!-- /input-group -->
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">@Messages("genCMS.docView.editDoc")</label>
+				<div class="col-sm-5">
+					<button type="button" class="btn btn-success" data-bind="click: goToEditDocument"><i class="fa fa-plus fa-lg"></i> @Messages("genCMS.docView.editDoc")</button>
+				</div>
+			</div>
+		</div>
+	  <!-- /ko -->
+	  
+	</div>
+<!-- /ko -->

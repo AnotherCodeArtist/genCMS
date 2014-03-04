@@ -1,0 +1,362 @@
+/* 
+Custom CSS for...
+'Modern Business' HTML Theme by Start Bootstrap
+
+All Start Bootstrap themes are licensed under Apache 2.0. 
+For more info and more free Bootstrap 3 HTML themes, visit http://startbootstrap.com!
+*/
+
+/* Global Styles */
+html,body {
+	height: 100%;
+}
+
+body {
+	padding-top: 50px; /* body padding for fixed top nav */
+}
+
+.img-home-portfolio,.img-customer,.portfolio-item {
+	margin-bottom: 30px;
+}
+
+	margin-top: 15px;
+}
+
+/* Page Sections */
+.section,.section-colored {
+	padding: 50px 0;
+}
+
+.section-colored {
+	background-color: #e1e1e1;
+	/* change this to change the background color of a colored section */
+}
+
+.sidebar {
+	margin-top: 40px;
+}
+
+.sidebar ul {
+	border-radius: 5px;
+	padding: 5px;
+	border: 1px solid #cccccc;
+}
+
+/* Half Page Height Carousel Customization */
+.carousel {
+	height: 50%;
+}
+
+.item,.active,.carousel-inner {
+	height: 100%;
+}
+
+.fill {
+	width: 100%;
+	height: 100%;
+	background-position: center;
+	background-size: cover;
+}
+
+/* Social Icons Styles */
+.list-social-icons {
+	margin-bottom: 45px;
+}
+
+.tooltip-social a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.facebook-link a:hover {
+	color: #3b5998;
+}
+
+.linkedin-link a:hover {
+	color: #007fb1;
+}
+
+.twitter-link a:hover {
+	color: #39a9e0;
+}
+
+.google-plus-link a:hover {
+	color: #d14836;
+}
+
+/* Service Page Styles */
+.service-icon {
+	font-size: 50px;
+}
+
+/* 404 Page Styles */
+.error-404 {
+	font-size: 8em;
+}
+
+/* Pricing Page Styles */
+.price {
+	font-size: 4em;
+}
+
+.price-cents {
+	vertical-align: super;
+	font-size: 50%;
+}
+
+.price-month {
+	font-size: 35%;
+	font-style: italic;
+}
+
+/* Footer Styles */
+footer {
+	margin: 50px 0;
+}
+
+.doctypes tbody tr:hover {
+	cursor: pointer;
+}
+
+.genListDocument {
+	cursor: pointer;
+}
+
+.genListEditorial {
+	cursor: default;
+}
+
+.formElement {
+	padding-top: 7px;
+}
+
+.panel-heading {
+    cursor: pointer;
+}
+
+.validationMessage {color: Red;}
+.customMessage {color:Red;}
+
+body.dragging, body.dragging * {
+  cursor: move !important;
+}
+
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
+
+.tagDrop{
+	cursor: move;
+	heigth: 100px;
+}
+
+.tagDrag{
+	cursor: move;
+	heigth: 100px;
+}
+
+.dragged {
+    opacity: 0.5;
+    position: absolute;
+    top: 0;
+    z-index: 2000;
+}
+ol.vertical {
+    margin: 0 0 9px;
+}
+ol.vertical li {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border: 1px solid #CCCCCC;
+    color: #0088CC;
+    display: block;
+    margin: 5px;
+    padding: 5px;
+}
+ol.vertical li.placeholder {
+    border: medium none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+ol.vertical li.placeholder:before {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: rgba(0, 0, 0, 0) -moz-use-text-color rgba(0, 0, 0, 0) #FF0000;
+    border-image: none;
+    border-style: solid none solid solid;
+    border-width: 5px medium 5px 5px;
+    content: "";
+    height: 0;
+    left: -5px;
+    margin-top: -5px;
+    position: absolute;
+    top: -4px;
+    width: 0;
+}
+
+
+.ajax-loader {
+	background-image: url(/assets/images/ajax-loader.gif);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+#ajaxLoader img{
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:20px;
+}
+
+#map { height: 180px; }
+
+.mapcontent {
+	margin-top:10px;
+	margin-bottom:10px;
+	height: 200px;
+}
+
+/* CSS Method for adding Font Awesome Chevron Icons */
+ .accordion-toggle:after {
+    /* symbol for "opening" panels */
+    font-family:'FontAwesome';
+    content:"\f077";
+    float: right;
+    color: inherit;
+}
+.panel-heading.collapsed .accordion-toggle:after {
+    /* symbol for "collapsed" panels */
+    content:"\f078";
+}
+
+.navBadge {
+	float:right;
+}
+
+.navTagFilterText{
+	padding-right: 50px;
+}
+
+.tagNavigationChildLink{
+	margin-left: 20px;
+}
+
+.help-inline{
+	font-style:italic;
+	color: red;
+}
+
+.fa-stack-genCMS{
+	display: inline-block;
+    height: 1em;
+    line-height: 1em;
+    position: relative;
+    vertical-align: middle;
+    width: 1em;
+}
+
+
+.userroles {
+	font-size: 75%;
+	font-style: italic;
+}
+
+.flex-video {
+position: relative;
+padding-top: 25px;
+padding-bottom: 67.5%;
+height: 0;
+margin-bottom: 16px;
+overflow: hidden;
+}
+ 
+.flex-video.widescreen { padding-bottom: 57.25%; }
+.flex-video.vimeo { padding-top: 0; }
+ 
+.flex-video iframe,
+.flex-video object,
+.flex-video embed {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+}
+@media only screen and (max-device-width: 800px), only screen and (device-width: 1024px) and (device-height: 600px), only screen and (width: 1280px) and (orientation: landscape), only screen and (device-width: 800px), only screen and (max-width: 767px) {
+.flex-video { padding-top: 0; }
+}
+
+#contentRight{
+min-height:100px;
+}
+
+.tagSmall {
+    font-size: 0.9em;
+}
+.tagNormal {
+    font-size: 1em;
+}
+.tagMedium {
+    font-size: 1.5em;
+}
+.tagLarge {
+    font-size: 2em;
+}
+
+.btn-tag-remove{
+	margin: 2px;
+}
+
+
+/* Responsive Styles */
+
+/* hide the horizontal scrollbar */
+html {
+  overflow-x: hidden;
+}
+
+/* make all parent containers 100% height */
+html, body, .wrapper {
+  height: 100%;
+}
+
+/* move the toggle button to the left and give it
+   some breathing room */
+.navbar-toggle {
+  float: left;
+  margin-left: 10px;
+}
+
+
+@media screen and (max-width: 767px) {
+
+  /* outer div */
+  .row-offcanvas {
+    position: relative;
+    left: 0;
+    -webkit-transition: left .3s ease-in;
+    -most-transition: left .3s ease-in;
+    transition: left .3s ease-in;
+  }
+  
+  /* sidebar */
+  .sidebar-offcanvas {
+    left: -80%;
+    width: 80%;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background-color: #F7F7F7;
+    padding: 0px;
+  }
+  
+  /* content */
+  .row-offcanvas.active {
+    left: 80%;
+  }
+  
+}

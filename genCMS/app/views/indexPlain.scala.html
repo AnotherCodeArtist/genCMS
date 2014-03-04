@@ -1,0 +1,71 @@
+@(user: String="")(implicit request:Request[Any], lang: play.api.i18n.Lang)
+
+@import helper._
+<div class="container row-offcanvas wrapper">
+      <div class="row">
+        <!-- <div id="sidebarLeft" class="col-xs-12 col-sm-3 sidebar-offcanvas">
+			<div class="well well-sm">
+	        	<a id="hideSidebarBtn" data-toggle="offcanvas" class="btn hidden-xs"><i class="fa fa-chevron-up"></i></a>
+				leftSidebar()
+          </div>
+        </div> -->
+        <div id="contentRight" class="col-sm-12">
+        	<a id="showSidebarBtn" style="text-align: left;" data-toggle="offcanvas" class="hidden-xs hidden btn"><i class="fa fa-chevron-down"></i></a>
+          	<div id="mainContent">
+          		@projectStartPage()
+          	</div>
+          	<div id="fullDoc" class="hidden">
+          		@document.documentFullView()
+          	</div>
+          	<div id="searchMap" class="hidden">
+          		<div id="map"></div>
+          		<button type="button" class="btn btn-default" data-bind="click: function(){ centerMapViewCurrentPosition(); }, clickBubble: false"><i class="fa fa-search"/> @Messages("genCMS.docEdit.geoLoc.showCurrPos")</button>
+          		<div id="mapSearchResults">
+          		<!-- ko if: selectedPOIS -->
+          			<div class="table-responsive">
+						<table class="doctypes table table-hover">
+						<thead>
+							<tr>
+							<th></th>
+							<th></th>
+							<th></th>
+							</tr>
+		    			</thead>
+						<tbody data-bind="foreach: $root.selectedPOIS">
+					        <tr> 
+					            <td data-bind="text: fields.geoloc.display_name"></td>
+					            <td><button type="button" class="btn btn-primary" data-bind="click: function(){ $root.goToDocument(_id.$oid) }, clickBubble: false"><i class="fa fa-check"/> @Messages("genCMS.docView.geoLoc.select")</button> </td>
+					            <td><button type="button" class="btn btn-primary" data-bind="click: function(){ centerMapView(fields.geoloc.lat,fields.geoloc.lon,16) }, clickBubble: false"><i class="fa fa-search"/> @Messages("genCMS.docEdit.geoLoc.show")</button> </td>
+					    	    </tr>     
+					 	   </tbody>
+					    </table>
+					 </div>
+          		<!-- /ko -->
+          		</div>
+          	</div>
+        </div>
+      </div>
+</div>
+<script>
+  $(function(){
+    // initialize the kendo ui panelbar
+    // handle the #toggle click event
+	$("#toggle").on("click", function() {
+	  $(".row-offcanvas").toggleClass("active");
+	});
+
+	$("#hideSidebarBtn").on("click", function() {
+		$("#sidebarLeft").toggleClass("hidden");
+		$("#showSidebarBtn").toggleClass("hidden");
+		$("#hideSidebarBtn").toggleClass("hidden");
+		$('#contentRight').toggleClass("col-sm-10 col-sm-12");
+	});
+
+	$("#showSidebarBtn").on("click", function() {
+		$("#sidebarLeft").toggleClass("hidden");
+		$("#showSidebarBtn").toggleClass("hidden");
+		$("#hideSidebarBtn").toggleClass("hidden");
+		$('#contentRight').toggleClass("col-sm-10 col-sm-12");
+	});
+  });
+</script>

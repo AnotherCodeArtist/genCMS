@@ -1,0 +1,27 @@
+@(user: String="")(implicit request:Request[Any], lang: play.api.i18n.Lang)
+<div class="container">
+	 <div id="projectsList" visible = "true">
+	<!--  <pre data-bind="text: ko.toJSON(docTypes, null, 2)"></pre>-->
+	 <!-- <pre data-bind="text: ko.toJSON(selectedDocType, null, 2)"></pre> -->
+		<div class="page-header">
+			<h1>Available Projects:</h1>
+		</div>
+		
+		<div class="panel-group" id="accordionProjects">
+		<!-- ko foreach: {data: projects, as:'element'} -->
+				<div class="panel panel-info">
+				    <div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordionDocTypeElements" data-bind="attr: {href: '#'+ $index()}">
+				      <h4 class="panel-title accordion-toggle">      
+				          <button type="button" class="btn btn-info" data-bind="click: $root.selectProject, clickBubble: false" ><i class="fa fa-check "/></button>
+				          <strong data-bind="text: title"/>   <span class="userroles" data-bind="text: headVM.getProjectRolesCurrentUser(element._id.$oid())"></span>
+				      </h4>
+				    </div>
+				    <div data-bind="attr: {id:  $index}" class="panel-collapse collapse">
+				      <div class="panel-body">
+							<p data-bind="html: description"></p>
+				      </div>
+				    </div>
+				</div>
+		<!-- /ko -->
+	</div>
+</div>

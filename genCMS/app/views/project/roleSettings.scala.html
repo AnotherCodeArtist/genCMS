@@ -1,0 +1,48 @@
+@* basicSettings Template File *@
+@(param: Any)(implicit request:Request[Any], lang: play.api.i18n.Lang)
+
+<div class="form-horizontal well well-sm">
+	<div class="table-responsive">
+		<table class="table table-hover table-striped">
+		    <thead>
+		    	<tr>
+		    		<th>@Messages("genCMS.project.role.name")</th>
+		    		<th>@Messages("genCMS.project.role.job")</th>
+		    		<th>@Messages("genCMS.project.role.remove")</th>
+		    	</tr>
+	    	</thead>
+		    <tbody data-bind="foreach: {data: selectedProject().authorroles, as: 'authorrole'}">
+		        <tr>
+		            <td data-bind="text: authorrole.name"></td>
+		            <!-- ko if: authorrole.jobdoc()=="" -->
+		            	<!-- 
+		            	 <td><button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" data-content="TO SOMETHING AGAINST IT">NO DOC YET</button></td>
+		            	 -->
+		            	<td>@Messages("genCMS.project.role.noJobDesc")</button></td>
+		            <!-- /ko -->
+		            <!--  
+		            $('[data-toggle=popover]').popover()
+		            -->
+		            <!-- ko if: authorrole.jobdoc()!="" -->
+			            <td><button type="button" class="btn btn-default" data-bind="click: function(){$root.openDoc(authorrole.jobdoc())}">@Messages("genCMS.project.role.openJobDesc")</button></td>
+		            <!-- /ko -->
+		            <td><button type="button" data-bind="click: function(){ $root.removeAuthorRole(authorrole) }, clickBubble: false" class="btn btn-danger" ><i class="fa fa-trash-o fa-lg"/></button></td>
+		        </tr>
+		    </tbody>
+		</table>
+	</div>
+	<hr>
+	<div class="form-group">
+		<label for="authorRoleInput" class="col-sm-2 control-label">@Messages("genCMS.project.role.name")</label>
+		<div class="col-sm-5">
+			<input id="authorRoleInput" type="text" class="form-control" data-bind="value: newAuthorRole, valueUpdate: 'afterkeydown'" placeholder="@Messages("genCMS.project.role.name")"/>
+			<span id="authorRoleInputHelp1" data-bind="attr: {class: (newAuthorRoleUnique()==false && newAuthorRole()!='') ? 'help-inline' : 'help-inline hidden'}">@Messages("genCMS.project.role.unique")</span>
+			<span id="authorRoleInputHelp2" data-bind="attr: {class: newAuthorRole()=='' ? 'help-inline' : 'help-inline hidden'}">@Messages("genCMS.project.role.notEmtpy")</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button type="button" class="btn btn-success" data-bind="click: function(){$root.addAuthorRole()}, enable: (newAuthorRoleUnique()==true && newAuthorRole()!='')"><i class="fa fa-plus fa-lg"></i> @Messages("genCMS.project.role.add")</button>
+		</div>
+	</div>
+</div>	

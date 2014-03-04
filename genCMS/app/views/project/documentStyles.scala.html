@@ -1,0 +1,54 @@
+@* basicSettings Template File *@
+@(param: Any)(implicit request:Request[Any], lang: play.api.i18n.Lang)
+  <div class="panel-group" id="accordionDocTypeElements">
+		<!-- ko foreach: styles -->
+				<div class="panel panel-info">
+				    <div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordionDocTypeElements" data-bind="attr: {href: '#col'+$index()}"">
+				      <h4 class="panel-title accordion-toggle">      
+				           "<span data-bind="text:name"></span>"
+				      </h4>
+				    </div>
+				    <div data-bind="attr: {id: 'col'+$index()}" class="panel-collapse collapse">
+				      <div class="panel-body">
+				      		<div class="form-horizontal well well-sm">
+							    <div class="form-group">
+									<label for="tagsInput" class="col-sm-2 control-label">@Messages("genCMS.project.styles.styleName")</label>
+									<div class="col-sm-5">
+				      					<input type="text" class="form-control" data-bind="value: name, valueUpdate: 'afterkeydown'"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="style" class="col-sm-2 control-label">@Messages("genCMS.project.styles.style")</label>
+									<div class="col-sm-5">
+										<textarea data-bind="value: style"></textarea>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="tagsInput" class="col-sm-2 control-label"></label>
+									<div class="col-sm-5">
+										<button type="button" class="btn btn-success" data-bind="click: $root.saveStyle"><i class="fa fa-save fa-lg"/> @Messages("genCMS.project.styles.save")</button>
+										<button type="button" class="btn btn-danger" data-bind="click: $root.deleteStyle, clickBubble: false"><i class="fa fa-trash-o fa-lg"/> @Messages("genCMS.project.styles.delete")</button>
+									</div>
+								</div>
+						    </div>
+				      </div>
+				    </div>
+				</div>
+		<!-- /ko -->
+	</div>
+	<div class="form-horizontal well well-sm">
+	    <div class="form-group">
+			<label for="tagsInput" class="col-sm-2 control-label">@Messages("genCMS.project.styles.styleName")</label>
+			<div class="col-sm-5">
+				<div class="input-group">
+					<input id="styleInput" type="text" class="form-control" data-bind="value: newStyle, valueUpdate: 'afterkeydown'" placeholder="@Messages("genCMS.project.styles.styleName")"/>
+				      <span class="input-group-btn">
+					    <button type="button" class="btn btn-success" data-bind="click: function(){$root.addStyle()}, enable: (newStyle()!='')"><i class="fa fa-plus fa-lg"></i> @Messages("genCMS.project.styles.addStyle")</button>
+					  </span>
+			    </div><!-- /input-group -->
+				<span id="styleInputHelp2" data-bind="attr: {class: newStyle()=='' ? 'help-inline' : 'help-inline hidden'}">@Messages("constraint.required")</span>
+			</div>
+		</div>
+    </div>
+	
+	

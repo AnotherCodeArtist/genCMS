@@ -1,0 +1,573 @@
+@(user: String="")(implicit request:Request[Any], lang: play.api.i18n.Lang)
+<div class="container">
+	<script type="text/javascript">
+	
+		var imageUploadsToInit = new Array();
+		var audioUploadsToInit = new Array();
+		var videoUploadsToInit = new Array();
+		
+		var addFileUploadInit = function(initObject){
+			//console.log("ADD TO INIT");
+			//console.log(initObject);
+			switch(initObject.type){
+			case "image": {
+				imageUploadsToInit.push(initObject);
+				break;
+				}
+			case "audio": {
+				audioUploadsToInit.push(initObject);
+				break;
+			}
+			case "video":{
+				videoUploadsToInit.push(initObject);
+				break;
+			}
+			}
+		}
+
+		var initFileUpload = function(uploader, acceptedFileTypes) {
+			//console.log("init");
+			//console.log("uploader");
+			//console.log(uploader);
+			//console.log("regex");
+			//console.log(acceptedFileTypes);
+			$('#'+uploader.fileUploadID).fileupload({
+				acceptFileTypes: acceptedFileTypes,
+				url: uploader.url,
+				done: function(e, data){
+					//console.log("Upload DONE");
+					//console.log(data.result);
+					if(data.result.res=="KO"){
+						//console.log(data.result.error);
+					}
+					//console.log(data.result.data['$oid']);
+					setTimeout(function(){
+						$('#'+uploader.targetID).val(data.result.data['$oid']).change();		
+						if(uploader.type == "audio"){
+							init_js_audioPlayer(data.result.data['$oid'],uploader.playerID);
+						}else if(uploader.type == "video"){
+							init_js_videoPlayer(data.result.data['$oid'],uploader.playerID);
+						}
+				    },200);
+				},
+				progress: function (e, data) {
+					
+		            var progress = parseInt(data.loaded / data.total * 100, 10);
+		            //console.log(progress+ " progress!");
+	     	       $('#'+uploader.progressBarID+' .progress-bar').css(
+		                'width',
+		                progress + '%'
+		            );
+		        }
+			}).on('fileuploadprocessalways', function (e, data) {
+			    var currentFile = data.files[data.index];
+			    if (data.files.error && currentFile.error) {
+			      // there was an error, do something about it
+			      //console.log(currentFile.error);
+			    }
+			  }).prop('disabled', !$.support.fileInput)
+		    .parent().addClass($.support.fileInput ? undefined : 'disabled');
+		}
+
+		function callInitForUploaders(){
+
+			var acceptedFileTypes = /(\.|\/)(gif|jpe?g|png)$/i;
+			//init image uploaders
+			$.each(imageUploadsToInit, function(index, uploader){
+				initFileUpload(uploader, acceptedFileTypes);
+			});
+			//init audio uploaders
+			acceptedFileTypes = /(\.|\/)(mp3)$/i;
+			$.each(audioUploadsToInit, function(index, uploader){
+				initFileUpload(uploader, acceptedFileTypes);
+				if(uploader.file!=""){	//init audio player
+					init_js_audioPlayer(uploader.file, uploader.playerID);
+				}	
+			});
+			//init video uploaders
+			acceptedFileTypes = /(\.|\/)(m4v)$/i;
+			$.each(videoUploadsToInit, function(index, uploader){
+				initFileUpload(uploader, acceptedFileTypes);
+				if(uploader.file!="" && uploader.file.substring(0,8) != 'YOUTUBE:'){	//init audio player
+					init_js_videoPlayer(uploader.file, uploader.playerID);
+				}
+			});
+				
+
+			
+		}
+		
+		function init_js_audioPlayer(file,location) {
+			//console.log("init audio player: "+file+" "+location);
+			jQuery("#jquery_jplayer_" + location).jPlayer( {
+			    ready: function () {
+					$(this).jPlayer("setMedia", {
+				mp3: "/audio/"+file
+			      });
+			    },
+			    play: function() {
+			    	$(this).jPlayer("pauseOthers");
+			    },
+			    cssSelectorAncestor: "#jp_interface_" + location,
+			    swfPath: "/assets/swf",
+			    //solution:"flash",
+			  });
+		return;
+		}
+
+		function init_js_videoPlayer(file,location) {
+				//console.log("init videoplayer");
+				//console.log(file);
+				//console.log(location);
+			jQuery("#jquery_jplayer_v_" + location).jPlayer( {
+			    ready: function () {
+					$(this).jPlayer("setMedia", {
+				m4v: "/video/"+file
+			      });
+			    },
+			    play: function() {
+			    	$(this).jPlayer("pauseOthers");
+			    },
+			    cssSelectorAncestor: "#jp_container_" + location,
+			    swfPath: "/assets/swf",
+			    supplied: "m4v"
+			   //solution:"flash",
+			  });
+		return;
+		}
+		
+	</script>
+	<div id="documentEdit">
+		 <!-- 
+		 <pre data-bind="text: ko.toJSON(selectedDocType, null, 2)"></pre>-->
+		<!-- 
+		<pre data-bind="text: ko.toJSON(elements(), null, 2)"></pre>-->
+  <!-- 
+  <pre data-bind="text: ko.toJSON(elements(), null, 2)"></pre> 
+  -->
+  <!-- 
+   <pre data-bind="text: ko.toJSON(document(), null, 2)"></pre>
+   -->
+  <!--<pre data-bind="text: ko.toJSON($root.document().fields.name, null, 2)"></pre> -->
+  <!--<pre data-bind="text: ko.toJSON(template(), null, 2)"></pre>-->
+  <!--<pre data-bind="text: ko.toJSON(listTemplate(), null, 2)"></pre>-->
+        <div class="page-header">
+	        <h1>@Messages("genCMS.docEdit.title") "<strong data-bind="text: document().title"></strong>":</h1>
+		</div>
+		<!-- ko ifnot: document().inEdit -->
+			<div class="alert alert-warning">
+				<!-- ko if: document().published -->@Messages("genCMS.docEdit.statusPub")<!-- /ko -->
+	           	<!-- ko if: document().deleted -->@Messages("genCMS.docEdit.statusDel")<!-- /ko -->
+	           	<!-- ko if: (!document().inEdit() && !document().deleted() && !document().published()) -->@Messages("genCMS.docEdit.statusWaitPub")<!-- /ko -->
+			</div>
+		<!-- /ko -->
+        <div class="form-horizontal">
+			<div class="form-group">
+				<label for="documentTitle" class="col-sm-2 control-label">@Messages("genCMS.docEdit.docName"):</label>
+				<div class="col-sm-5">
+					<input id="documentTitle" type="text" class="form-control" data-bind="value: document().title, valueUpdate: 'afterkeydown', enable: document().inEdit" placeholder="Document Name"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">@Messages("genCMS.docEdit.createDate"):</label>
+				<div class="col-sm-5">
+					<label class="formElement" id="createdAt" data-bind="text: timeStampToDate(document().fields['createdAt'].$date(), '@Messages("genCMS.locale")')"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="documentTitle" class="col-sm-2 control-label">@Messages("genCMS.docEdit.modDate"):</label>
+				<div class="col-sm-5">
+					<label class="formElement" id="createdAt" data-bind="text: timeStampToDate(document().fields['modifiedAt'].$date(), '@Messages("genCMS.locale")')"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="documentTitle" class="col-sm-2 control-label">@Messages("genCMS.docEdit.status"):</label>
+				<div class="col-sm-5">
+					<label class="formElement" id="status">
+						<!-- ko if: document().inEdit -->@Messages("genCMS.docEdit.statusEdit")<!-- /ko -->
+		            	<!-- ko if: document().published -->@Messages("genCMS.docEdit.statusPub")<!-- /ko -->
+		            	<!-- ko if: document().deleted -->@Messages("genCMS.docEdit.statusDel")<!-- /ko -->
+		            	<!-- ko if: (!document().inEdit() && !document().deleted() && !document().published()) -->@Messages("genCMS.docEdit.statusWaitPub")<!-- /ko -->
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="page-header">
+			<h2>@Messages("genCMS.docEdit.fields"):</h2>
+		</div>
+        <!-- "<strong data-bind="text: selectedDocType().name"></strong>"
+        "<strong data-bind="text: selectedDocType().author"></strong>"
+        "<strong data-bind="text: selectedDocType().createdAt ? selectedDocType().createdAt.$date : ''" ></strong>"
+        "<strong data-bind="text: selectedDocType().createdAt ? selectedDocType().modifiedAt.$date : ''"></strong>"
+        -->
+        
+		<div class="form-horizontal">
+		<!-- ko foreach: {data: elements(), as:'element'} -->
+			 <!-- 
+			 <pre data-bind="text: ko.toJSON(element, null, 2)"></pre>
+			 -->
+			 <!-- 
+			 -->
+			<!-- ko if: type()=="std" -->
+			<!-- /ko -->
+			<!-- ko if: type()=="textLine" -->
+				<div class="form-group well well-sm">
+					<label data-bind="attr: {for: 'textLine'+fname().replace(/\s/g,'-')}, text: required()==true ? $root.getLocale(element.fname(),'@Messages("genCMS.locale")')+' *' : $root.getLocale(element.fname(),'@Messages("genCMS.locale")')" class="col-sm-2 control-label"></label>
+					<div class="col-sm-5">
+						<input type="text" class="form-control" data-bind="value: $root.document().fields[fname()], valueUpdate: 'afterkeydown', attr: {id: 'textline'+fname().replace(/\s/g,'-')}, enable: $root.document().inEdit" placeholder=""/>
+						<span data-bind="attr:{id: 'Validation_'+fname().replace(/\s/g,'-')}" type="validation" class="help-inline hidden"></span>
+					</div>
+				</div>
+			<!-- /ko -->
+			<!-- ko if: type()=="HTML" -->
+				<div class="form-group well well-sm">
+					<label data-bind="attr: {for: 'html'+fname().replace(/\s/g,'-')}, text: required()==true ? $root.getLocale(element.fname(),'@Messages("genCMS.locale")')+' *' : $root.getLocale(element.fname(),'@Messages("genCMS.locale")')" class="col-sm-2 control-label"></label>
+					<div class="col-sm-10">
+						<textarea data-bind="attr: {id: 'html'+fname().replace(/\s/g,'-')}, wysiwyg: $root.document().fields[fname()], enable: $root.document().inEdit"/>
+						<span data-bind="attr:{id: 'Validation_'+fname().replace(/\s/g,'-')}" type="validation" class="help-inline hidden"></span>
+					</div>
+				</div>
+				
+			<!-- /ko -->
+			<!-- ko if: type()=="img" -->
+				<div class="form-group well well-sm">
+					<label data-bind="attr: {for: 'image'+fname().replace(/\s/g,'-')}, text: required()==true ? $root.getLocale(element.fname(),'@Messages("genCMS.locale")')+' *' : $root.getLocale(element.fname(),'@Messages("genCMS.locale")')" class="col-sm-2 control-label"></label>
+					<div class="col-sm-3">
+					<div data-bind="attr:{class: $root.document().fields[fname()]()!='' ? '' : 'hidden'}">
+						<input class="hidden" type="text" data-bind="value: $root.document().fields[fname()], attr:{id:'input'+fname().replace(/\s/g,'-')}"/>
+						<img class="img-thumbnail" data-bind="attr:{ src: $root.document().fields[fname()]()!='' ? 'thumb/img/' + $root.document().fields[fname()]() : '' }"/>
+					</div>
+						<span class="btn btn-success fileinput-button"><i class="fa fa-plus"></i><span> @Messages("genCMS.docEdit.uploadImg")</span>
+     						<input data-bind="attr:{id:'fileUpload'+fname().replace(/\s/g,'-')}, enable: $root.document().inEdit" type="file" file-accept="jpeg, jpg" name="image" multiple>
+    					</span>
+    					<div data-bind="attr:{id:'progress'+fname().replace(/\s/g,'-')}" class="progress progress-striped"><div class="progress-bar progress-bar-success"></div></div>
+    					<span data-bind="attr:{id: 'Validation_'+fname().replace(/\s/g,'-')}" type="validation" class="help-inline hidden"></span>
+					</div>
+				</div>
+				 <!-- ko text: addFileUploadInit({
+				 	url: "img/52e52fab5f0000350ae1c780", 
+				 	fileUploadID:'fileUpload'+fname().replace(/\s/g,'-'),
+				 	targetID:'input'+fname().replace(/\s/g,'-'),
+				 	progressBarID:'progress'+fname().replace(/\s/g,'-'),
+				 	type: "image",
+				 	fname: ""}); -->
+				<!-- /ko -->
+			<!-- /ko -->
+			<!-- ko if: type()=="audio" -->
+				<div class="form-group well well-sm">
+					<label data-bind="attr: {for: 'image'+fname().replace(/\s/g,'-')}, text: required()==true ? $root.getLocale(element.fname(),'@Messages("genCMS.locale")')+' *' : $root.getLocale(element.fname(),'@Messages("genCMS.locale")')" class="col-sm-2 control-label"></label>
+					<div class="col-sm-3">
+					<div data-bind="attr:{class: $root.document().fields[fname()]()!='' ? '' : 'hidden'}">
+						<input class="hidden" type="text" data-bind="value: $root.document().fields[fname()], attr:{id:'input'+fname().replace(/\s/g,'-')}"/>
+						<div data-bind="attr:{id:'jquery_jplayer_'+(audioUploadsToInit.length+1)}" class="jp-jplayer"></div>
+						  
+				  		<div data-bind="attr:{id:'jp_interface_'+(audioUploadsToInit.length+1)}" class="jp-audio">
+						    <div class="jp-type-single">
+						      <div class="jp-gui jp-interface">
+						        <ul class="jp-controls">
+						          <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+						          <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+						          <li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
+						          <li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
+						          <li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
+						          <li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li>
+						        </ul>
+						        <div class="jp-progress">
+						          <div class="jp-seek-bar">
+						            <div class="jp-play-bar"></div>
+						          </div>
+						        </div>
+						        <div class="jp-volume-bar">
+						          <div class="jp-volume-bar-value"></div>
+						        </div>
+						        <div class="jp-time-holder">
+						          <div class="jp-current-time"></div>
+						          <div class="jp-duration"></div>
+						          <ul class="jp-toggles">
+						            <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
+						            <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
+						          </ul>
+						        </div>
+						      </div>
+						      
+						      <div class="jp-no-solution">
+						        <span>Update Required</span>
+						        To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+						      </div>
+						    </div>
+						  </div>
+					</div>
+						<span class="btn btn-success fileinput-button"><i class="fa fa-plus"></i><span> @Messages("genCMS.docEdit.uploadAudio")</span>
+     						<input data-bind="attr:{id:'fileUpload'+fname().replace(/\s/g,'-')}, enable: $root.document().inEdit" type="file" name="audio" multiple>
+    					</span>
+    					<div data-bind="attr:{id:'progress'+fname().replace(/\s/g,'-')}" class="progress progress-striped"><div class="progress-bar progress-bar-success"></div></div>
+    					<span data-bind="attr:{id: 'Validation_'+fname().replace(/\s/g,'-')}" type="validation" class="help-inline hidden"></span>
+    				<!-- /ko -->
+					</div>
+				</div>
+				 <!-- ko text: addFileUploadInit({
+					 	url: "audio/52e52fab5f0000350ae1c780", 
+					 	fileUploadID: 'fileUpload'+fname().replace(/\s/g,'-'),
+					 	playerID: (audioUploadsToInit.length+1),
+					 	targetID:'input'+fname().replace(/\s/g,'-'),
+					 	progressBarID:'progress'+fname().replace(/\s/g,'-'),
+					 	type: "audio",
+					 	file: $root.document().fields[fname()](),
+					 	fname: ""
+			 		});  -->
+				<!-- /ko -->
+			<!-- /ko -->
+			<!-- ko if: type()=="video" -->
+				<div class="form-group well well-sm">
+					<label data-bind="attr: {for: 'video'+fname().replace(/\s/g,'-')}, text: required()==true ? $root.getLocale(element.fname(),'@Messages("genCMS.locale")')+' *' : $root.getLocale(element.fname(),'@Messages("genCMS.locale")')" class="col-sm-2 control-label"></label>
+					<div class="col-sm-3">
+						<div data-bind="attr:{class: ($root.document().fields[fname()]()!='' && $root.document().fields[fname()]().substring(0,8) === 'YOUTUBE:')  ? '' : 'hidden'}">
+							<div class="flex-video widescreen" style="margin: 0 auto;text-align:center;">
+								<iframe data-bind="attr:{src:'//www.youtube.com/embed/'+$root.document().fields[fname()]().substring(8)+'?rel=0'}" frameborder="0" allowfullscreen></iframe>
+							</div>
+						</div>
+							<input class="hidden" type="text" data-bind="value: $root.document().fields[fname()], attr:{id:'input'+fname().replace(/\s/g,'-')}"/>
+						<div data-bind="attr:{class: ($root.document().fields[fname()]()!='' && $root.document().fields[fname()]().substring(0,8) != 'YOUTUBE:')  ? '' : 'hidden'}">
+							
+							<div data-bind="attr:{id:'jp_container_'+(videoUploadsToInit.length+1)}" class="jp-video ">
+							    <div class="jp-type-single">
+							      <div data-bind="attr:{id:'jquery_jplayer_v_'+(videoUploadsToInit.length+1)}" class="jp-jplayer"></div>
+							      <div class="jp-gui">
+							        <div class="jp-video-play">
+							          <a href="javascript:;" class="jp-video-play-icon" tabindex="1">play</a>
+							        </div>
+							        <div class="jp-interface">
+							          <div class="jp-progress">
+							            <div class="jp-seek-bar">
+							              <div class="jp-play-bar"></div>
+							            </div>
+							          </div>
+							          <div class="jp-current-time"></div>
+							          <div class="jp-duration"></div>
+							          <div class="jp-controls-holder">
+							            <ul class="jp-controls">
+							              <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+							              <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+							              <li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
+							              <li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
+							              <li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
+							              <li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li>
+							            </ul>
+							            <div class="jp-volume-bar">
+							              <div class="jp-volume-bar-value"></div>
+							            </div>
+							            <ul class="jp-toggles">
+							              <li><a href="javascript:;" class="jp-full-screen" tabindex="1" title="full screen">full screen</a></li>
+							              <li><a href="javascript:;" class="jp-restore-screen" tabindex="1" title="restore screen">restore screen</a></li>
+							              <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
+							              <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
+							            </ul>
+							          </div>
+							        </div>
+							      </div>
+							      <div class="jp-no-solution">
+							        <span>Update Required</span>
+							        To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+							      </div>
+							    </div>
+							  </div>
+						</div>
+						<!-- ko if: $root.document().inEdit -->
+							<span class="btn btn-success fileinput-button"><i class="fa fa-plus"></i><span> @Messages("genCMS.docEdit.uploadVideo")</span>
+	     						<input data-bind="attr:{id:'fileUpload'+fname().replace(/\s/g,'-')}, enable: $root.document().inEdit" type="file" name="video">
+	    					</span>
+	    					<div data-bind="attr:{id:'progress'+fname().replace(/\s/g,'-')}" class="progress progress-striped"><div class="progress-bar progress-bar-success"></div></div>
+						<!-- /ko -->
+						<div>
+							<label class="control-label">@Messages("genCMS.docEdit.addYoutube"):</label>
+	   						<input data-bind="attr:{id:'youtube'+fname().replace(/\s/g,'-')}" class="form-control" type="text" placeholder="Youtube URL"/>
+	   						<button type="button" class="btn btn-success" data-bind="click: function(){ $root.addYoutubeVideo($('#youtube'+fname().replace(/\s/g,'-')).val(),fname()); }" ><i class="fa fa-plus"></i><span> @Messages("genCMS.docEdit.addYoutube")</span></button>
+						</div>
+						<span data-bind="attr:{id: 'Validation_'+fname().replace(/\s/g,'-')}" type="validation" class="help-inline hidden"></span>
+					</div>
+				</div>
+				<!-- ko text: addFileUploadInit({
+				 	url: "video/52e52fab5f0000350ae1c780", 
+				 	fileUploadID:'fileUpload'+fname().replace(/\s/g,'-'),
+				 	playerID: (videoUploadsToInit.length+1),
+				 	targetID:'input'+fname().replace(/\s/g,'-'),
+				 	progressBarID:'progress'+fname().replace(/\s/g,'-'),
+				 	type: "video",
+				 	file: $root.document().fields[fname()](),
+				 	fname: ""}); -->
+				<!-- /ko -->
+			<!-- /ko -->
+			<!-- ko if: type()=="number" -->
+				<div class="form-group well well-sm">
+					<label data-bind="attr: {for: 'image'+fname().replace(/\s/g,'-')}, text: required()==true ? $root.getLocale(element.fname(),'@Messages("genCMS.locale")')+' *' : $root.getLocale(element.fname(),'@Messages("genCMS.locale")')" class="col-sm-2 control-label"></label>
+					<div class="col-sm-3 formElement">
+						<input type="number" step="0.1" data-bind="value: $root.document().fields[fname()], attr: {id:'input'+fname().replace(/\s/g,'-')}, enable: $root.document().inEdit"/>
+						<span data-bind="attr:{id: 'Validation_'+fname().replace(/\s/g,'-')}" type="validation" class="help-inline hidden"></span>
+					</div>
+				</div>
+			<!-- /ko -->
+			<!-- ko if: type()=="boolean" -->
+				<div class="form-group well well-sm">
+					<label data-bind="attr: {for: 'image'+fname().replace(/\s/g,'-')}, text: required()==true ? $root.getLocale(element.fname(),'@Messages("genCMS.locale")')+' *' : $root.getLocale(element.fname(),'@Messages("genCMS.locale")')" class="col-sm-2 control-label"></label>
+					<div class="col-sm-3 formElement">
+						<input type="checkbox" data-bind="checked: $root.document().fields[fname()], attr: {id:'input'+fname().replace(/\s/g,'-')}, enable: $root.document().inEdit"/>
+						<span data-bind="attr:{id: 'Validation_'+fname().replace(/\s/g,'-')}" type="validation" class="help-inline hidden"></span>
+					</div>
+				</div>
+			<!-- /ko -->
+			<!-- ko if: type()=="geoLoc" -->
+				<div class="form-group well well-sm">
+					<label data-bind="attr: {for: 'image'+fname().replace(/\s/g,'-')}, text: required()==true ? $root.getLocale(element.fname(),'@Messages("genCMS.locale")')+' *' : $root.getLocale(element.fname(),'@Messages("genCMS.locale")')" class="col-sm-2 control-label"></label>
+					<div class="col-sm-10 formElement">
+						<!-- ko if: $root.document().fields[fname()].lat() != null && $root.document().fields[fname()].lon() != null -->
+								<div class="form-group">							
+									<label class="col-sm-2 control-label">@Messages("genCMS.docEdit.geoLoc.display"):</label>
+									<div class="col-sm-10">
+										<input class="form-control" data-bind="value: $root.document().fields[fname()].display_name, enable: $root.document().inEdit" type="text" placeholder="Address Display"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">@Messages("genCMS.docEdit.geoLoc.lat"):</label>
+									<div class="col-sm-10">
+										<input class="form-control" data-bind="value: $root.document().fields[fname()].lat, enable: $root.document().inEdit" type="text" placeholder="Latitude"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">@Messages("genCMS.docEdit.geoLoc.lon"):</label>
+									<div class="col-sm-10">
+										<input class="form-control" data-bind="value: $root.document().fields[fname()].lon, enable: $root.document().inEdit" type="text" placeholder="Longitude"/>
+									</div>
+								</div>
+						<!-- /ko -->
+						<div id="map"></div>
+						<hr>
+						<!-- 
+						<pre data-bind="text: ko.toJSON($root.lookedUpAddresses(), null, 2)"></pre>
+						 -->
+						 <div class="table-responsive">
+							<table class="doctypes table table-hover">
+							<thead>
+								<tr>
+								<th></th><th></th><th></th>
+								</tr>
+			    			</thead>
+							<tbody data-bind="foreach: $root.lookedUpAddresses()">
+						        <tr> 
+						        <!-- 
+						         data-bind="click: $root.goToEditDocType">
+						         -->
+						            
+						            <td data-bind="text: display_name"></td>
+						            <td><button id= "as" type="button" class="btn btn-primary" data-bind="click: function(){ $root.selectAddress($index()) }, clickBubble: false"><i class="fa fa-check"/> @Messages("genCMS.docEdit.geoLoc.select")</button> </td>
+						            <td><button id= "as" type="button" class="btn btn-primary" data-bind="click: function(){ centerMapView(lat(),lon(),16) }, clickBubble: false"><i class="fa fa-search"/> @Messages("genCMS.docEdit.geoLoc.show")</button> </td>
+						            
+						    	    </tr>     
+						 	   </tbody>
+						    </table>
+						 </div>
+						<label class="control-label">@Messages("genCMS.docEdit.geoLoc.searchAdr"):</label>
+						<span id="addressInputHelp" class="help-inline hidden">@Messages("genCMS.docEdit.geoLoc.noMatches")</span>
+						<span id="coordinatesInputHelp" class="help-inline hidden">@Messages("genCMS.docEdit.geoLoc.noLatLon")</span>
+   						<input id="addressInput" class="form-control" type="text" placeholder="Address" data-bind="enable: $root.document().inEdit"/>
+   						<button id="addressLookupBtn"type="button" class="btn btn-success" data-bind="click: function(){ $root.lookupAddress($('#addressInput').val()); }, enable: $root.document().inEdit" ><i id="geolocAddrIcon" class="fa fa-search"></i><span> @Messages("genCMS.docEdit.geoLoc.lookup")</span></button>
+   						<button id="coordinatesLookupBtn"type="button" class="btn btn-success" data-bind="click: function(){ $root.takeLatLon($('#addressInput').val()); }, enable: $root.document().inEdit" ><i id="geolocLatLonIcon" class="fa fa-check"></i><span> @Messages("genCMS.docEdit.geoLoc.takeCords")</span></button>
+   						<span data-bind="attr:{id: 'Validation_'+fname().replace(/\s/g,'-')}" type="validation" class="help-inline hidden"></span>
+					</div>
+				</div>
+			<!-- /ko -->
+			
+		<!-- /ko -->
+		</div>
+		<!-- ko if: headVM.getProjectTags(headVM.selectedProject()).length > 0 -->
+			<div class="page-header">
+		        <h2>@Messages("genCMS.project.tags.tags")</h2>
+			</div>
+			<div class="form-horizontal well well-sm">
+				<div class="table-responsive">
+					<!-- ko if: document().tags().length > 0 -->
+						<table class="table table-hover table-striped">
+						    <thead>
+						    	<tr>
+						    		<th>@Messages("genCMS.project.tags.tagName")</th>
+						    		<th>@Messages("genCMS.project.tags.removeTag")</th>
+						    	</tr>
+					    	</thead>
+						    <tbody data-bind="foreach: {data: document().tags, as: 'tag'}">
+						        <tr>
+						            <td data-bind="text: tag"></td>
+						            <td><button type="button" data-bind="click: function(){ $root.removeTag(tag) }, clickBubble: false" class="btn btn-danger" ><i class="fa fa-trash-o fa-lg"/></button></td>
+						        </tr>     
+						    </tbody>
+						</table>
+					<!-- /ko -->
+					<div class="form-group">
+						<label for="tagsInput" class="col-sm-2 control-label">@Messages("genCMS.project.tags.tagName")</label>
+						<div class="col-sm-5">
+							<div class="input-group">
+		      					<select id="projectTagsDD" class="form-control" data-bind="options: headVM.getProjectTags(headVM.selectedProject())"></select>
+						      <span class="input-group-btn">
+								<button type="button" class="btn btn-success" data-bind="click: function(){$root.addTag($('#projectTagsDD').val())}"><i class="fa fa-plus fa-lg"></i></button>
+						      </span>
+						    </div><!-- /input-group -->
+						</div>
+					</div>
+				</div>
+				<hr>
+			</div>	
+		<!-- /ko -->
+		<hr>
+		<button type="button" class="btn btn-success" data-bind="click: $root.previewDocument"><i class="fa fa-search fa-lg"/> @Messages("genCMS.docEdit.previewDoc")</button>
+		<button type="button" class="btn btn-success" data-bind="click: $root.previewDocumentList"><i class="fa fa-search fa-lg"/> @Messages("genCMS.docEdit.previewDocList")</button>
+		<hr>
+		<button type="button" class="btn btn-success" data-bind="click: $root.saveDocument, enable: $root.document().inEdit"><i class="fa fa-save fa-lg"/> @Messages("genCMS.docEdit.save")</button>
+		<button type="button" class="btn btn-warning" data-bind="click: $root.goHistoryBack"> <i class="fa fa-reply fa-lg"/> @Messages("genCMS.docEdit.discardBack")</button>
+		<button type="button" class="btn btn-danger" data-bind="click: $root.deleteDocument"><i class="fa fa-trash-o fa-lg"/> @Messages("genCMS.docEdit.delete")</button>
+		<div data-bind="if: messageShown">
+			<div  data-bind="attr: {class: messageClass()}">
+	  			<button type="button" class="close" data-bind="click: deleteMessage">&times;</button>
+	  			<span data-bind="html: message"></span>
+			</div>
+		</div>
+		<hr>
+		<!-- ko if: $root.document().inEdit -->
+			<button type="button" class="btn btn-success" data-bind="click: $root.releaseDocument, clickBubble: false"><i class="fa fa-check fa-lg"/> @Messages("genCMS.docEdit.release")</button>
+		<!-- /ko -->
+		<!-- ko ifnot: $root.document().inEdit -->
+           <button type="button" class="btn btn-danger" data-bind="click: $root.unreleaseDocument, clickBubble: false"><i class="fa fa-reply fa-lg"/> @Messages("genCMS.docEdit.unrelease")</button>
+		<!-- /ko -->
+		<!-- ko if: (!document().inEdit() && !document().deleted() && !document().published()) && (headVM.loggedInUser().admin || headVM.isCurrentUserProjectAdmin()) -->
+		<hr>
+		<div class="page-header">
+	        <h2>@Messages("genCMS.docEdit.rejectConfirm")</h2>
+		</div>
+		<div class="form-horizontal well well-sm">
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-5">
+					<button type="button" class="btn btn-success" data-bind="click: $root.confirmRelease, clickBubble: false"><i class="fa fa-check fa-lg"/> @Messages("genCMS.docEdit.confirm")</button>
+				</div>
+			</div>
+			<hr>
+			<div class="form-group">
+				<label for="tagsInput" class="col-sm-2 control-label">@Messages("genCMS.docEdit.rejectMsg")</label>
+				<div class="col-sm-5">
+					<textarea class="form-control" id="rejectMsg" data-bind="value: $root.rejectMsg, valueUpdate: 'afterkeydown'"></textarea>
+					<span data-bind="attr:{class: $root.rejectMsg().length > 0 ? 'help-inline hidden' : 'help-inline'}">@Messages("error.required")</span>
+					<button type="button" class="btn btn-danger" data-bind="click: $root.rejectRelease, enable: $root.rejectMsg().length > 0"><i class="fa fa-minus fa-lg"></i> @Messages("genCMS.docEdit.reject")</button>
+				</div>
+			</div>
+		</div>
+		<!-- /ko -->
+		
+
+	</div>
+	<div id="documentPreview" class="hidden">
+		<div id="documentPreviewFull" class="hidden">
+		</div>
+		<div id="documentPreviewList" class="hidden">
+		</div>
+		<button type="button" class="btn btn-success" data-bind="click: $root.closePreview"><i class="fa fa-reply fa-lg"/> @Messages("genCMS.docEdit.backEdit")</button>
+	</div>
+	
+	<!-- ko text: callInitForUploaders() --><!-- /ko -->
+	<!-- ko text: mainVM.init() --><!-- /ko -->
+</div>

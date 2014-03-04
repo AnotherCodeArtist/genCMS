@@ -1,0 +1,121 @@
+@(projectTitle: String="", projectSelected: Boolean=false, email:String="")(implicit request:Request[Any], lang: play.api.i18n.Lang)
+@import securesocial.core.SecureSocial
+@import service.GenUser
+
+<header>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				 <!-- <button id="toggle" type="button" class="navbar-toggle"><span class="sr-only">Toggle navigation</span> -->
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<!-- You'll want to use a responsive image option so this logo looks good on devices - I recommend using something like retina.js (do a quick Google search for it and you'll find it) -->
+				<a class="navbar-brand" href="/"><i class="fa fa-home fa-lg"></i> genCMS</a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				@if(projectSelected){
+				<ul class="nav navbar-nav" >
+					<li class="dropdown">
+		                <a href="#" class="dropdown-toggle" data-toggle="dropdown">@Messages("genCMS.header.navigation") <i class="fa fa-caret-down fa-lg"></i></a>
+		                <ul class="dropdown-menu span10" data-bind="genCMSnavigation: tagsStructure">
+		                </ul>
+					</li>
+					<li class="dropdown">
+		                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-filter fa-lg"></i></a>
+		                <ul class="dropdown-menu span10">
+		                @leftSidebar()
+		                </ul>
+					</li>
+					<!-- ko if: (filterTags().length > 0 || filterType()!="") -->
+					<li>
+						<a href="#" data-bind="click: clearFilters, clickBubble:false">
+							<span class="fa-stack fa-lg fa-stack-genCMS">
+							  <i class="fa fa-filter fa-stack-1x fa-lg"></i>
+							  <i class="fa fa-minus fa-stack-1x text-danger fa-lg"></i>
+							</span>
+						</a>
+					</li>
+					<!-- /ko -->
+		            <li><a href="#" data-bind="click: goToMapSearch"><i class="fa fa-search fa-lg"></i> @Messages("genCMS.sidebar.map")</a></li>
+					<!--  ko if: (headVM.isCurrentUserProjectAuthor()!="") -->
+						<li><a data-bind="attr:{href: '#doc/'+headVM.getProjectAuthorRoleDocument(headVM.isCurrentUserProjectAuthor())}"><i class="fa fa-question-circle fa-lg"></i> @Messages("genCMS.sidebar.jobDocument")</a></li>
+					<!--  /ko -->
+				</ul>
+				}
+				<ul class="nav navbar-nav navbar-right">
+										
+					@if(!SecureSocial.currentUser.isDefined){
+					<!-- no User logged in -->
+						
+						
+						
+						<li><a href="@securesocial.controllers.routes.LoginPage.login()"><i class="fa fa-sign-in fa-lg"></i> @Messages("genCMS.header.title")</a></li>
+					} else {
+					<!-- User is logged in -->
+						@if(!projectSelected){
+						<!-- No Project Selected Yet -->
+							<li class=""><a href="#" data-bind="click: $root.goToSelectProject"><i class="fa fa-refresh"></i> @Messages("genCMS.header.selectProject")</a></li>
+						} else{
+						<!-- Project Selected -->
+							<li class="dropdown"><a href="#" class="dropdown-toggle"
+							data-toggle="dropdown"><i class="fa fa-user fa-lg"></i> @Messages("genCMS.header.project") "@projectTitle" <i class="fa fa-caret-down fa-lg"></i></a>
+								<ul class="dropdown-menu">
+									<!--  ko if: (($root.isCurrentUserProjectAuthor()!="") || $root.isCurrentUserAdmin()) -->
+										<!-- ko if: $root.isCurrentUserProjectAdmin() -->
+											<li><a href="#" data-bind="click: $root.goToDocTypesList"><i class="fa fa-wrench"></i> @Messages("genCMS.header.manageDocTypes")</a></li>
+											<li class="divider"></li>
+										<!-- /ko -->
+										<li><a href="#" data-bind="click: $root.goToCreateDocument"><i class="fa fa-plus"></i> @Messages("genCMS.header.createDocument")</a></li>
+										<li><a href="#" data-bind="click: $root.goToMyDocumentList"><i class="fa fa-files-o"></i> @Messages("genCMS.header.myDocuments")</a></li>
+										<!-- ko if: $root.isCurrentUserProjectAdmin() -->
+											<li><a href="#" data-bind="click: $root.goToUnreleasedDocuments"><i class="fa fa-share-square-o"></i> @Messages("genCMS.header.releaseDocuments")</a></li>
+											<li><a href="#" data-bind="click: $root.goToEditProject"><i class="fa fa-wrench"></i> @Messages("genCMS.header.projectSettings")</a></li>
+											<li class="divider"></li>
+										<!-- /ko -->
+									<!-- /ko -->
+									<li><a href="#" data-bind="click: $root.goToSelectProject"><i class="fa fa-refresh"></i> @Messages("genCMS.header.changeProject")</a></li>
+									<!-- ko if: $root.isCurrentUserAdmin() -->
+										<li><a href="#" data-bind="click: $root.goToNewProject"><i class="fa fa-plus"></i> @Messages("genCMS.header.newProject")</a></li>
+									<!-- /ko -->
+								</ul>
+							</li>
+						}
+						
+						<li class="dropdown"><a href="#" class="dropdown-toggle"
+							data-toggle="dropdown"><i class="fa fa-user"></i> @SecureSocial.currentUser.get.firstName @SecureSocial.currentUser.get.lastName <i class="fa fa-caret-down fa-lg"></i></a>
+							<ul class="dropdown-menu">
+								<!-- <li><a href="#"><i class="fa fa-envelope"></i>   @Messages("genCMS.header.notifications")</a></li> -->
+								<!-- <li class="divider"></li> -->
+								<!-- <li><a href="#" data-bind="click: $root.goToEditUserAccount"><i class="fa fa-wrench"></i> @Messages("genCMS.header.accountSettings")</a></li> -->
+								<!-- ko if: $root.isCurrentUserProjectAdmin() -->
+								<li><a href="#" data-bind="click: $root.goToManageUsers"><i class="fa fa-group"></i> @Messages("genCMS.header.manageUsers")</a></li>
+								<!-- /ko -->
+								<li class="divider"></li>
+								<li><a class="btn" href="@securesocial.core.providers.utils.RoutesHelper.changePasswordPage.absoluteURL()"><i class="fa fa-lock fa-lg"></i> @Messages("genCMS.header.changePassword")</a></li>
+								<li><a href="@securesocial.controllers.routes.LoginPage.logout()"><i class="fa fa-sign-out fa-lg"></i> @Messages("genCMS.header.logout")</li></a>
+							</ul>
+						</li>
+						<!-- <a href="profile"><small>@email</small></a> -->
+					}
+					
+					<!-- editor (Redakteur) logged in -->
+					
+					<!-- author logged in -->
+					
+					<!-- guest logged in -->
+					
+					
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</div>
+		<!-- /.container -->
+	</nav>
+</header>

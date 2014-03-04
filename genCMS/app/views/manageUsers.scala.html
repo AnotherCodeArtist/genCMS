@@ -1,0 +1,146 @@
+@* accountSettings Template File *@
+@()(implicit request:Request[Any], lang: play.api.i18n.Lang)
+<div class="container">
+	<div id="usersList" visible = "true">
+	<!--  <pre data-bind="text: ko.toJSON(docTypes, null, 2)"></pre>-->
+	  <!-- 
+	   <pre data-bind="text: ko.toJSON(selectedDocType, null, 2)"></pre>
+	   -->
+	    <div class="page-header">
+			<h1>@Messages("genCMS.user.listTitle"):</h1>
+		</div>
+		 <!-- <input id="allProjectsSelector" type="checkbox" /> -->
+		 <!-- <label for="allProjectsSelector">All Projects</label> -->
+		 <!-- <pre data-bind="text: ko.toJSON(docTypes, null, 2)"></pre>  -->
+		 <div data-bind="if: messageShown">
+			<div  data-bind="attr: {class: messageClass()}">
+	  			<button type="button" class="close" data-bind="click: deleteMessage">&times;</button>
+	  			<span data-bind="text: message"></span>
+			</div>
+		</div>
+   		
+   		<div class="well well-sm row clearfix">
+    		<div class="col-sm-6">
+    			<div class="checkbox">
+		   			<label>
+		     			<input type="checkbox" data-bind="checked: searchProjectOnly" checked> @Messages("genCMS.document.projectOnly")
+		   			</label>
+		   		</div>
+	    		@Messages("genCMS.user.filterOpts")
+	    		<div class="radio">
+	    			<label>
+		    			<input type="radio" name="filterOpts" value="notFiltered" data-bind="checked: filterOpt"/>
+		    			@Messages("genCMS.user.unfiltered")
+	    			</label>
+	    		</div>
+	    		<div class="radio">
+	    			<label>
+		    			<input type="radio" name="filterOpts" value="admin" data-bind="checked: filterOpt"/>
+		    			@Messages("genCMS.user.admin")
+	    			</label>
+	    		</div>
+	    		<div class="radio">
+	    			<label>
+		    			<input type="radio" name="filterOpts" value="projectAdmin" data-bind="checked: filterOpt"/>
+		    			@Messages("genCMS.user.projectAdmin")
+	    			</label>
+	    		</div>
+	    		<div class="radio">
+	    			<label>
+		    			<input type="radio" name="filterOpts" value="author" data-bind="checked: filterOpt"/>
+		    			@Messages("genCMS.user.author")
+	    			</label>
+	    		</div>
+    		</div>
+    		<div class="col-sm-6">
+    		<form class="form-horizontal" role="form">
+			  <div class="form-group">
+			    <label for="inputFirstname" class="col-sm-2 control-label">@Messages("genCMS.user.lbl.firstname")</label>
+			    <div class="col-sm-10">
+			      <input data-bind="value: firstName" type="text" class="form-control" id="inputFirstname" placeholder="@Messages("genCMS.user.lbl.firstname")">
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <label for="inputLastname" class="col-sm-2 control-label">@Messages("genCMS.user.lbl.lastname")</label>
+			    <div class="col-sm-10">
+			      <input data-bind="value: lastName" type="text" class="form-control" id="inputLastname" placeholder="@Messages("genCMS.user.lbl.lastname")">
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <label for="inputUserID" class="col-sm-2 control-label">@Messages("genCMS.user.lbl.userid")</label>
+			    <div class="col-sm-10">
+			      <input data-bind="value: userID" type="text" class="form-control" id="inputUserID" placeholder="@Messages("genCMS.user.lbl.userid")">
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <div class="col-sm-offset-2 col-sm-10">
+			      <button data-bind="click: function(){$root.loadUsersPage(0,false)}" type="button" class="btn btn-default"><i class="fa fa-search fa-lg"/> @Messages("genCMS.user.search")</button>
+			    </div>
+			  </div>
+			</form>
+    		
+    		</div>
+		</div>
+ 		
+ 		<div class="table-responsive">
+			<table class="doctypes table table-hover table-striped">
+			    <thead>
+			    	<tr>
+			    		<th>
+			    			<a href="#" data-bind="click: function(){ $root.sortDocumentPage('userid')}">@Messages("genCMS.user.lbl.userid")
+				    		<!-- ko if: sortBy()=='userid' -->
+				    			<i data-bind="attr: {'class': sortAsc()==true ? 'fa fa-caret-down fa-lg' : 'fa fa-caret-up fa-lg'}"/>
+				    		<!-- /ko -->
+			    			</a>
+			    		</th>
+			    		<th>
+			    			<a href="#" data-bind="click: function(){ $root.sortDocumentPage('firstname')}">@Messages("genCMS.user.lbl.firstname")
+				    		<!-- ko if: sortBy()=='firstname' -->
+				    			<i data-bind="attr: {'class': sortAsc()==true ? 'fa fa-caret-down fa-lg' : 'fa fa-caret-up fa-lg'}"/>
+				    		<!-- /ko -->
+			    			</a>
+			    		</th>
+			    		<th>
+			    			<a href="#" data-bind="click: function(){ $root.sortDocumentPage('lastname')}">@Messages("genCMS.user.lbl.lastname")
+				    		<!-- ko if: sortBy()=='lastname' -->
+				    			<i data-bind="attr: {'class': sortAsc()==true ? 'fa fa-caret-down fa-lg' : 'fa fa-caret-up fa-lg'}"/>
+				    		<!-- /ko -->
+			    			</a>
+			    		</th>
+			    		<th>
+			    			<a href="#" data-bind="click: function(){ $root.sortDocumentPage('lastLogin')}">@Messages("genCMS.user.lbl.lastlogin")
+				    		<!-- ko if: sortBy()=='lastLogin' -->
+				    			<i data-bind="attr: {'class': sortAsc()==true ? 'fa fa-caret-down fa-lg' : 'fa fa-caret-up fa-lg'}"/>
+				    		<!-- /ko -->
+			    			</a>
+			    		</th>
+			    		
+			    		<th>Projectroles</th>
+			    	</tr>
+		    	</thead>
+			    <tbody data-bind="foreach: users">
+			        <tr data-bind="click: $root.goToEditUser">
+			            <td data-bind="text: userid"></td>
+			            <td data-bind="text: firstname"></td>
+			            <td data-bind="text: lastname"></td>
+			            <td data-bind="text: timeStampToDate(lastLogin.$date(), '@Messages("genCMS.locale")')"></td>
+			            <td data-bind="text: $root.getProjectRoles($index)"></td>
+			            
+			            <!-- 
+			            <td><button type="button" class="btn btn-danger" data-bind="click: $root.deleteDocument, clickBubble: false"><i class="fa fa-trash-o fa-lg"/></button></td>
+			             -->
+			        </tr>     
+			    </tbody>
+			</table>
+			<!-- ko if: availablePages() > 1 -->
+			<ul class="pagination">
+			  <li data-bind="attr: {'class': currentPage() == 0 ? 'disabled' : ''}"><a href="#" data-bind="click: function() { if(currentPage()==0) return; else $root.loadUsersPage(currentPage()-1); }">&laquo;</a></li>
+		  	  <!-- ko foreach: new Array(availablePages()) -->
+				  <li data-bind="attr: {'class': $parent.currentPage() == $index() ? 'active' : ''}"><a href="#" data-bind="text: $index()+1, click: function() { $root.loadUsersPage($index()); }"></a></li>
+   			  <!-- /ko -->
+			  <li data-bind="attr: {'class': currentPage() == availablePages()-1 ? 'disabled' : ''}"><a href="#" data-bind="click: function() { if (currentPage() == availablePages()-1) return; else $root.loadUsersPage(currentPage()+1); }">&raquo;</a></li>
+			</ul>
+			<!-- /ko -->
+		</div>
+	</div>	
+</div>

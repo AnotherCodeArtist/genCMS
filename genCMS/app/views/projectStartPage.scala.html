@@ -1,0 +1,28 @@
+@()(implicit request:Request[Any], lang: play.api.i18n.Lang)
+
+<div>
+	<!-- ko if: editorial -->
+		<div class="genListEditorial" data-bind="genCMStemplateFull: editorial"></div>
+	<!-- /ko -->
+	
+	<div>
+	 <!--  ko if: (documentsList().length > 0) -->
+	 	<h3>
+	 		<!-- ko if: (headVM.selectedTag() ==="") -->@Messages("genCMS.docView.newestDocs")<!-- /ko -->
+	 		<!-- ko if: (headVM.selectedTag() !="") -->@Messages("genCMS.docView.newestDocsPreTag")<span data-bind="text: headVM.selectedTag"></span>@Messages("genCMS.docView.newestDocsPostTag")<!-- /ko -->
+	 	</h3>
+		<!-- ko foreach: {data: documentsList, as: 'document'}-->
+			<p class="genListDocument" data-bind="genCMStemplateList: document, click: $root.openDoc"></p>
+		<!-- /ko -->
+	 <!-- /ko -->
+		<!-- ko if: availablePages() > 1 -->
+			<ul class="pagination">
+			  <li data-bind="attr: {'class': currentPage() == 0 ? 'disabled' : ''}"><a href="#" data-bind="click: function() { if(currentPage()==0) return; else $root.loadIndexPage(currentPage()-1,false); }">&laquo;</a></li>
+		  	  <!-- ko foreach: new Array(availablePages()) -->
+				  <li data-bind="attr: {'class': $parent.currentPage() == $index() ? 'active' : ''}"><a href="#" data-bind="text: $index()+1, click: function() { $root.loadIndexPage($index(),false); }"></a></li>
+   			  <!-- /ko -->
+			  <li data-bind="attr: {'class': currentPage() == availablePages()-1 ? 'disabled' : ''}"><a href="#" data-bind="click: function() { if (currentPage() == availablePages()-1) return; else $root.loadIndexPage(currentPage()+1,false); }">&raquo;</a></li>
+			</ul>
+		<!-- /ko -->
+	</div>
+</div>

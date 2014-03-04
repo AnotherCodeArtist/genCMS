@@ -1,0 +1,378 @@
+genCMS.locale=en
+genCMS.validationFailed=Validation Failed
+
+#sidebar
+genCMS.sidebar.title=Filter Documents
+genCMS.sidebar.map=Search On Map
+genCMS.sidebar.typ=Document Type
+genCMS.sidebar.tags=Topics
+genCMS.sidebar.jobDocument=My Task
+
+# Header
+genCMS.header.title=Login
+genCMS.header.selectProject=Select a Project
+genCMS.header.manageDocTypes=Manage Document Types
+genCMS.header.createDocument=Create Document
+genCMS.header.myDocuments=My Documents
+genCMS.header.releaseDocuments=Documents to Release
+genCMS.header.projectSettings=Project Settings
+genCMS.header.changeProject=Change Project
+genCMS.header.newProject=New Project
+genCMS.header.notifications=Notifications
+genCMS.header.accountSettings=Account Settings
+genCMS.header.manageUsers=Manage Users
+genCMS.header.changePassword=Change Password
+genCMS.header.logout=Logout
+genCMS.header.project=Projekt
+genCMS.header.navigation=Articles
+
+# Project Settings
+genCMS.project.settings.title=Project Settings
+genCMS.project.settings.basicSettings=Basic Settings
+genCMS.project.settings.tags=Topics
+genCMS.project.settings.authorRoles=Author Roles
+genCMS.project.settings.members=Project Members
+genCMS.project.settings.reportedContent=Reported Content
+genCMS.project.settings.projectStyle=Project Style
+genCMS.project.settings.docStyles=Document Type Styles
+
+# Project Tags
+genCMS.project.tags.tags=Topics
+genCMS.project.tags.tagName=Topic
+genCMS.project.tags.removeTag=Remove Topic
+genCMS.project.tags.addTag=Add Topic
+genCMS.project.tags.saveTag=Save Menue Structure
+
+# Project Styles
+genCMS.project.styles.styleName=Style Name
+genCMS.project.styles.addStyle=Add Style
+genCMS.project.styles.style=Style Properties
+genCMS.project.styles.save=Save
+genCMS.project.styles.delete=Delete
+
+# Project Roles
+genCMS.project.role.name=Role Name
+genCMS.project.role.jobDesc=Job Description
+genCMS.project.role.remove=Remove Role
+genCMS.project.role.add=Add Role
+genCMS.project.role.notEmtpy=The Role Name must not be empty
+genCMS.project.role.unique=The Role Name has to be unique
+genCMS.project.role.noJobDesc=No Description set
+genCMS.project.role.openJobDesc=Open Job Description
+
+# User
+genCMS.user.listTitle=Manage Users
+genCMS.user.projectOnly=Connected To Project Only
+genCMS.user.filterOpts=Filter Options
+genCMS.user.textFilters=Text Filter
+genCMS.user.unfiltered=Not Filtered
+genCMS.user.admin=Admin Only
+genCMS.user.projectAdmin=Project Admin Only
+genCMS.user.author=Author Only
+genCMS.user.lbl.userid=Email
+genCMS.user.lbl.admin=Admin
+genCMS.user.lbl.projectAdmin=Project Admin
+genCMS.user.lbl.author=Author
+genCMS.user.lbl.firstname=Firstname
+genCMS.user.lbl.lastname=Lastname
+genCMS.user.lbl.lastlogin=Last Login
+genCMS.user.role.admin=Admin
+genCMS.user.role.projectAdmin=ProjectAdmin
+genCMS.user.role.author=Author
+genCMS.user.search=Search
+genCMS.user.accountSettings=User Account Settings
+genCMS.user.lbl.changePWD=Change Password
+genCMS.user.save=Save Changes
+genCMS.user.lbl.avatar=Avatar
+genCMS.user.mgmt.author=Author Management
+genCMS.user.mgmt.projectadmin=Project Admin Management
+genCMS.user.mgmt.admin=Admin Management
+genCMS.user.lbl.isAdmin=User is Admin
+genCMS.user.lbl.makeAdmin=Add to Admins
+genCMS.user.lbl.removeAdmin=Remove from Admins
+genCMS.user.lbl.removePrAdmin=Remove from Project Admins
+genCMS.user.lbl.addPrAdmin=Add To Project Admins
+genCMS.user.lbl.project=Project
+genCMS.user.lbl.authorRole=Author Role
+genCMS.user.lbl.removeAuthor=Remove From Authors
+genCMS.user.lbl.addAuthor=Add To Authors
+
+# Document
+genCMS.document.listTitle=My Documents
+genCMS.document.projectOnly=Connected To Project Only
+genCMS.document.filterOpts=Filter Options
+genCMS.document.unfiltered=Not Filtered
+genCMS.document.inEdit=In Edit Only
+genCMS.document.published=Published Only
+genCMS.document.deleted=Deleted Only
+genCMS.document.changeAuthor=Modified By
+genCMS.document.status=Status
+genCMS.document.statusDel=Deleted
+genCMS.document.statusEdit=In Edit
+genCMS.document.statusPub=Published
+genCMS.document.statusWaitPub=Wait For Publish
+genCMS.document.release=Release
+genCMS.document.unrelease=Cancel Release
+genCMS.document.delete=Delete
+genCMS.document.docTitle=Title
+genCMS.document.project=Project
+genCMS.document.modDate=Last Edit
+genCMS.document.createDate=Created
+
+# Document New
+genCMS.docNew.titleLinked=Choose a Type for your new linked Article
+genCMS.docNew.titleUnlinked=Choose a Type for your new Article
+genCMS.docNew.noDocTypes=There are no Document Types to choose from
+
+# Document Edit
+genCMS.docView.adminSection=Administration Area
+genCMS.docView.isEditorial=Document is Editorial
+genCMS.docView.setEditorial=Set as Editorial
+genCMS.docView.editorial=Editorial
+genCMS.docView.authorJob=Author Role
+genCMS.docView.setAuthorJob=Set Job Description
+genCMS.docView.clearFilter=Clear Filter
+genCMS.docView.geoLoc.select=Open Article
+genCMS.docView.newestDocs=Recently Published Articles
+genCMS.docView.newestDocsPreTag=Recently Published Articles in Category "
+genCMS.docView.newestDocsPostTag=":
+genCMS.docView.editDoc=Edit Document
+genCMS.docView.connectedDocuments=Connected Articles
+genCMS.docView.createConnectedDocument=Create Connected Article
+
+# Document Edit
+genCMS.docEdit.title=Edit Document
+genCMS.docEdit.docName=Document Name
+genCMS.docEdit.createDate=Created At
+genCMS.docEdit.modDate=Last Modified
+genCMS.docEdit.fields=Document Fields
+genCMS.docEdit.uploadImg=Upload Image...
+genCMS.docEdit.uploadAudio=Upload Audio...
+genCMS.docEdit.uploadVideo=Upload Video...
+genCMS.docEdit.addYoutube=Add Youtube Video
+genCMS.docEdit.geoLoc.required=Latitude, Longitude and Display Name are required
+genCMS.docEdit.geoLoc.display=Display
+genCMS.docEdit.geoLoc.lat=Latitude
+genCMS.docEdit.geoLoc.lon=Longitude
+genCMS.docEdit.geoLoc.select=Select
+genCMS.docEdit.geoLoc.show=Show
+genCMS.docEdit.geoLoc.lookup=Lookup Address
+genCMS.docEdit.geoLoc.takeCords=Take Coordinates
+genCMS.docEdit.geoLoc.showCurrPos=Show Current Location
+genCMS.docEdit.previewDoc=Preview Document
+genCMS.docEdit.previewDocList=Preview Document List
+genCMS.docEdit.save=Save Document
+genCMS.docEdit.discardBack=Discard Changes / Back
+genCMS.docEdit.delete=Delete Document
+genCMS.docEdit.backEdit=Back To Edit
+genCMS.docEdit.geoLoc.searchAdr=Search Address
+genCMS.docEdit.geoLoc.noMatches=Sorry, no matches found
+genCMS.docEdit.geoLoc.noLatLon=Has to be "latitude, longitude" (e.g. "47.0786521, 15.4070155")
+genCMS.docEdit.status=Document Status
+genCMS.docEdit.statusEdit=Document Is Editable
+genCMS.docEdit.statusPub=Document Is Published - Editing not possible
+genCMS.docEdit.statusWaitPub=Document Is Waiting for Approval - Editing not possible
+genCMS.docEdit.release=Release Document
+genCMS.docEdit.unrelease=Cancel Release Of Document
+genCMS.docEdit.reject=Reject Release
+genCMS.docEdit.rejectMsg=Reject Message
+genCMS.docEdit.confirm=Confirm Release
+genCMS.docEdit.rejectConfirm=Confirm or Reject the Release
+
+# Doc Type
+genCMS.doctype.listTitle=Available Document Types
+genCMS.doctype.projectOnly=Connected To Project Only
+genCMS.doctype.userOnly=Created By User Only
+genCMS.doctype.name=Name
+genCMS.doctype.author=Author
+genCMS.doctype.copy=Copy
+genCMS.doctype.connect=Connect
+genCMS.doctype.detailDesign=Detail Design
+genCMS.doctype.listDesign=List Design
+genCMS.doctype.new=New Document Type
+genCMS.doctype.editTitle=Edit Document Type
+genCMS.doctype.docTypeName=Document Type Name
+genCMS.doctype.stdField=Standardfield
+genCMS.doctype.stdFieldMsg=Standardfields can not be modified or deleted
+genCMS.doctype.fieldname=Fieldname
+genCMS.doctype.locale=Locale
+genCMS.doctype.minLength=Minimum Length
+genCMS.doctype.maxLength=Maximum Length
+genCMS.doctype.required=Required
+genCMS.doctype.addLocale=Add Locale
+genCMS.doctype.delField=DeleteField
+genCMS.doctype.minWidth=Minimal Width
+genCMS.doctype.maxWidth=Maximal Width
+genCMS.doctype.minHeight=Minimal Height
+genCMS.doctype.maxHeight=Maximal Height
+genCMS.doctype.maxFileSize=Maximal Filesize [B]
+genCMS.doctype.min=Minimum
+genCMS.doctype.max=Maximum
+genCMS.doctype.txt=Textline
+genCMS.doctype.html=HTML
+genCMS.doctype.img=Image
+genCMS.doctype.audio=Audio
+genCMS.doctype.video=Video
+genCMS.doctype.number=Number
+genCMS.doctype.boolean=Boolean
+genCMS.doctype.geoLoc=Geo Location
+genCMS.doctype.save=Save Document Type
+genCMS.doctype.discardBack=Discard Changes / Back
+genCMS.doctype.delete=Delete Document Type
+genCMS.doctype.addField=Add Field
+genCMS.doctype.turnGEO=Add Geolocation
+genCMS.doctype.fieldtype=Type of Field
+
+# DocTypeDesign
+genCMS.docTypeDesign.title=Edit Document Type Design
+genCMS.docTypeDesign.listTitle=Edit Document Type List Design
+genCMS.docTypeDesign.edit=Edit
+genCMS.docTypeDesign.preview=Preview
+genCMS.docTypeDesign.help=Help
+genCMS.docTypeDesign.columnCnfgHelp=To change the column configuration you can edit the different values in the input (they should add 12).
+genCMS.docTypeDesign.grid=Grid system
+genCMS.docTypeDesign.remove=remove
+genCMS.docTypeDesign.drag=drag
+genCMS.docTypeDesign.elmt=Elements
+genCMS.docTypeDesign.elmtHelp=Drag & Drop the elements inside the columns where you want to insert them. And from there, you can configure the style of that elements.
+genCMS.docTypeDesign.lbls=Labels
+genCMS.docTypeDesign.lblsHelp=Drag &amp; Drop the elements inside the columns where you want to insert them. And from there, you can configure the style of that elements.
+genCMS.docTypeDesign.style=Style
+genCMS.docTypeDesign.save=Save
+genCMS.docTypeDesign.discardBack=Discard / Back
+
+# DocType Connect
+genCMS.docTypeConnect.title=Connect Document Type to selected Project
+genCMS.docTypeConnect.existingCon=Existing Connections
+genCMS.docTypeConnect.name=Name
+genCMS.docTypeConnect.desc=Description
+genCMS.docTypeConnect.active=Active
+genCMS.docTypeConnect.updateConn=Update Connection
+genCMS.docTypeConnect.delConn=Delete Connection
+genCMS.docTypeConnect.connect=Connect To Project
+genCMS.docTypeConnect.discardBack=Discard Changes / Back
+
+# Forbidden
+genCMS.forbidden.title=Forbidden
+genCMS.forbidden.loginMsg=The page you wanted to display is only accessible for logged in users! Please login!
+genCMS.forbidden.authorizationMsg=You are not allowed to visit the page! Please contact an administrator if you need help!
+
+hello.world=HELLO WORLD
+genCMS.index.title=HELLO WORLD
+
+# App name
+securesocial.appName=SecureSocial 2
+
+# Login page
+securesocial.login.title=Login
+securesocial.login.instructions=Use your existing account on one of the following networks to log in.
+securesocial.login.accessDenied=You denied access to your account. Please grant it to log in.
+securesocial.login.errorLoggingIn=An error occurred while logging you in. Please try again.
+securesocial.login.useEmailAndPassword=Or login using a username and password.
+securesocial.login.useEmailAndPasswordOnly=Login using a username and password.
+securesocial.login.signUp=If you don''t have an account with us yet you can sign up
+securesocial.login.here=here
+securesocial.login.invalidCredentials=The credentials you entered are not valid
+securesocial.login.forgotPassword=Did you forget your password?
+
+# Sign up page
+securesocial.signup.title=Sign Up
+securesocial.signup.username=Username
+securesocial.signup.firstName=First Name
+securesocial.signup.lastName=Last Name
+securesocial.signup.email1=Email
+securesocial.signup.email2=Email confirmation
+securesocial.signup.password1=Password
+securesocial.signup.password2=Password confirmation
+securesocial.signup.createAccount=Create Account
+securesocial.signup.cancel=Cancel
+securesocial.signup.userNameAlreadyTaken=Username already taken
+securesocial.signup.passwordsDoNotMatch=Passwords do not match
+securesocial.signup.thankYouCheckEmail=Thank you. Please check your email for further instructions
+securesocial.signup.invalidLink=The link you followed is invalid
+securesocial.signup.signUpDone=Thank you for signing up.  You can log in now
+securesocial.signup.invalidPassword=Enter at least {0} characters
+
+# Password reset
+securesocial.password.title=Reset Password
+securesocial.password.passwordUpdated=Your password was updated successfully
+securesocial.password.reset=Reset Password
+securesocial.password.error=There was a problem changing your password. Please try again
+
+# Password change
+securesocial.passwordChange.title=Change Password
+securesocial.passwordChange.currentPassword=Current Password
+securesocial.passwordChange.newPassword1=New Password
+securesocial.passwordChange.newPassword2=New Password Confirmation
+securesocial.passwordChange.changeButton=Change
+securesocial.passwordChange.invalidPassword=Invalid password
+securesocial.passwordChange.ok=Your password was changed successfully
+securesocial.passwordChange.okButton=Ok
+
+# Not authorized page
+securesocial.notAuthorized.title=Not Authorized
+securesocial.notAuthorized.message=You are not authorized to access that page
+
+#
+securesocial.loginRequired=You need to log in to access that page.
+
+# Mails
+#
+mails.sendAlreadyRegisteredEmail.subject=Sign up instructions
+mails.sendSignUpEmail.subject=Sign up instructions
+mails.welcomeEmail.subject=Welcome
+mails.passwordResetEmail.subject=Password reset instructions
+mails.unknownEmail.subject=Password reset request
+mails.passwordResetOk.subject=Password change confirmation
+
+#
+# Copyright (C) 2009-2013 Typesafe Inc. <http://www.typesafe.com>
+#
+
+# Default messages
+
+# --- Constraints
+constraint.required=Required
+constraint.unique=Has to be Unique
+constraint.uniqueAndAZ=Has to be Unique and letters only!
+constraint.min=Minimum value: {0}
+constraint.max=Maximum value: {0}
+constraint.minLength=Minimum length: {0}
+constraint.maxLength=Maximum length: {0}
+constraint.email=Email
+
+# --- Formats
+format.date=Date (''{0}'')
+format.numeric=Numeric
+format.real=Real
+
+# --- Errors
+error.invalid=Invalid value
+error.invalid.java.util.Date=Invalid date value
+error.required=This field is required
+error.number=Numeric value expected
+error.real=Real number value expected
+error.real.precision=Real number value with no more than {0} digit(s) including {1} decimal(s) expected
+error.min=Must be greater or equal to {0}
+error.min.strict=Must be strictly greater than {0}
+error.max=Must be less or equal to {0}
+error.max.strict=Must be strictly less than {0}
+error.minLength=Minimum length is {0}
+error.maxLength=Maximum length is {0}
+error.email=Valid email required
+error.pattern=Must satisfy {0}
+
+error.expected.date=Date value expected
+error.expected.date.isoformat=Iso date value expected
+error.expected.jodadate.format=Joda date value expected
+error.expected.jsarray=Array value expected
+error.expected.jsboolean=Boolean value expected
+error.expected.jsnumber=Number value expected
+error.expected.jsobject=Object value expected
+error.expected.jsstring=String value expected
+error.expected.jsnumberorjsstring=String or number expected
+error.expected.keypathnode=Node value expected
+
+error.path.empty=Empty path
+error.path.missing=Missing path
+error.path.result.multiple=Multiple results for the given path

@@ -1,0 +1,33 @@
+@(user: String="")(implicit request:Request[Any], lang: play.api.i18n.Lang)
+<div class="container">
+	<div class="page-header">
+		
+		<h1 data-bind="text: connectToDocument()=='' ? '@Messages("genCMS.docNew.titleUnlinked")' : '@Messages("genCMS.docNew.titleLinked")'"></h1>
+	</div>
+	<div class="well well-sm">
+				<div class="panel-group" id="accordionAvailableTypes">
+				<!-- <pre data-bind="text: ko.toJSON($root.availableDocTypes, null, 2)"></pre> -->
+					<!-- ko if: availableDocTypes().length == 0 -->
+					<div  class="alert alert-warning">
+  						@Messages("genCMS.docNew.noDocTypes")
+					</div>
+					<!-- /ko -->
+					<!-- ko foreach: {data: availableDocTypes, as:'type'} -->
+						<div class="panel panel-info">
+						    <div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordionDocTypeElements" data-bind="attr: {href: '#'+ $index()}">
+						      <h4 class="panel-title accordion-toggle">      
+						          <button type="button" class="btn btn-info" data-bind="click: $root.goToEditNewDocument, clickBubble: false" ><i class="fa fa-plus "/></button>
+						          <strong data-bind="text: name"/>
+						      </h4>
+						    </div>
+						    <div data-bind="attr: {id:  $index}" class="panel-collapse collapse">
+						      <div class="panel-body">
+									<p data-bind="html: description"></p>
+						      </div>
+						    </div>
+						</div>
+					<!-- /ko -->
+				</div>
+		</div>
+		<!-- /ko -->
+</div>

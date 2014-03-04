@@ -1,0 +1,143 @@
+@(title: String, projectTitle:String="", projectSelected:Boolean=false)(content: Html)(implicit request:Request[Any], lang: play.api.i18n.Lang)
+@import securesocial.core.SecureSocial
+
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>@title</title>
+<!-- Bootstrap core CSS -->
+<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.css")">
+<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap-dropdown-multilevel.css")">
+<link rel="stylesheet" href="@routes.Assets.at("stylesheets/layoutit.css")">
+<link rel="stylesheet" href="@routes.Assets.at("font-awesome/css/font-awesome.min.css")">
+<!-- Custom CSS -->
+<link rel="stylesheet" href="@routes.Assets.at("stylesheets/custom.css")">
+<!-- Bootstrap Datepicker -->
+<link rel="stylesheet" href="@routes.Assets.at("stylesheets/datepicker.css")">
+<link rel="stylesheet" href="@routes.Assets.at("stylesheets/jquery.fileupload.css")">
+<link rel="stylesheet" href="@routes.Assets.at("stylesheets/number-polyfill.css")">
+<link rel="stylesheet" href="@routes.Assets.at("stylesheets/dummy.css")">
+
+<link rel="stylesheet" href="@routes.Assets.at("stylesheets/jplayer/jplayer.blue.monday.css")">
+<link rel="stylesheet" href="@routes.Assets.at("stylesheets/leaflet.css")" />
+<link rel="stylesheet" href="@routes.Assets.at("stylesheets/leaflet.markerCluster.css")" />
+<link rel="stylesheet" href="@routes.Assets.at("stylesheets/leaflet.markerCluster.Default.css")" />
+<link rel="stylesheet" href="@routes.Assets.at("stylesheets/leaflet.awesome-markers.css")" />
+
+<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+<script src="@routes.Assets.at("javascript/jquery-1.10.2.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/jquery.cookie.js")" type="text/javascript"></script> 
+<!-- 
+ <script src="@routes.Assets.at("javascript/jquery-sortable-min.js")" type="text/javascript"></script>
+ -->
+  <script src="@routes.Assets.at("javascript/jquery-sortable-min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/jquery-ui.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/jquery-ui-touchPunch.js")" type="text/javascript"></script>
+
+<script src="@routes.Assets.at("javascript/jquery-htmlClean.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/jquery.fileupload.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/jquery.fileupload-process.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/jquery.fileupload-validate.js")" type="text/javascript"></script>
+<!-- 
+ -->
+
+<script src="@routes.Assets.at("javascript/jquery.jplayer.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/handlebars-v1.3.0.js")" type="text/javascript"></script>
+
+<script src="@routes.Assets.at("javascript/bootstrap.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/bootstrap-datepicker.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/bootstrap-dropdown-multilevel.js")" type="text/javascript"></script>
+
+<script src="@routes.Assets.at("javascript/template.js")" type="text/javascript"></script>
+<!-- Loading jQuery TinyMCE -->
+<script src="@routes.Assets.at("javascript/tinymce/jquery.tinymce.min.js")" type="text/javascript"></script>
+<!-- Loading TinyMCE -->
+<script src="@routes.Assets.at("javascript/tinymce/tinymce.min.js")" type="text/javascript"></script>
+
+<script src="@routes.Assets.at("javascript/knockout-3.0.0.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/knockout.mapping.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/knockout.validation.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/knockout.wysiwyg.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/sammy.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/number-polyfill.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/leaflet.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/leaflet.markercluster.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/leaflet.awesome-markers.min.js")" type="text/javascript"></script>
+
+<style id="customProjectStyle" type="text/css">
+</style>
+
+</head>
+<body>
+	<section id="header">
+		@header(projectTitle,projectSelected)		
+	</section>
+
+	<section id="main">
+		<div class="container">
+			@content
+		</div><!-- /.container -->
+	</section>
+	
+	<div id="ajaxLoader" class="hidden">
+		<img src="@routes.Assets.at("images/ajax-loader.gif")"/>
+	</div>
+	
+    <section id="footer">
+		<div class="container">
+	    <hr>
+		<footer>
+			<div class="row">
+				<div class="col-lg-8">
+					<p>&copy; Passath Robin, BSc - <a href="http://www.fh-joanneum.at/AIM">AIM12 - FH Joanneum Graz</a></p>
+				</div>
+				<div class="col-lg-4">
+					<a href="#" onclick="return changeLanguage('de');">
+						<img src="@routes.Assets.at("images/lang/ATDE.png")" />
+					</a>
+					<a href="#" onclick="return changeLanguage('en');">
+						<img src="@routes.Assets.at("images/lang/EN.png")" />
+					</a>
+					<a href="#" onclick="return changeLanguage('es');">
+						<img src="@routes.Assets.at("images/lang/ES.png")" />
+					</a>
+					<a href="#" onclick="return changeLanguage('fr');">
+						<img src="@routes.Assets.at("images/lang/FR.png")" />
+					</a>
+				</div>
+			</div>
+		</footer>
+	    </div><!-- /.container -->
+	</section>
+
+	<div class="modal fade text-center" id="ajaxSpinner"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	        <img src="@routes.Assets.at("images/ajax-loader.gif")"/>
+	</div>
+	</div><!-- /.modal -->    
+
+<script src="@routes.Assets.at("javascript/Application.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascript/Router.js")" type="text/javascript"></script>	
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(document).on("click",'.addTagToFilter',function(event) {
+			event.preventDefault();
+			event.stopPropagation();
+		    headVM.addFilterTag(event);
+		});
+
+		$(document).on("click",'.removeTagFromFilter',function(event) {
+		    event.preventDefault();
+			event.stopPropagation();
+		    headVM.removeFilterTag(event);
+		});
+	});
+</script>
+</body>
+</html>
