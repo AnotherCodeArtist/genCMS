@@ -1,50 +1,35 @@
 package service
 
-import play.api.Play.current
-import play.api.data._
-import play.api.data.Forms._
-import models.DocumentType
-import reactivemongo.api._
-import reactivemongo.bson._
-import reactivemongo.core.commands._
-import reactivemongo.api.collections.default.BSONCollection
-import play.api.libs.concurrent.Execution.Implicits._
-import play.modules.reactivemongo.ReactiveMongoPlugin.db
-import play.modules.reactivemongo.json.collection.JSONCollection
+import scala.collection.mutable.Map
 import scala.concurrent.Future
-import scala.concurrent.duration._
-import scala.concurrent.Await
-import reactivemongo.bson.BSONObjectID
-import play.modules.reactivemongo.json.BSONFormats._
-import reactivemongo.bson.BSONDocument
-import play.api.Logger
-import play.api.libs.json.Json
-import play.api.libs.json.JsObject
-import play.modules.reactivemongo.json.BSONFormats
-import play.api.libs.json.JsObject
-import play.api.libs.functional.syntax._
-import play.api.libs.json.Json
-import play.api.libs.json._
-import play.api.libs.json.Reads._
-import reactivemongo.bson.BSONObjectID
-import reactivemongo.bson.BSONObjectID.generate
-import play.api.libs.json.Json
-import play.modules.reactivemongo.json.BSONFormats._
-import play.api.libs.json.JsValue
-import play.api.Play.current
-import play.api.data._
-import play.api.data.Forms._
-import models.DocumentType
-import reactivemongo.api._
-import reactivemongo.bson._
-import reactivemongo.core.commands._
+
 import models.DocTypeProjectConnection
-import scala.collection.mutable.{
-  Map,
-  SynchronizedMap,
-  HashMap
-}
+import play.api.Logger
+import play.api.Play.current
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json.JsError
+import play.api.libs.json.JsObject
+import play.api.libs.json.JsSuccess
+import play.api.libs.json.Json
+import play.api.libs.json.Json.toJsFieldJsValueWrapper
+import play.api.libs.json.Reads.JsObjectReads
+import play.api.libs.json.Reads.StringReads
+import play.api.libs.json.Reads.traversableReads
+import play.api.libs.json.__
+import play.modules.reactivemongo.ReactiveMongoPlugin.db
+import play.modules.reactivemongo.json.BSONFormats
 import play.modules.reactivemongo.json.collection.JSONCollection
+import reactivemongo.bson.BSONDocument
+import reactivemongo.bson.BSONStringHandler
+import reactivemongo.bson.Producer.nameValue2Producer
+import reactivemongo.core.commands.Aggregate
+import reactivemongo.core.commands.Ascending
+import reactivemongo.core.commands.Count
+import reactivemongo.core.commands.GetLastError
+import reactivemongo.core.commands.Group
+import reactivemongo.core.commands.Match
+import reactivemongo.core.commands.Sort
+import reactivemongo.core.commands.Unwind
 
 object DocumentTypeDao {
 
@@ -75,7 +60,7 @@ object DocumentTypeDao {
   def queryDocTypeStyles(query: JsObject, filter: Option[JsObject]): Future[List[JsObject]] = {
     try {
       val f = stylesCollection.find(query, filter).cursor[JsObject]
-      f.collect[List](999).map {
+      f.collect[List](Integer.MAX_VALUE).map {
         styles =>
           styles
       }
@@ -104,7 +89,7 @@ object DocumentTypeDao {
     val filter = Json.obj("_id" -> 1, "connectedProjects." + projectID -> 1)
 
     val f = collection.find(query, filter).cursor[JsObject]
-    val list = f.collect[List](10)
+    val list = f.collect[List](Integer.MAX_VALUE)
     val transformToArr = (__ \ "connectedProjects" \ projectID).json.pick
 
     list.map { resultList =>
@@ -112,15 +97,16 @@ object DocumentTypeDao {
       for (r <- resultList) {
         r.transform(transformToArr) match {
           case JsSuccess(value, path) => value.asOpt[List[DocTypeProjectConnection]] match {
-            case Some(connections) => {
+            case Some(connections) =>
               Logger.debug("R is here! " + r.toString)
               for (con <- connections) {
                 con.docTypeId = Some((r \ "_id" \ "$oid").asOpt[String].getOrElse(""))
                 if (con.active)
                   result = result.+:(con)
               }
-            }
+            case None =>
           }
+          case JsError(err) =>
         }
       }
       result
@@ -132,7 +118,7 @@ object DocumentTypeDao {
     val filter = Json.obj("_id" -> 1, "connectedProjects." + projectID -> 1)
 
     val f = collection.find(query, filter).cursor[JsObject]
-    val list = f.collect[List](100)
+    val list = f.collect[List](Integer.MAX_VALUE)
     val transformToArr = (__ \ "connectedProjects" \ projectID).json.pick
 
     list.map { resultList =>
@@ -147,7 +133,9 @@ object DocumentTypeDao {
                   result += (con._id.stringify -> con.name)
               }
             }
+            case None =>
           }
+          case JsError(err) =>
         }
       }
       result
@@ -159,7 +147,7 @@ object DocumentTypeDao {
     val filter = Json.obj("_id" -> 1, "connectedProjects." + projectID -> 1)
 
     val f = collection.find(query, filter).cursor[JsObject]
-    val list = f.collect[List](100)
+    val list = f.collect[List](Integer.MAX_VALUE)
     val transformToArr = (__ \ "connectedProjects" \ projectID).json.pick
 
     list.map { resultList =>
@@ -167,63 +155,46 @@ object DocumentTypeDao {
       for (r <- resultList) {
         r.transform(transformToArr) match {
           case JsSuccess(value, path) => value.asOpt[List[DocTypeProjectConnection]] match {
-            case Some(connections) => {
+            case Some(connections) =>
               for (con <- connections) {
                 con.docTypeId = Some((r \ "_id" \ "$oid").asOpt[String].getOrElse(""))
                 result += (con._id.stringify -> con.name)
               }
-            }
+            case None =>
           }
+          case JsError(err) =>
         }
       }
       result
     }
   }
 
-  /*Logger.debug("CURRENTUSER: " + currentUser)
-    val query = Json.obj("$or" -> Json.arr(
-      Json.obj("author" -> currentUser),
-      Json.obj("public" -> true)))
-    val filter = Json.obj("_id" -> 1, "title" -> 1, "author" -> 1, "description" -> 1)
-
-    val f = collection.find(query, filter)
-      .options(QueryOpts(skipN = page * perPage))
-      .sort(Json.obj("modifiedAt" -> 1))
-      .cursor[JsObject]
-
-    f.collect[List](perPage).map {
-      jRes => jRes
-    }
-  }
-  * 
-  */
-
   /**
    * Save a DocumentType.
    *
    * @return true, once saved.
    */
-  def save(documentType: DocumentType): Future[DocumentType] = {
-    Logger.debug("Saving Documenttype: " + documentType.name)
-    println(Json.writes[DocumentType].writes(documentType))
-    val timestamp: Long = System.currentTimeMillis()
-    val insertDoc = documentType.copy(createdAt = timestamp, modifiedAt = timestamp)
-    collection.insert(insertDoc).map {
-      case ok if ok.ok =>
-        insertDoc
-      case error => throw new RuntimeException(error.message)
-    }
-  }
-
-  def update(documentType: DocumentType): Future[Boolean] = {
-    Logger.debug("Updating Documenttype: " + documentType.name)
-    val timestamp: Long = System.currentTimeMillis()
-    collection.save(documentType.copy(modifiedAt = timestamp)).map {
-      case ok if ok.ok =>
-        true
-      case error => throw new RuntimeException(error.message)
-    }
-  }
+  //  def save(documentType: DocumentType): Future[DocumentType] = {
+  //    Logger.debug("Saving Documenttype: " + documentType.name)
+  //    println(Json.writes[DocumentType].writes(documentType))
+  //    val timestamp: Long = System.currentTimeMillis()
+  //    val insertDoc = documentType.copy(createdAt = timestamp, modifiedAt = timestamp)
+  //    collection.insert(insertDoc).map {
+  //      case ok if ok.ok =>
+  //        insertDoc
+  //      case error => throw new RuntimeException(error.message)
+  //    }
+  //  }
+  //
+  //  def update(documentType: DocumentType): Future[Boolean] = {
+  //    Logger.debug("Updating Documenttype: " + documentType.name)
+  //    val timestamp: Long = System.currentTimeMillis()
+  //    collection.save(documentType.copy(modifiedAt = timestamp)).map {
+  //      case ok if ok.ok =>
+  //        true
+  //      case error => throw new RuntimeException(error.message)
+  //    }
+  //  }
 
   /**
    * The total number of DocumentTypes
@@ -245,13 +216,13 @@ object DocumentTypeDao {
    * @param perPage The number of results per page.
    * @return All of the DocumentTypes.
    */
-  def findAll(page: Int, perPage: Int): Future[Seq[DocumentType]] = {
-    collection.find(Json.obj())
-      .options(QueryOpts(skipN = page * perPage))
-      .sort(Json.obj("_id" -> -1))
-      .cursor[DocumentType]
-      .collect[List](perPage)
-  }
+  //  def findAll(page: Int, perPage: Int): Future[Seq[DocumentType]] = {
+  //    collection.find(Json.obj())
+  //      .options(QueryOpts(skipN = page * perPage))
+  //      .sort(Json.obj("_id" -> -1))
+  //      .cursor[DocumentType]
+  //      .collect[List](perPage)
+  //  }
 
   def findById(id: String, filter: Option[JsObject]): Future[Option[JsObject]] = {
     val query = dbHelper.toObjectId(id)
@@ -318,7 +289,7 @@ object DocumentTypeDao {
         val query = Json.obj("connectedProjects." + projectID + ".active" -> true, "connectedProjects." + projectID -> Json.obj("$exists" -> true, "$not" -> Json.obj("$size" -> 0)))
         val filter = Json.obj("_id" -> 1, "connectedProjects." + projectID -> 1, "listDesignTemplate" -> 1, "designTemplate" -> 1)
         val f = collection.find(query, filter).cursor[JsObject]
-        val list = f.collect[List](999)
+        val list = f.collect[List](Integer.MAX_VALUE)
         val transformToArr = (__ \ "connectedProjects" \ projectID).json.pick
         list.map { resultList =>
           var result = Json.obj() //> res  : play.api.libs.json.JsObject = {}

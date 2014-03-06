@@ -1,37 +1,40 @@
 package controllers
 
 import scala.concurrent.Future
+import scala.math.BigDecimal.int2bigDecimal
+
 import play.api.Logger
-import play.api.Play.current
-import play.api.libs.concurrent.Execution.Implicits._
+import play.api.i18n.Messages
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.functionalCanBuildApplicative
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
+import play.api.libs.json.JsArray
+import play.api.libs.json.JsBoolean
 import play.api.libs.json.JsError
-import play.api.libs.json.JsResult
+import play.api.libs.json.JsNumber
+import play.api.libs.json.JsObject
+import play.api.libs.json.JsString
 import play.api.libs.json.JsSuccess
 import play.api.libs.json.Json
-import play.api.libs.json.Reads._
-import play.api.mvc._
+import play.api.libs.json.Json.toJsFieldJsValueWrapper
+import play.api.libs.json.Reads.JsBooleanReads
+import play.api.libs.json.Reads.JsObjectReducer
+import play.api.libs.json.Reads.JsStringReads
+import play.api.libs.json.Reads.StringReads
+import play.api.libs.json.Reads.functorReads
+import play.api.libs.json.Reads.traversableReads
+import play.api.libs.json.__
+import play.api.mvc.Action
 import play.api.mvc.Controller
-import play.modules.reactivemongo.ReactiveMongoPlugin.db
-import play.modules.reactivemongo.json.BSONFormats._
 import play.modules.reactivemongo.json.BSONFormats
 import reactivemongo.core.commands.LastError
-import reactivemongo.core.errors.DatabaseException
-import securesocial.core.Authorization
-import securesocial.core.Identity
-import securesocial.core.Identity
 import securesocial.core.SecureSocial
-import securesocial.core.SecuredRequest
 import service.DBHelper
+import service.DocumentDao
 import service.DocumentTypeDao
 import service.GenUser
 import service.ProjectDao
 import service.UserDao
-import service.DocumentDao
-import play.api.i18n.Messages
-import reactivemongo.bson.BSONObjectID
 
 object ProjectController extends Controller with SecureSocial {
 
@@ -51,16 +54,6 @@ object ProjectController extends Controller with SecureSocial {
   //def
 
   def createProject() = SecuredAction(ajaxCall = true).async(parse.text) { implicit request =>
-    //TODO
-    /*
-     * check if name given by user is already used
-     * load default project from DB
-     * generate new id DONE
-     * add name from user input DONE
-     * store new project to db DONE
-     * reply user the generated project
-     * 
-     */
     Logger.debug("project: " + request.body)
 
     val defaultProject = Json.obj(
@@ -71,8 +64,7 @@ object ProjectController extends Controller with SecureSocial {
       "editorial" -> "",
       "directPublish" -> false,
       "tags" -> JsArray(),
-      "authorroles" -> JsArray() //TODO Add rest of required options
-      //"authorroles" -> JsArray(Seq(Json.obj("name" -> "default", "document" -> ""))) //TODO Add rest of required options
+      "authorroles" -> JsArray() //"authorroles" -> JsArray(Seq(Json.obj("name" -> "default", "document" -> "")))
       )
 
     val language = request.cookies.get("locale").map(cookie => cookie.value).getOrElse("en")
@@ -272,7 +264,6 @@ object ProjectController extends Controller with SecureSocial {
    * ]}}
    */
   def getSelectedProjectConnections() = Action.async(parse.json) { implicit request =>
-    //val projectID = "52d13eb49d0000d9016df9bf"
     request.session.get("project") match {
       case Some(projectID) =>
         val connectionQueryExt = (request.body \ "connectionID").asOpt[String] match {
@@ -336,7 +327,7 @@ object ProjectController extends Controller with SecureSocial {
               distinctTags =>
                 projectDao.getProjectTagsStruktur(projectID).flatMap {
                   tagStruktur =>
-                    DocumentTypeDao.queryDocTypeStyles(Json.obj("deleted"->false), Some(Json.obj())).map {
+                    DocumentTypeDao.queryDocTypeStyles(Json.obj("deleted" -> false), Some(Json.obj())).map {
                       styles =>
                         Ok(dbHelper.resOK(Json.obj("project" -> project, "distinctTags" -> distinctTags, "ordererdTags" -> tagStruktur, "styles" -> styles)))
                     }
@@ -524,7 +515,7 @@ object ProjectController extends Controller with SecureSocial {
   }
 
   def getProjectStyle() = Action.async { implicit request =>
-    DocumentTypeDao.queryDocTypeStyles(Json.obj("deleted"->false), Some(Json.obj("_id" -> 1, "style" -> 1))).map { res =>
+    DocumentTypeDao.queryDocTypeStyles(Json.obj("deleted" -> false), Some(Json.obj("_id" -> 1, "style" -> 1))).map { res =>
       val stylesheet = res.foldLeft("")((acc, x) => {
         val id = "genCMS" + ((x \ "_id") \ "$oid").asOpt[String].getOrElse("")
         val style = ((x \ "style")).asOpt[String].getOrElse("")

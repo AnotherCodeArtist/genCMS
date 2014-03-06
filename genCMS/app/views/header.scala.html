@@ -15,7 +15,7 @@
 					<span class="icon-bar"></span>
 				</button>
 				<!-- You'll want to use a responsive image option so this logo looks good on devices - I recommend using something like retina.js (do a quick Google search for it and you'll find it) -->
-				<a class="navbar-brand" href="/"><i class="fa fa-home fa-lg"></i> genCMS</a>
+				<a class="navbar-brand" href="/"><i class="fa fa-home fa-lg"></i> @Messages("genCMS.header.brand")</a>
 			</div>
 			<!-- Collect the nav links, forms, and other content for toggling -->
 
@@ -61,7 +61,15 @@
 					<!-- User is logged in -->
 						@if(!projectSelected){
 						<!-- No Project Selected Yet -->
-							<li class=""><a href="#" data-bind="click: $root.goToSelectProject"><i class="fa fa-refresh"></i> @Messages("genCMS.header.selectProject")</a></li>
+							<li class="dropdown"><a href="#" class="dropdown-toggle"
+								data-toggle="dropdown"><i class="fa fa-user fa-lg"></i> @Messages("genCMS.header.project") <i class="fa fa-caret-down fa-lg"></i></a>
+									<ul class="dropdown-menu">
+										<li><a href="#" data-bind="click: $root.goToSelectProject"><i class="fa fa-refresh"></i> @Messages("genCMS.header.changeProject")</a></li>
+										<!-- ko if: $root.isCurrentUserAdmin() -->
+											<li><a href="#" data-bind="click: $root.goToNewProject"><i class="fa fa-plus"></i> @Messages("genCMS.header.newProject")</a></li>
+										<!-- /ko -->
+									</ul>
+							</li>
 						} else{
 						<!-- Project Selected -->
 							<li class="dropdown"><a href="#" class="dropdown-toggle"
@@ -104,14 +112,6 @@
 						</li>
 						<!-- <a href="profile"><small>@email</small></a> -->
 					}
-					
-					<!-- editor (Redakteur) logged in -->
-					
-					<!-- author logged in -->
-					
-					<!-- guest logged in -->
-					
-					
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->

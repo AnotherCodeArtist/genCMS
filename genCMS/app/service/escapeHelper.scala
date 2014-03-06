@@ -1,14 +1,11 @@
 package service
 
-import org.apache.commons.lang3.StringEscapeUtils.escapeHtml4
-import org.owasp.html.Handler
-import org.owasp.html.HtmlPolicyBuilder
-import org.owasp.html.HtmlSanitizer
-import org.owasp.html.HtmlStreamRenderer
-import org.owasp.html.PolicyFactory
 import java.util.regex.Pattern
+
+import org.apache.commons.lang3.StringEscapeUtils.escapeHtml4
+import org.owasp.html.HtmlPolicyBuilder
+import org.owasp.html.PolicyFactory
 import org.owasp.html.Sanitizers
-import com.google.common.base.Predicate
 
 object EscapeHelper {
 
@@ -54,9 +51,9 @@ object EscapeHelper {
 
   val VALIGN = Pattern.compile(
     "(?i)baseline|bottom|middle|top")
-    
-    val ONE_CHAR = Pattern.compile(
-      ".?", Pattern.DOTALL)
+
+  val ONE_CHAR = Pattern.compile(
+    ".?", Pattern.DOTALL)
 
   val POLICY_DEFINITION: PolicyFactory = new HtmlPolicyBuilder()
     .allowAttributes("id").matching(HTML_ID).globally()
@@ -135,7 +132,7 @@ object EscapeHelper {
       "ul", "ol", "li", "dd", "dt", "dl", "tbody", "thead", "tfoot",
       "table", "td", "th", "tr", "colgroup", "fieldset", "legend")
     .toFactory();
- val SIMPLE_POLICY = Sanitizers.BLOCKS.and(Sanitizers.FORMATTING).and(Sanitizers.IMAGES).and(Sanitizers.LINKS).and(Sanitizers.STYLES)
+  val SIMPLE_POLICY = Sanitizers.BLOCKS.and(Sanitizers.FORMATTING).and(Sanitizers.IMAGES).and(Sanitizers.LINKS).and(Sanitizers.STYLES)
   /**
    * Escapes HTML entities in text only fields using the apache commons StringEscapeUtils
    */
@@ -147,6 +144,6 @@ object EscapeHelper {
    * Prevents XSS using the OWASP Html Sanitizer
    */
   def sanitizeHTML(txt: String) = {
-	  SIMPLE_POLICY.sanitize(txt)
+    SIMPLE_POLICY.sanitize(txt)
   }
 }

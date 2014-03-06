@@ -1,34 +1,35 @@
 package service
 
-import play.api.Play.current
-import play.api.data._
-import play.api.data.Forms._
-import models.DocumentType
-import reactivemongo.api._
-import reactivemongo.bson._
-import reactivemongo.core.commands._
-import play.api.libs.concurrent.Execution.Implicits._
-import play.modules.reactivemongo.ReactiveMongoPlugin.db
-import play.modules.reactivemongo.json.collection.JSONCollection
+import scala.collection.mutable.Buffer
 import scala.concurrent.Future
-import scala.concurrent.duration._
-import scala.concurrent.Await
-import reactivemongo.bson.BSONObjectID
-import play.modules.reactivemongo.json.BSONFormats
+
+import models.DocumentTag
 import play.api.Logger
-import play.api.libs.json.Json
-import play.api.libs.json.JsObject
-import play.api.libs.json.JsValue
-import play.api.libs.json.JsObject
-import reactivemongo.core.commands.LastError
-import reactivemongo.core.errors.DatabaseException
+import play.api.Play.current
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.functional.syntax.functionalCanBuildApplicative
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.JsArray
 import play.api.libs.json.JsObject
-import play.api.libs.json.JsObject
-import play.api.libs.json.JsSuccess
-import models.DocumentTag
-import scala.collection.mutable.Buffer
-import play.api.libs.json.Writes
+import play.api.libs.json.JsValue
+import play.api.libs.json.Json
+import play.api.libs.json.Json.toJsFieldJsValueWrapper
+import play.modules.reactivemongo.ReactiveMongoPlugin.db
+import play.modules.reactivemongo.json.BSONFormats
+import play.modules.reactivemongo.json.collection.JSONCollection
+import reactivemongo.bson.BSONDocument
+import reactivemongo.bson.BSONStringHandler
+import reactivemongo.bson.Producer.nameValue2Producer
+import reactivemongo.core.commands.Aggregate
+import reactivemongo.core.commands.Ascending
+import reactivemongo.core.commands.Descending
+import reactivemongo.core.commands.Group
+import reactivemongo.core.commands.GroupField
+import reactivemongo.core.commands.LastError
+import reactivemongo.core.commands.Match
+import reactivemongo.core.commands.Sort
+import reactivemongo.core.commands.SumValue
+import reactivemongo.core.commands.Unwind
 
 object ProjectDao {
   case class AuthorRole(
@@ -299,7 +300,7 @@ object ProjectDao {
     val query = Json.obj()
     val filter = Json.obj("title" -> 1)
     val c = collection.find(query, filter).cursor[JsObject]
-    c.toList().map { res =>
+    c.collect[List](Integer.MAX_VALUE).map { res =>
       res.foldLeft(Json.obj())((acc, x) => acc ++ Json.obj(((x \ "_id") \ "$oid").as[String] -> (x \ "title")))
     }
   }
@@ -310,7 +311,7 @@ object ProjectDao {
     val query = Json.obj()
     val filter = Json.obj("authorroles" -> 1)
     val c = collection.find(query, filter).cursor[JsObject]
-    c.toList().map { res =>
+    c.collect[List](Integer.MAX_VALUE).map { res =>
       res.foldLeft(Json.obj())((acc, x) => acc ++ Json.obj(((x \ "_id") \ "$oid").as[String] -> (x \ "authorroles")))
     }
   }
@@ -322,7 +323,7 @@ object ProjectDao {
     val query = Json.obj()
     val filter = Json.obj("tags" -> 1)
     val c = collection.find(query, filter).cursor[JsObject]
-    c.toList().map { res =>
+    c.collect[List](Integer.MAX_VALUE).map { res =>
       res.foldLeft(Json.obj())((acc, x) => acc ++ Json.obj(((x \ "_id") \ "$oid").as[String] -> (x \ "tags")))
     }
   }
@@ -360,51 +361,51 @@ object ProjectDao {
    */
   def getProjectTagsStruktur(projectID: String): Future[Option[JsValue]] = {
     //def getProjectTagsStruktur(projectID: String): Future[List[JsValue]] = {
-    try{
+    try {
       db.command(Aggregate("projects", Seq(
-      Match(BSONFormats.toBSON(dbHelper.toObjectId(projectID)).get.asInstanceOf[BSONDocument]),
-      Unwind("tagsStructure"),
-      Group(BSONDocument("_id" -> "$tagsStructure.name", "parent" -> "$tagsStructure.parent", "sort" -> "$tagsStructure.sort"))(), //("count" -> SumValue(1)),
-      Sort(Seq(Ascending("_id.sort"), Ascending("parent")))))) map { stream =>
-      val x = (
-        stream.toList.map { doc =>
-          BSONFormats.toJSON(doc).asInstanceOf[JsObject]
-        })
+        Match(BSONFormats.toBSON(dbHelper.toObjectId(projectID)).get.asInstanceOf[BSONDocument]),
+        Unwind("tagsStructure"),
+        Group(BSONDocument("_id" -> "$tagsStructure.name", "parent" -> "$tagsStructure.parent", "sort" -> "$tagsStructure.sort"))(), //("count" -> SumValue(1)),
+        Sort(Seq(Ascending("_id.sort"), Ascending("parent")))))) map { stream =>
+        val x = (
+          stream.toList.map { doc =>
+            BSONFormats.toJSON(doc).asInstanceOf[JsObject]
+          })
 
-      val xxx = x.foldLeft(Buffer[DocumentTag]())((acc, x) => {
-        val name = ((x \ "_id") \ "_id").asOpt[String].getOrElse("")
-        val sort = ((x \ "_id") \ "sort").asOpt[Int].getOrElse(0)
-        ((x \ "_id") \ "parent").asOpt[String] match {
-          case None => //insert as tag
-            acc.indexWhere(dT => dT.name == name) match {
-              case -1 => acc ++ Buffer(DocumentTag(name, sort, null))
-              case index => 
-                acc(index) = DocumentTag(name, sort, acc(index).childs)
-                acc
-            }
-          case Some(parent) => //check if parent exists, T: include tag as child, F: include parent with child
-            acc.indexWhere(dT => dT.name == parent) match {
-              case -1 => acc ++ Buffer(DocumentTag(parent, -1, Buffer(DocumentTag(name, sort, null))))
-              case parentIndex =>
-                val parent = acc(parentIndex)
-                parent.childs match {
-                  case null =>
-                    acc(parentIndex) = DocumentTag(parent.name, acc(parentIndex).order, Buffer(DocumentTag(name, sort, null)))
-                    acc
-                  case childs =>
-                    //check if child exist
-                    childs.indexWhere(dT => dT.name == name) match {
-                      case -1 =>
-                        acc(parentIndex) = DocumentTag(parent.name, acc(parentIndex).order, childs ++ Buffer(DocumentTag(name, sort, null)))
-                        acc
-                      case childIndex => acc
-                    }
-                }
-            }
-        }
-      })
-      Some(Json.toJson(xxx.sortWith(DBHelper.compDocTag)))
-    }
+        val xxx = x.foldLeft(Buffer[DocumentTag]())((acc, x) => {
+          val name = ((x \ "_id") \ "_id").asOpt[String].getOrElse("")
+          val sort = ((x \ "_id") \ "sort").asOpt[Int].getOrElse(0)
+          ((x \ "_id") \ "parent").asOpt[String] match {
+            case None => //insert as tag
+              acc.indexWhere(dT => dT.name == name) match {
+                case -1 => acc ++ Buffer(DocumentTag(name, sort, null))
+                case index =>
+                  acc(index) = DocumentTag(name, sort, acc(index).childs)
+                  acc
+              }
+            case Some(parent) => //check if parent exists, T: include tag as child, F: include parent with child
+              acc.indexWhere(dT => dT.name == parent) match {
+                case -1 => acc ++ Buffer(DocumentTag(parent, -1, Buffer(DocumentTag(name, sort, null))))
+                case parentIndex =>
+                  val parent = acc(parentIndex)
+                  parent.childs match {
+                    case null =>
+                      acc(parentIndex) = DocumentTag(parent.name, acc(parentIndex).order, Buffer(DocumentTag(name, sort, null)))
+                      acc
+                    case childs =>
+                      //check if child exist
+                      childs.indexWhere(dT => dT.name == name) match {
+                        case -1 =>
+                          acc(parentIndex) = DocumentTag(parent.name, acc(parentIndex).order, childs ++ Buffer(DocumentTag(name, sort, null)))
+                          acc
+                        case childIndex => acc
+                      }
+                  }
+              }
+          }
+        })
+        Some(Json.toJson(xxx.sortWith(DBHelper.compDocTag)))
+      }
     } catch {
       case e: Throwable => Future(None) //Wrong ID
     }
@@ -447,119 +448,5 @@ object ProjectDao {
       lastError => lastError
     }
   }
-
-  /*
-  def update(documentType: DocumentType): Future[Boolean] = {
-    Logger.debug("Updating Documenttype: " + documentType.name)
-    val timestamp: Long = System.currentTimeMillis()
-    collection.save(documentType.copy(modifiedAt = timestamp)).map {
-      case ok if ok.ok =>
-        true
-      case error => throw new RuntimeException(error.message)
-    }
-  }
-
-  /**
-   * The total number of DocumentTypes
-   */
-  def count: Future[Int] = {
-    db.command(Count(collection.name))
-  }
-
-  /**
-   * Find all the documentTypes.
-   *
-   * @param page The page to retrieve, 0 based.
-   * @param perPage The number of results per page.
-   * @return All of the DocumentTypes.
-   */
-  def findAll(page: Int, perPage: Int): Future[Seq[DocumentType]] = {
-    collection.find(Json.obj())
-      .options(QueryOpts(skipN = page * perPage))
-      .sort(Json.obj("_id" -> -1))
-      .cursor[DocumentType]
-      .collect[List](perPage)
-  }
-
-  def findById(id: BSONObjectID): Future[DocumentType] = {
-    collection.find(Json.obj("_id" -> id)).cursor[DocumentType].collect[List](1).map {
-      docTypes =>
-        if (docTypes.isEmpty)
-          null
-        else
-          docTypes(0)
-    }
-  }
-  * 
-  * 
-  */
-
-  /*
-  def findAllForProject(page: Int, perPage: Int): Future[Seq[DocumentType]] = {
-    collection.find(Json.obj())
-      .options(QueryOpts(skipN = page * perPage))
-      .sort(Json.obj("_id" -> -1))
-      .cursor[DocumentType]
-      .collect[List](perPage)
-  }*/
-
-  /*
-    /** The total number of messages */
-  
-*/
-  /* def createUser() = Action{
-    val user = User("seppi","sepp@test.at", "Sepp", "Bucher","password")
-     // insert the user
-    val futureResult = collection.insert(user)
-    Async {
-      // when the insert is performed, send a OK 200 result
-      futureResult.map(_ => Ok)
-    }		
-  }
-  
-  def findUsers(name:String) = Action{
-    Async {
-      val cursor: Cursor[User] = collection.
-        // find all people with name `name`
-        find(Json.obj("firstName" -> name)).
-        // sort them by creation date
-        sort(Json.obj("created" -> -1)).
-        // perform the query and get a cursor of JsObject
-        cursor[User]
-
-      // gather all the JsObjects in a list
-      val futureUsersList: Future[List[User]] = cursor.collect[List](10, true)
-
-      // everything's ok! Let's reply with the array
-      futureUsersList.map { persons =>
-        Ok(persons.toString)
-      }
-    }
-  }
-  */
-  /*
-  /**
-   * Find all the messages.
-   *
-   * @param page The page to retrieve, 0 based.
-   * @param perPage The number of results per page.
-   * @return All of the messages.
-   */
-  def findAll(page: Int, perPage: Int): Future[Seq[Message]] = {
-    collection.find(Json.obj())
-      .options(QueryOpts(skipN = page * perPage))
-      .sort(Json.obj("_id" -> -1))
-      .cursor[Message]
-      .toList(perPage)
-  }
-
-
-
-  
-  
-  
-  
-  
-  * */
 
 }

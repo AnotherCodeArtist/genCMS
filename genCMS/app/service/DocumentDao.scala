@@ -2,6 +2,7 @@ package service
 
 import scala.concurrent.Future
 import scala.math.BigDecimal.double2bigDecimal
+
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages
@@ -23,6 +24,8 @@ import play.modules.reactivemongo.json.BSONFormats
 import play.modules.reactivemongo.json.BSONFormats.toJSON
 import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.api.gridfs.GridFS
+import reactivemongo.api.indexes.Index
+import reactivemongo.api.indexes.IndexType
 import reactivemongo.bson.BSONArray
 import reactivemongo.bson.BSONArrayIdentity
 import reactivemongo.bson.BSONBooleanHandler
@@ -37,8 +40,6 @@ import reactivemongo.core.commands.Count
 import reactivemongo.core.commands.GetLastError
 import reactivemongo.core.commands.LastError
 import reactivemongo.core.commands.RawCommand
-import reactivemongo.api.indexes.IndexType
-import reactivemongo.api.indexes.Index
 
 object DocumentDao {
 
@@ -222,9 +223,6 @@ object DocumentDao {
     }
   }
 
-  /*
-   * TODO: replace with $near & calculation of distance
-   */
   def getNearLocationsWithDistance(long: Double, lat: Double, projectID: String): Future[Option[JsValue]] = {
     val command =
       BSONDocument(
@@ -241,15 +239,6 @@ object DocumentDao {
     } catch {
       case e: Throwable => Logger.error(e.getMessage()); Future(None)
     }
-
-    /*
-       * { geoNear: "places",
-                 near: [ -74, 40.74 ],
-                 spherical: true
-               }
-       */
-
-    //Future(None)
 
   }
 

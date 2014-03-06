@@ -6,19 +6,7 @@
 GET      /                                                                                                controllers.Application.index
 GET      /html/index                                                                                      controllers.Application.indexplain
 
-#POST     /                                                               controllers.Application.sendMail
-
-# Login and Registration
-#GET      /html/loginOLD                                                     controllers.Application.loginplain
-#GET      /loginOLD                                                          controllers.Application.login(email = "")
-#POST     /loginOLD                                                       controllers.Application.authenticate
-#GET      /registerOLD                                                    controllers.Application.register
-#POST     /registerOLD                                                    controllers.Application.sendRegistration
-#GET      /logoutOLD                                                      controllers.Application.logout
-##GET      /notFound                     controllers.Application.notFound
-
 #Internationalization
-
 GET      /lang/:lang                                                                                      controllers.Application.changeLanguage(lang:String)
 
 # Login page
@@ -31,18 +19,16 @@ GET      /logout                                                                
 GET      /set/admin/:email                                                                                controllers.Application.setAdmin(email:String)
 GET      /remove/admin/:email                                                                             controllers.Application.removeAdmin(email:String)
 
-GET      /set/projectadmin/:email/:projectID                                                              controllers.Application.setProjectadmin(email:String, projectID:String)
 GET      /set/projectadmin/:email                                                                         controllers.Application.setProjectadmin(email:String, projectID:String="")
-GET      /remove/projectadmin/:email/:projectID                                                           controllers.Application.removeProjectadmin(email:String, projectID:String)
+GET      /set/projectadmin/:email/:projectID                                                              controllers.Application.setProjectadmin(email:String, projectID:String)
 GET      /remove/projectadmin/:email                                                                      controllers.Application.removeProjectadmin(email:String, projectID:String="")
+GET      /remove/projectadmin/:email/:projectID                                                           controllers.Application.removeProjectadmin(email:String, projectID:String)
 
-GET      /set/author/:email/:role/:projectID                                                              controllers.Application.setAuthor(email:String, role:String, projectID:String)
-GET      /set/author/:email/:role                                                                         controllers.Application.setAuthor(email:String, role:String, projectID:String)
 GET      /set/author/:email                                                                               controllers.Application.setAuthor(email:String, role:String="default", projectID:String="")
-GET      /remove/author/:email/:projectID                                                                 controllers.Application.removeAuthor(email:String, projectID:String)
+GET      /set/author/:email/:role                                                                         controllers.Application.setAuthor(email:String, role:String, projectID:String)
+GET      /set/author/:email/:role/:projectID                                                              controllers.Application.setAuthor(email:String, role:String, projectID:String)
 GET      /remove/author/:email                                                                            controllers.Application.removeAuthor(email:String, projectID:String="")
-
-
+GET      /remove/author/:email/:projectID                                                                 controllers.Application.removeAuthor(email:String, projectID:String)
 
 # User Registration and password handling (only needed if you are using UsernamePasswordProvider)
 GET      /signup                                                                                          securesocial.controllers.Registration.startSignUp
@@ -69,7 +55,6 @@ GET      /html/docTypeDesignEditor                                              
 GET      /html/docTypeListDesignEditor                                                                    controllers.Application.getDocTypeDesignEditor(listDesign:Boolean ?= true)
 GET      /html/userSettings                                                                               controllers.Application.getUserAccountPage
 GET      /html/manageUsers                                                                                controllers.Application.getUserManagementPage
-GET      /html/404                                                                                        controllers.Application.getNotFoundPage
 GET      /html/newProject                                                                                 controllers.Application.getProjectNewPage
 GET      /html/projectEdit                                                                                controllers.Application.getProjectEditPage
 GET      /html/projects                                                                                   controllers.Application.getProjectsList
@@ -80,12 +65,9 @@ GET      /html/documentEditor                                                   
 GET      /html/documentList                                                                               controllers.Application.getDocumentList
 GET      /html/documentListUnreleased                                                                     controllers.Application.getDocumentListUnreleased
 # documenttypes
-#GET    /doctypes                                                        controllers.DocumentController.getDocTypes(page: Int ?= 0, perPage: Int ?= 10, projectOnly: Boolean ?= false, userOnly: Boolean ?= false, orderBy:String ?= "_id", order:Int ?=-1)
 GET      /doctype/styles/full                                                                             controllers.DocumentController.getDocTypeStylesFull()
 GET      /doctype/styles                                                                                  controllers.DocumentController.getDocTypeStylesKeyValue()
 GET      /doctypes/:perPage/:page/:projectOnly/:userOnly/:orderBy/:asc                                    controllers.DocumentController.getDocTypes(page: Int, perPage: Int, projectOnly: Boolean, userOnly: Boolean, orderBy, asc: Boolean)
-#GET      /doctype/all/:page/:perPage   controllers.DocumentController.getDocTypes(page: Int, perPage: Int)
-#GET     /doctype/new               controllers.DocumentController.showCreationForm
 POST     /new/doctype                                                                                     controllers.DocumentController.createDocType
 GET      /doctype/connected                                                                               controllers.DocumentController.getConnectedDocumentTypes()
 POST     /doctype/connect/:id                                                                             controllers.DocumentController.connectDocTypeToProject(id)
@@ -144,8 +126,8 @@ GET      /headerInfos                                                           
 GET      /projects/titles                                                                                 controllers.ProjectController.getProjectTitles()
 GET      /projects/roles                                                                                  controllers.ProjectController.getProjectAuthorRoles()
 GET      /projects/tags                                                                                   controllers.ProjectController.getProjectTags()
-GET      /projects                                                                                        controllers.ProjectController.getProjects(page: Int ?= 0, perPage: Int ?= 10)
-GET      /projects/:perPage/:page                                                                         controllers.ProjectController.getProjects(page: Int, perPage: Int)
+GET      /projects                                                                                        controllers.ProjectController.getProjects(page: Int ?= 0, perPage: Int ?= 25)
+#GET      /projects/:perPage/:page                                                                         controllers.ProjectController.getProjects(page: Int, perPage: Int)
 POST     /project/tags                                                                                    controllers.ProjectController.getSelectedProjectTags()
 POST     /project/saveTags                                                                                controllers.ProjectController.saveSelectedProjectTagsStructure()
 POST     /project/connections                                                                             controllers.ProjectController.getSelectedProjectConnections()
@@ -166,22 +148,12 @@ GET      /project/editorial/:docID                                              
 GET      /project                                                                                         controllers.ProjectController.getSelectedProject()
 POST     /new/project                                                                                     controllers.ProjectController.createProject
 
-GET      /dummy/:id                                                                                       controllers.DocumentController.DUMMY(id:String)
-
 GET      /users/:perPage/:page/:projectOnly/:filteredOnly/:admin/:projectAdmin/:author/:orderBy/:asc      controllers.Application.getUsers(page: Int, perPage: Int, projectOnly: Boolean,filteredOnly:Boolean, admin: Boolean, projectAdmin: Boolean, author: Boolean, orderBy: String, asc: Boolean)
-GET      /user/:email                                                                                     controllers.Application.getUser(email:String)
 GET      /user                                                                                            controllers.Application.getUser(email:String="")
+GET      /user/:email                                                                                     controllers.Application.getUser(email:String)
 POST     /user                                                                                            controllers.Application.updateUser()
 
 GET      /projectstyle                                                                                    controllers.ProjectController.getProjectStyle()
-#User Test
-#GET		/createUser					controllers.Application.createUser
-#GET		/findUser/:name				controllers.Application.findUsers(name: String)
-
-#Task Page
-#GET		/tasks						controllers.Application.tasks
-#POST	/tasks						controllers.Application.newTask
-#POST    /tasks/:id/delete       controllers.Application.deleteTask(id: Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET      /assets/*file                                                                                    controllers.Assets.at(path="/public", file)

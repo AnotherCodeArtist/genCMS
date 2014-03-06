@@ -1,33 +1,25 @@
 package controllers
-import play.api._
-import play.api.mvc._
-import play.api.data._
-import play.api.data.Forms._
-import models._
+
 import scala.concurrent.Future
-import play.api.libs.concurrent.Execution.Implicits._
-import play.api.libs.json.Json
-import play.api.libs.json.JsValue
+
+import play.api.Logger
 import play.api.Play.current
-import reactivemongo.api._
-import play.modules.reactivemongo.MongoController
-import play.modules.reactivemongo.json.collection.JSONCollection
-import service.UserDao
-import reactivemongo.bson.BSONObjectID
-import scala.concurrent.duration._
-import play.api.mvc.RequestHeader
-import service.ProjectDao
-import views.html.document.documentEdit
-import securesocial.core.SecureSocial
-import securesocial.core.Identity
-import securesocial.core.Identity
-import securesocial.core.Authorization
-import service.GenUser
-import securesocial.core.SecuredRequest
 import play.api.i18n.Lang
 import play.api.i18n.Messages
-import service.MongoUserService
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json.Json
+import play.api.libs.json.Json.toJsFieldJsValueWrapper
+import play.api.mvc.Action
+import play.api.mvc.Controller
+import play.api.mvc.RequestHeader
+import play.modules.reactivemongo.MongoController
+import securesocial.core.Authorization
+import securesocial.core.Identity
+import securesocial.core.SecureSocial
 import service.DBHelper
+import service.GenUser
+import service.ProjectDao
+import service.UserDao
 
 case class IsAdmin() extends Authorization {
   def isAuthorized(identity: Identity): Boolean = {
@@ -46,124 +38,6 @@ object Application extends Controller with MongoController with SecureSocial {
 
   val userDao = UserDao
   val dbHelper = DBHelper
-  // -- Authentication
-  //def collection: JSONCollection = db.collection[JSONCollection]("persons")
-
-  /*def authenticateUser(email:String, password:String) = {
-    if(email.equals("robin.passath@gmx.at"))
-    	true
-	else
-		false
-  }*/
-  /*
-  val minPasswordLength = 6
-  val maxPasswordLength = 100
-  val loginForm = Form(
-    tuple(
-      "email" -> nonEmptyText,
-      "password" -> nonEmptyText) /* verifying ("Invalid email or password", result => result match {
-        case (email, password) => async{ await(UserDao.authenticate(email, password)) }
-      })
-      * 
-      */ )
-
-  val registerForm = Form(
-    tuple(
-      "username" -> nonEmptyText,
-      "firstName" -> nonEmptyText,
-      "lastName" -> nonEmptyText,
-      "email" -> nonEmptyText,
-      "password" -> nonEmptyText(minPasswordLength, maxPasswordLength)) /*verifying ("error at registration", result => result match {
-        case (username, firstname, lastname, email, password) => Await.result(UserDao.save(User(BSONObjectID.generate, username, firstname, lastname, email, password)), 1 second) //UserDao.count(email, password)
-      })
-      * 
-      */ )
-*/
-  /**
-   * Login page.
-   */
-  /*
-  def login(email: String) = Action { implicit request =>
-    if (email.isEmpty())
-      Ok(views.html.loginOLD(getSessionValue(request, "email"), loginForm))
-    else {
-      val failedForm = loginForm.fill(email, "")
-      Ok(views.html.loginOLD(getSessionValue(request, "email"), failedForm))
-    }
-  }
-*/
-  /*
-  def loginplain = Action { implicit request =>
-    Ok(views.html.loginPlain(getSessionValue(request, "email"), loginForm))
-  }
-*/
-  /*
-   
-   def register = Action { implicit request =>
-    Ok(views.html.loginPlain(getSessionValue(request, "email"), null, registerForm))
-  }
-*/
-  /**
-   * Handle login form submission.
-   */
-  /* def authenticate = Action.async { implicit request =>
-    loginForm.bindFromRequest.fold(
-      formWithErrors => Future(BadRequest(views.html.loginOLD(getSessionValue(request, "email"), formWithErrors))),
-      formSuccess => {
-        val login = UserDao.authenticate(formSuccess._1, formSuccess._2)
-        login.map {
-          success =>
-            if (success) {
-              Redirect(routes.Application.index).withSession("email" -> formSuccess._1).withCookies(Cookie("locale", "en", httpOnly = false))
-            } else {
-              val failedForm = loginForm.fillAndValidate(formSuccess._1, "") //.withError("login", "username or password", "email")
-              Logger.debug(failedForm.toString)
-              Ok(views.html.loginOLD("", failedForm, null, Map("error" -> "Username or Password is incorrect"))) //.flashing("error"->"Username or Password is incorrect")
-              //Redirect(routes.Application.login).flashing("error" -> "Username or Password is incorrect")
-            }
-        }
-      })
-    //user => Redirect(routes.Application.index).withSession("email" -> user._1))
-  }
-*/
-  /*      
-  def sendRegistration = Action.async { implicit request =>
-    registerForm.bindFromRequest.fold(
-      formWithErrors => Future(BadRequest(views.html.loginOLD(getSessionValue(request, "email"), null, formWithErrors))),
-      formSuccess => {
-        val registration = UserDao.save(User(BSONObjectID.generate, formSuccess._1, formSuccess._2, formSuccess._3, formSuccess._4, formSuccess._5))
-        registration.map {
-          success =>
-            if (success) {
-              Redirect(routes.Application.login).flashing("success" -> "registration successfull!")
-            } else {
-              val failedForm = registerForm.fill(formSuccess._1, formSuccess._2, formSuccess._3, formSuccess._4, "")
-              BadRequest(views.html.loginOLD(getSessionValue(request, "email"), null, registerForm)).flashing("error" -> "registration not successfull")
-            }
-        }
-      })
-    //user => Redirect(routes.Application.index).flashing("success" -> "registration successfull!"))
-  }
-*/
-  /**
-   * Logout and clean the session.
-   */
-  /* def logout = Action {
-    Redirect(routes.Application.index).withNewSession.flashing(
-      "success" -> "You've been logged out")
-  }
-*/
-  /**
-   * Provide security features
-   */
-  /* trait Secured {
-    /**
-     * Retrieve the connected user email.
-     */
-    private def username(request: RequestHeader) = request.session.get("email")
-
-  }
-  * */
 
   def changeLanguage(langCode: String) = Action { implicit request =>
     implicit val lang = langCode match {
@@ -174,7 +48,6 @@ object Application extends Controller with MongoController with SecureSocial {
       case _ => Lang("en")
     }
     Ok(Messages("hello.world")).withLang(lang)
-    //Redirect("/", 301).withLang(lang)
   }
 
   def index = UserAwareAction.async { implicit request =>
@@ -200,23 +73,6 @@ object Application extends Controller with MongoController with SecureSocial {
     Ok(views.html.indexPlain())
   }
 
-  /* def sendMail() = Action {
-    /*
-     
-    val email = "robinpassath@hotmail.com"
-
-    val body: Body = new Body(views.txt.email.body.render().toString(),
-      views.html.email.body.render().toString());
-    Mailer.getDefaultMailer().sendMail("play-easymail | it works!",
-      body, email);
-
-    //flash("message", "Mail to '" + email
-    //		+ "' has been sent successfully!");
-     *  
-     */
-    Redirect(routes.Application.index).flashing("message" -> "The email has been send") //"message","Mail to '" + email+ "' has been sent successfully!")
-  }
-*/
   def getSessionValue(request: RequestHeader, field: String): String = {
     request.session.get(field).map {
       value => value
@@ -355,10 +211,6 @@ object Application extends Controller with MongoController with SecureSocial {
     Ok(views.html.manageUsers())
   }
 
-  def getNotFoundPage = UserAwareAction { implicit request =>
-    Ok(views.html.page404())
-  }
-
   def getProjectNewPage = SecuredAction(ajaxCall = true) { implicit request =>
     Ok(views.html.project.projectNew())
   }
@@ -395,7 +247,7 @@ object Application extends Controller with MongoController with SecureSocial {
         Ok(views.html.documentType.docTypeConnectToProject(projectID))
       }
       case None => {
-        Ok(views.html.notFoundPage(request.path))
+        BadRequest(dbHelper.resKO(Json.obj("error" -> "no project selected")))
       }
     }
   }
@@ -412,7 +264,7 @@ object Application extends Controller with MongoController with SecureSocial {
         }
       }
       case None => {
-        Ok(views.html.notFoundPage(request.path))
+        BadRequest(dbHelper.resKO(Json.obj("error" -> "no project selected")))
       }
     }
   }
@@ -423,7 +275,7 @@ object Application extends Controller with MongoController with SecureSocial {
         Ok(views.html.document.documentEdit())
       }
       case None => {
-        Ok(views.html.notFoundPage(request.path))
+        BadRequest(dbHelper.resKO(Json.obj("error" -> "no project selected")))
       }
     }
   }

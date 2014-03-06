@@ -17,17 +17,8 @@
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs">
 				  <li class="active"><a href="#basicSettings" data-toggle="tab">@Messages("genCMS.project.settings.basicSettings")</a></li>
-				  <!--
-				  <li><a href="#layoutSettings" data-toggle="tab">Layout</a></li>
-				  -->
 				  <li><a href="#tagsSettings" data-toggle="tab">@Messages("genCMS.project.settings.tags")</a></li>
-				  <!-- 
-				   <li><a href="#docTypeSettings" data-toggle="tab">Available Document Types</a></li>
-				   -->
 				  <li><a href="#roleSettings" data-toggle="tab">@Messages("genCMS.project.settings.authorRoles")</a></li>
-				  <!-- 
-				   <li><a href="#memberSettings" data-toggle="tab">@Messages("genCMS.project.settings.members")</a></li>
-				   -->
 				  <li><a href="#docStyleSettings" data-toggle="tab">@Messages("genCMS.project.settings.docStyles")</a></li>
 				</ul>
 				
@@ -39,24 +30,9 @@
 				  <div class="tab-pane fade" id="tagsSettings">
 				    @project.tagsSettings()
 			      </div>
-				  <!--
-				  <div class="tab-pane fade" id="layoutSettings">
-				    project.layoutSettings()
-			      </div>
-			      -->
-			      <!-- 
-			       <div class="tab-pane fade" id="docTypeSettings">
-			    	project.docTypeSettings()
-			      </div>
-			       -->
 				  <div class="tab-pane fade" id="roleSettings">
 				  	@project.roleSettings()
 				  </div>
-				  <!-- 
-				   <div class="tab-pane fade" id="memberSettings">
-				  	project.memberSettings()
-				  </div>
-				   -->
 				  <div class="tab-pane fade" id="docStyleSettings">
 				  	@project.documentStyles()
 				  </div>

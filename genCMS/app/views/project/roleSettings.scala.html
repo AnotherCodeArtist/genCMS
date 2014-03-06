@@ -15,14 +15,8 @@
 		        <tr>
 		            <td data-bind="text: authorrole.name"></td>
 		            <!-- ko if: authorrole.jobdoc()=="" -->
-		            	<!-- 
-		            	 <td><button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" data-content="TO SOMETHING AGAINST IT">NO DOC YET</button></td>
-		            	 -->
 		            	<td>@Messages("genCMS.project.role.noJobDesc")</button></td>
 		            <!-- /ko -->
-		            <!--  
-		            $('[data-toggle=popover]').popover()
-		            -->
 		            <!-- ko if: authorrole.jobdoc()!="" -->
 			            <td><button type="button" class="btn btn-default" data-bind="click: function(){$root.openDoc(authorrole.jobdoc())}">@Messages("genCMS.project.role.openJobDesc")</button></td>
 		            <!-- /ko -->

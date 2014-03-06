@@ -4,13 +4,15 @@
 <div class="form-horizontal well well-sm">
 	<div class="form-group">
 	<div class="col-sm-5">
-		<ol class="tagDrag vertical" data-bind="foreach: selectedProject().tags">
-	      	<li class="level1" data-bind="attr:{tagname:$data}">
-	        <!-- ko text:$data --><!-- /ko -->
-	        <button type="button" class="close" data-bind="click: function(){ $root.removeTag($data)}"><i class="fa fa-trash-o fa-sm text-danger"/></button>
-	        <ol class="level2"></ol>
-	        </li>
-	    </ol>
+		<div class="form-group">
+			<ol class="tagDrag vertical" data-bind="foreach: selectedProject().tags">
+		      	<li class="level1" data-bind="attr:{tagname:$data}">
+		        <!-- ko text:$data --><!-- /ko -->
+		        <button type="button" class="close" data-bind="click: function(){ $root.removeTag($data)}"><i class="fa fa-trash-o fa-sm text-danger"/></button>
+		        <ol class="level2"></ol>
+		        </li>
+		    </ol>
+		</div>
 	    <div class="form-group">
 			<label for="tagsInput" class="col-sm-2 control-label">@Messages("genCMS.project.tags.tagName")</label>
 			<div class="col-sm-5">
@@ -27,9 +29,10 @@
 	</div>
 	
 	<div class="col-sm-7">
-		<ol class="tagDrop vertical">
-	       
-	    </ol>
+		<div class="form-group">
+			<ol class="tagDrop vertical">
+		    </ol>
+	    </div>
 	    <div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
 				<button type="button" class="btn btn-success" data-bind="click: function(){$root.saveTags()}"><i class="fa fa-plus fa-lg"></i> @Messages("genCMS.project.tags.saveTag")</button>
@@ -37,29 +40,4 @@
 		</div>
 	</div>
   </div>
-	
-	
-	
-	
-	
-<!-- <div class="col-sm-12 hidden">	
-	<div class="table-responsive">
-		<table class="table table-hover table-striped">
-		    <thead>
-		    	<tr>
-		    		<th>@Messages("genCMS.project.tags.tagName")</th>
-		    		<th>@Messages("genCMS.project.tags.removeTag")</th>
-		    	</tr>
-	    	</thead>
-		    <tbody data-bind="foreach: {data: selectedProject().tags, as: 'tag'}">
-		        <tr>
-		            <td data-bind="text: tag"></td>
-		            <td><button type="button" data-bind="click: function(){ $root.removeTag(tag) }, clickBubble: false" class="btn btn-danger" ><i class="fa fa-trash-o fa-lg"/></button></td>
-		        </tr>     
-		    </tbody>
-		</table>
-	</div>
-</div>
-	<hr>
-	-->
 </div>	   

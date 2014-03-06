@@ -1,14 +1,11 @@
 @(user: String="")(implicit request:Request[Any], lang: play.api.i18n.Lang)
-<div class="container">
-	<script type="text/javascript">
+<script type="text/javascript">
 	
 		var imageUploadsToInit = new Array();
 		var audioUploadsToInit = new Array();
 		var videoUploadsToInit = new Array();
 		
 		var addFileUploadInit = function(initObject){
-			//console.log("ADD TO INIT");
-			//console.log(initObject);
 			switch(initObject.type){
 			case "image": {
 				imageUploadsToInit.push(initObject);
@@ -22,25 +19,17 @@
 				videoUploadsToInit.push(initObject);
 				break;
 			}
+			default: {
+				break;
+			}	
 			}
-		}
+		};
 
 		var initFileUpload = function(uploader, acceptedFileTypes) {
-			//console.log("init");
-			//console.log("uploader");
-			//console.log(uploader);
-			//console.log("regex");
-			//console.log(acceptedFileTypes);
 			$('#'+uploader.fileUploadID).fileupload({
 				acceptFileTypes: acceptedFileTypes,
 				url: uploader.url,
 				done: function(e, data){
-					//console.log("Upload DONE");
-					//console.log(data.result);
-					if(data.result.res=="KO"){
-						//console.log(data.result.error);
-					}
-					//console.log(data.result.data['$oid']);
 					setTimeout(function(){
 						$('#'+uploader.targetID).val(data.result.data['$oid']).change();		
 						if(uploader.type == "audio"){
@@ -51,23 +40,13 @@
 				    },200);
 				},
 				progress: function (e, data) {
-					
-		            var progress = parseInt(data.loaded / data.total * 100, 10);
-		            //console.log(progress+ " progress!");
-	     	       $('#'+uploader.progressBarID+' .progress-bar').css(
-		                'width',
-		                progress + '%'
-		            );
+					var progress = parseInt(data.loaded / data.total * 100, 10);
+	     	       	$('#'+uploader.progressBarID+' .progress-bar').css('width', progress + '%');
 		        }
 			}).on('fileuploadprocessalways', function (e, data) {
 			    var currentFile = data.files[data.index];
-			    if (data.files.error && currentFile.error) {
-			      // there was an error, do something about it
-			      //console.log(currentFile.error);
-			    }
-			  }).prop('disabled', !$.support.fileInput)
-		    .parent().addClass($.support.fileInput ? undefined : 'disabled');
-		}
+			}).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
+		};
 
 		function callInitForUploaders(){
 
@@ -80,7 +59,7 @@
 			acceptedFileTypes = /(\.|\/)(mp3)$/i;
 			$.each(audioUploadsToInit, function(index, uploader){
 				initFileUpload(uploader, acceptedFileTypes);
-				if(uploader.file!=""){	//init audio player
+				if(uploader.file!==""){	//init audio player
 					init_js_audioPlayer(uploader.file, uploader.playerID);
 				}	
 			});
@@ -88,7 +67,7 @@
 			acceptedFileTypes = /(\.|\/)(m4v)$/i;
 			$.each(videoUploadsToInit, function(index, uploader){
 				initFileUpload(uploader, acceptedFileTypes);
-				if(uploader.file!="" && uploader.file.substring(0,8) != 'YOUTUBE:'){	//init audio player
+				if(uploader.file!=="" && uploader.file.substring(0,8) !== 'YOUTUBE:'){	//init audio player
 					init_js_videoPlayer(uploader.file, uploader.playerID);
 				}
 			});
@@ -109,16 +88,13 @@
 			    	$(this).jPlayer("pauseOthers");
 			    },
 			    cssSelectorAncestor: "#jp_interface_" + location,
-			    swfPath: "/assets/swf",
+			    swfPath: "/assets/swf"
 			    //solution:"flash",
 			  });
 		return;
 		}
 
 		function init_js_videoPlayer(file,location) {
-				//console.log("init videoplayer");
-				//console.log(file);
-				//console.log(location);
 			jQuery("#jquery_jplayer_v_" + location).jPlayer( {
 			    ready: function () {
 					$(this).jPlayer("setMedia", {
@@ -137,6 +113,8 @@
 		}
 		
 	</script>
+<div class="container">
+	
 	<div id="documentEdit">
 		 <!-- 
 		 <pre data-bind="text: ko.toJSON(selectedDocType, null, 2)"></pre>-->

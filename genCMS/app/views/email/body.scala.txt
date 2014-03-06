@@ -1,3 +1,0 @@
-Yep, it works!
-
-Die tolle App findest du unter localhost:9000

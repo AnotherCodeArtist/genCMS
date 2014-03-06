@@ -1,8 +1,12 @@
 package service
 
 import scala.math.BigDecimal.long2bigDecimal
+
+import models.DocumentTag
 import play.api.libs.functional.syntax.functionalCanBuildApplicative
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
+import play.api.libs.json.JsArray
+import play.api.libs.json.JsBoolean
 import play.api.libs.json.JsNumber
 import play.api.libs.json.JsObject
 import play.api.libs.json.JsString
@@ -15,10 +19,6 @@ import play.api.libs.json.Reads.JsStringReads
 import play.api.libs.json.Reads.functorReads
 import play.api.libs.json.__
 import reactivemongo.bson.BSONObjectID
-import play.api.libs.json.JsString
-import play.api.libs.json.JsBoolean
-import play.api.libs.json.JsArray
-import models.DocumentTag
 
 object DBHelper {
   //(dbHelper.addCreationAndModificationDate and dbHelper.addCopyToName and dbHelper.addCreateUser(currentUser) and dbHelper.addChangeUser(currentUser) and dbHelper.addMongoId
@@ -92,17 +92,17 @@ object DBHelper {
   def addInEdit(inEdit: Boolean) = __.json.update((__ \ 'inEdit).json.put(JsBoolean(inEdit)))
 
   def addReported(reported: Boolean) = __.json.update((__ \ 'reported).json.put(JsBoolean(reported)))
-  
+
   def addTags() = __.json.update((__ \ 'tags).json.put(JsArray()))
 
   def addLoc() = __.json.update((__ \ 'loc).json.put(JsArray()))
-  
+
   def addConnectionID(connectionID: String) = __.json.update((__ \ 'connection).json.put(JsString(connectionID)))
 
   def addChangeUser(user: String) = __.json.update((__ \ 'changeAuthor).json.put(JsString(user)))
 
-  def addLocale(docTypeID: String, lang:String, field:String, value:String) = __.json.update((__ \ docTypeID \ lang \ field).json.put(JsString(value)))
-  
+  def addLocale(docTypeID: String, lang: String, field: String, value: String) = __.json.update((__ \ docTypeID \ lang \ field).json.put(JsString(value)))
+
   val toMongoUpdate = (__ \ '$set).json.copyFrom(__.json.pick)
 
   /** no need to always use Json combinators or transformers, sometimes stay simple */
@@ -134,6 +134,6 @@ object DBHelper {
 
   /* sort document tags according to sort order */
   def compDocTag(e1: DocumentTag, e2: DocumentTag) = (e1.order < e2.order)
-  
-  def parseDouble(s: String) = try { Some(s.toDouble) } catch { case _ :Throwable=> None }
+
+  def parseDouble(s: String) = try { Some(s.toDouble) } catch { case _: Throwable => None }
 }

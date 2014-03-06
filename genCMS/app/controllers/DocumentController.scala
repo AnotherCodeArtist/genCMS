@@ -2,51 +2,35 @@ package controllers
 
 import play.api.mvc.Controller
 import play.api.mvc._
-import play.api.libs.json.Json
-import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.ws.WS
 import play.modules.reactivemongo.json.BSONFormats._
 import reactivemongo.api._
 import reactivemongo.bson._
 import play.modules.reactivemongo._
-import views.html.defaultpages.badRequest
-import models.DocumentType
 import play.api.Logger
-import play.api.i18n.Messages
 import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
 import scala.concurrent.Future
-import reactivemongo.api.QueryOpts
-import reactivemongo.api.gridfs.GridFS
 import reactivemongo.api.gridfs.Implicits.DefaultReadFileReader
-import reactivemongo.api.collections.default.BSONCollection
 import models.DocumentDesignElement
 import service.DBHelper
 import service.DocumentTypeDao
 import service.EscapeHelper
-import org.apache.commons.lang3.StringEscapeUtils.escapeHtml4
 import reactivemongo.core.commands.LastError
 import play.modules.reactivemongo.json.BSONFormats
-import models.DocTypeProjectConnection
-import views.html.documentType.docTypeDesignEdit
 import javax.imageio.ImageIO
 import org.imgscalr.Scalr
 import reactivemongo.api.gridfs.DefaultFileToSave
 import java.io.FileInputStream
 import java.io.ByteArrayOutputStream
 import java.io.ByteArrayInputStream
-import java.io.File
 import java.net.URLEncoder
 import service.DocumentDao
 import service.ProjectDao
-import securesocial.core.SecureSocial
-import securesocial.core.Identity
-import securesocial.core.Identity
-import securesocial.core.Authorization
 import service.GenUser
-import securesocial.core.SecuredRequest
+import securesocial.core.SecureSocial
 
 object DocumentController extends Controller with MongoController with SecureSocial {
 
@@ -106,33 +90,6 @@ object DocumentController extends Controller with MongoController with SecureSoc
       }
   }
 
-  def DUMMY(projectID: String) = Action.async { implicit request =>
-
-    //docTypeDao.getAvailableTypes(projectID).map { result =>
-    // documentDao.getConnIDifUserAuthorized("52f3dc3de00100e0012680d0", "robin.passath@gmx.at").map { result =>
-    //val minLng = 15.5
-    //val maxLng = 100
-    //    val minLat = 40
-    //    val maxLat = 100
-    //documentDao.getNearLocationsWithDistance(long, lat, projectID).map { result =>
-    //documentDao.getLocationsInBox(minLng, minLat, maxLng, maxLat).map { result =>
-    val projectID = "531046f5650000a504f13572";
-    val filter = Json.obj("connectedProjects." + projectID -> Json.obj("$exists" -> true, "$not" -> Json.obj("$size" -> 0)));
-    DocumentTypeDao.getDocumentTypeLocales(filter).map { result =>
-      {
-        /*for(list <-result){
-        for(con <-list){
-          Logger.debug("con "+con.toString)
-        }
-      }*/
-        //val c = for (r <- result) yield Json.prettyPrint(r)
-        //val c = for (r <- result) yield r.validate(DocTypeProjectConnection)
-        Logger.debug(result.toString)
-        Ok(Json.prettyPrint(Json.toJson(result))) //c.mkString(" | "))
-      }
-    }
-  }
-
   def getDocTypes(page: Int, perPage: Int, projectOnly: Boolean = false, userOnly: Boolean = false, orderBy: String = "_id", asc: Boolean = true) = SecuredAction(ajaxCall = true, IsAdmin()).async { implicit request =>
     val projectId = request.session.get("project").getOrElse("")
     var query = Json.obj()
@@ -181,17 +138,6 @@ object DocumentController extends Controller with MongoController with SecureSoc
             case None => Ok("")
           }
       }
-      /*val f = docTypes.find[JsValue](dbHelper.toObjectId(id)).cursor[JsValue]
-     
-       f.collect[List](1).map {
-        docTypes =>
-          if (docTypes.isEmpty)
-            Ok("")
-          else
-            Ok(Json.toJson(docTypes(0)))
-      }
-      * 
-      */
     }
   }
 
@@ -576,8 +522,8 @@ object DocumentController extends Controller with MongoController with SecureSoc
     }
     //Future(Ok(""))
   }
-  
-    def getUnreleasedDocuments(page: Int, perPage: Int, orderBy: String = "_id", asc: Boolean = true) = SecuredAction(ajaxCall = true).async { implicit request =>
+
+  def getUnreleasedDocuments(page: Int, perPage: Int, orderBy: String = "_id", asc: Boolean = true) = SecuredAction(ajaxCall = true).async { implicit request =>
     val userEmail = request.user.identityId.userId
     val projectId = request.session.get("project").getOrElse("")
 
@@ -1030,7 +976,7 @@ case JsError(errors) => errors
     // here is the future file!
     Logger.debug(request.body.file("image").toString)
     request.body.file("image") match {
-      case Some(photo) => {
+      case Some(photo) =>
         //check if photo is type jpeg, jpg, gif or png
         if (checkIfPhoto(photo.contentType.get)) {
           //store original Image
@@ -1067,7 +1013,7 @@ case JsError(errors) => errors
         } else {
           Future(Ok(dbHelper.resKO(Json.obj("error" -> "Picture Format Error", "msg" -> "The uploaded File has got a wrong format"))))
         }
-      }
+      case None => Future(Ok(dbHelper.resKO(Json.obj("error" -> "Picture Format Error", "msg" -> "The uploaded File has got a wrong format"))))
     }
   }
 
@@ -1102,7 +1048,7 @@ case JsError(errors) => errors
     // here is the future file!
     Logger.debug(request.body.file("audio").toString)
     request.body.file("audio") match {
-      case Some(audio) => {
+      case Some(audio) =>
         //check if photo is type jpeg, jpg, gif or png
         if (checkIfAudio(audio.contentType.get)) {
           //store original Image
@@ -1120,7 +1066,7 @@ case JsError(errors) => errors
         } else {
           Future(Ok(dbHelper.resKO(Json.obj("error" -> "Audio Format Error", "msg" -> "The uploaded File has got a wrong format"))))
         }
-      }
+      case None => Future(Ok(dbHelper.resKO(Json.obj("error" -> "Audio Format Error", "msg" -> "The uploaded File has got a wrong format"))))
     }
   }
 
@@ -1138,7 +1084,7 @@ case JsError(errors) => errors
     // here is the future file!
     Logger.debug(request.body.file("video").toString)
     request.body.file("video") match {
-      case Some(video) => {
+      case Some(video) =>
         //check if photo is type jpeg, jpg, gif or png
         if (checkIfVideo(video.contentType.get)) {
           //store original Image
@@ -1156,7 +1102,7 @@ case JsError(errors) => errors
         } else {
           Future(Ok(dbHelper.resKO(Json.obj("error" -> "Audio Format Error", "msg" -> "The uploaded File has got a wrong format"))))
         }
-      }
+      case None => Future(Ok(dbHelper.resKO(Json.obj("error" -> "Audio Format Error", "msg" -> "The uploaded File has got a wrong format"))))
     }
   }
 
@@ -1566,14 +1512,14 @@ case JsError(errors) => errors
   }
 
   def getDocTypeStylesFull() = Action.async { implicit request =>
-    val query = Json.obj("deleted"->false)
+    val query = Json.obj("deleted" -> false)
     docTypeDao.queryDocTypeStyles(query, Some(Json.obj())).map { res =>
       Ok(dbHelper.resOK(Json.obj("styles" -> res)))
     }
   }
 
   def getDocTypeStylesKeyValue() = Action.async { implicit request =>
-    val query = Json.obj("deleted"->false)
+    val query = Json.obj("deleted" -> false)
     val filter = Json.obj("_id" -> 1, "name" -> 1)
     docTypeDao.queryDocTypeStyles(query, Some(filter)).map { res =>
       Ok(dbHelper.resOK(Json.obj("styles" -> res)))

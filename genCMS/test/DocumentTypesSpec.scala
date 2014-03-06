@@ -1,6 +1,3 @@
-import models.DocumentType
-import models.SingleLineText
-import models.HtmlText
 import org.specs2.mutable.Specification
 import play.api.libs.iteratee.Iteratee
 import play.api.libs.json.Json

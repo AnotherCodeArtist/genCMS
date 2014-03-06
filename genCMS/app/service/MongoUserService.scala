@@ -1,30 +1,50 @@
 package service
 
-import _root_.java.util.Date
-import securesocial.core._
-import play.api.{ Logger, Application }
-import securesocial.core.providers.Token
-import play.api.libs.concurrent.Execution.Implicits._
-import play.api.libs.json._
-import play.api.libs.json.Reads._
-import play.api.libs.json.Writes._
-import securesocial.core.IdentityId
-import securesocial.core.providers.Token
-import play.modules.reactivemongo.MongoController
-import play.api.mvc.Controller
-import play.modules.reactivemongo.json.collection.JSONCollection
+import java.util.Date
+
 import scala.concurrent.Await
-import scala.concurrent.duration._
-import reactivemongo.core.commands.GetLastError
-import scala.util.parsing.json.JSONObject
-import org.joda.time.DateTime
-import org.joda.time.format.{ DateTimeFormatter, DateTimeFormat }
 import scala.concurrent.Future
-import reactivemongo.core.commands._
-import play.modules.reactivemongo.json.BSONFormats._
-import play.modules.reactivemongo.json.BSONFormats
-import reactivemongo.bson.BSONDocument
-import reactivemongo.api.QueryOpts
+import scala.concurrent.duration.DurationInt
+
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+
+import play.api.Application
+import play.api.Logger
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.functional.syntax.functionalCanBuildApplicative
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
+import play.api.libs.functional.syntax.toInvariantFunctorOps
+import play.api.libs.json.JsArray
+import play.api.libs.json.JsObject
+import play.api.libs.json.Json
+import play.api.libs.json.Json.toJsFieldJsValueWrapper
+import play.api.libs.json.Reads.BooleanReads
+import play.api.libs.json.Reads.JsObjectReads
+import play.api.libs.json.Reads.LongReads
+import play.api.libs.json.Reads.StringReads
+import play.api.libs.json.Reads.traversableReads
+import play.api.libs.json.Writes.BooleanWrites
+import play.api.libs.json.Writes.DefaultDateWrites
+import play.api.libs.json.Writes.DefaultJodaDateWrites
+import play.api.libs.json.Writes.IntWrites
+import play.api.libs.json.Writes.JsValueWrites
+import play.api.libs.json.Writes.OptionWrites
+import play.api.libs.json.Writes.StringWrites
+import play.api.libs.json.__
+import play.api.mvc.Controller
+import play.modules.reactivemongo.MongoController
+import play.modules.reactivemongo.json.collection.JSONCollection
+import reactivemongo.core.commands.GetLastError
+import reactivemongo.core.commands.LastError
+import securesocial.core.AuthenticationMethod
+import securesocial.core.Identity
+import securesocial.core.IdentityId
+import securesocial.core.OAuth1Info
+import securesocial.core.OAuth2Info
+import securesocial.core.PasswordInfo
+import securesocial.core.UserServicePlugin
+import securesocial.core.providers.Token
 
 /**
  * Created with IntelliJ IDEA.
@@ -83,7 +103,7 @@ case class GenUser(
   def getSelectedProject(): Option[String] = {
     selectedProject
   }
-  
+
 }
 
 object GenUser {
@@ -173,8 +193,6 @@ class MongoUserService(application: Application) extends UserServicePlugin(appli
       case None => None
     }
   }
-
-  
 
   def updateUser(query: JsObject, updateQuery: JsObject, upsert: Boolean = false) = {
     collection.update(query, updateQuery, GetLastError(), upsert)
@@ -306,5 +324,5 @@ class MongoUserService(application: Application) extends UserServicePlugin(appli
     val query = Json.obj("expiration_time" -> Json.obj("$lt" -> Json.obj("$date" -> new Date())))
     tokens.remove(query, firstMatchOnly = false)
   }
-  
+
 }

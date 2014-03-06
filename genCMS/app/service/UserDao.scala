@@ -1,30 +1,24 @@
 package service
 
-import play.api.Play.current
-import play.api.data._
-import play.api.data.Forms._
-import models.User
-import reactivemongo.api._
-import reactivemongo.bson._
-import reactivemongo.core.commands._
-import reactivemongo.api.collections.default.BSONCollection
-import play.api.libs.concurrent.Execution.Implicits._
-import play.modules.reactivemongo.ReactiveMongoPlugin.db
-import play.modules.reactivemongo.json.collection.JSONCollection
 import scala.concurrent.Future
-import scala.concurrent.duration._
-import scala.concurrent.Await
-import reactivemongo.bson.BSONObjectID
-import play.modules.reactivemongo.json.BSONFormats._
-import reactivemongo.bson.BSONDocument
-import play.api.Logger
-import securesocial.core.Identity
-import play.api.libs.json.Json
+
+import play.api.Play.current
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.JsObject
-import securesocial.core.IdentityId
-import securesocial.core.AuthenticationMethod
-import securesocial.core.PasswordInfo
+import play.api.libs.json.Json
+import play.api.libs.json.Json.toJsFieldJsValueWrapper
+import play.modules.reactivemongo.ReactiveMongoPlugin.db
 import play.modules.reactivemongo.json.BSONFormats
+import play.modules.reactivemongo.json.collection.JSONCollection
+import reactivemongo.api.QueryOpts
+import reactivemongo.bson.BSONDocument
+import reactivemongo.core.commands.Count
+import reactivemongo.core.commands.GetLastError
+import reactivemongo.core.commands.LastError
+import securesocial.core.AuthenticationMethod
+import securesocial.core.Identity
+import securesocial.core.IdentityId
+import securesocial.core.PasswordInfo
 
 object UserDao {
   /** The user collection */
@@ -275,14 +269,17 @@ object UserDao {
 
     firstName match {
       case Some(firstN) => query = query ++ Json.obj("firstname" -> Json.obj("$regex" -> firstN))
+      case _ =>
     }
 
     lastName match {
       case Some(lastN) => query = query ++ Json.obj("lastname" -> Json.obj("$regex" -> lastN))
+      case _ =>
     }
 
     userID match {
       case Some(userid) => query = query ++ Json.obj("userid" -> Json.obj("$regex" -> userid))
+      case _ =>
     }
 
     val filter = Json.obj("userid" -> 1, "projectadmin" -> 1, "firstname" -> 1, "lastname" -> 1, "email" -> 1, "createdAt" -> 1, "lastLogin" -> 1, "author" -> 1, "admin" -> 1)
@@ -300,13 +297,13 @@ object UserDao {
       }
     }
   }
-  
+
   /**
    * returns the data of a single user
    */
-  def getUser(email:String): Future[Option[JsObject]] = {
+  def getUser(email: String): Future[Option[JsObject]] = {
     val query = Json.obj("userid" -> email, "provider" -> "userpass")
-    val filter = Json.obj("avatar"->1, "userid" -> 1, "projectadmin" -> 1, "firstname" -> 1, "lastname" -> 1, "email" -> 1, "createdAt" -> 1, "lastLogin" -> 1, "author" -> 1, "admin" -> 1)
+    val filter = Json.obj("avatar" -> 1, "userid" -> 1, "projectadmin" -> 1, "firstname" -> 1, "lastname" -> 1, "email" -> 1, "createdAt" -> 1, "lastLogin" -> 1, "author" -> 1, "admin" -> 1)
     val cursor = collection.find(query, filter).cursor[JsObject]
     val futureuser = cursor.headOption
 
@@ -315,11 +312,11 @@ object UserDao {
       case None => None
     }
   }
-  
+
   /**
    * updates a user selected by the parameter query
    * @updateQuery $set -> .... the fields/values to update
-   * @upsert	true -> insert if not existing, false -> no insert if not existing 
+   * @upsert	true -> insert if not existing, false -> no insert if not existing
    */
   def updateUser(query: JsObject, updateQuery: JsObject, upsert: Boolean = false) = {
     collection.update(query, updateQuery, GetLastError(), upsert)
@@ -335,98 +332,5 @@ object UserDao {
         case LastError(false, err, code, msg, _, _, _) => false
       }
   }
-
-  /**
-   * Save a message.
-   *
-   * @return The saved message, once saved.
-   */
-  /* def save(user: User): Future[Boolean] = {
-    Logger.debug("Saving User " + user.email)
-    collection.save(user).map {
-      case ok if ok.ok =>
-        true
-      case error => throw new RuntimeException(error.message)
-    }
-  }
-
-  def authenticate(email: String, password: String): Future[Boolean] = {
-    //Check if user with this credentials exists
-    Logger.debug("checking user " + email)
-    val query = BSONDocument("email" -> email, "password" -> password)
-    val futureCount = db.command(Count(collection.name, Some(query))) // sort them by creation date
-    futureCount.map {
-      count =>
-        if (count > 0)
-          true
-        else
-          false
-    }
-
-  }
-
-*
-* 
-*/
-  /*
-    /** The total number of messages */
-  def count: Future[Int] = {
-    ReactiveMongoPlugin.db.command(Count(collection.name))
-  }
-*/
-  /* def createUser() = Action{
-    val user = User("seppi","sepp@test.at", "Sepp", "Bucher","password")
-     // insert the user
-    val futureResult = collection.insert(user)
-    Async {
-      // when the insert is performed, send a OK 200 result
-      futureResult.map(_ => Ok)
-    }		
-  }
-  
-  def findUsers(name:String) = Action{
-    Async {
-      val cursor: Cursor[User] = collection.
-        // find all people with name `name`
-        find(Json.obj("firstName" -> name)).
-        // sort them by creation date
-        sort(Json.obj("created" -> -1)).
-        // perform the query and get a cursor of JsObject
-        cursor[User]
-
-      // gather all the JsObjects in a list
-      val futureUsersList: Future[List[User]] = cursor.collect[List](10, true)
-
-      // everything's ok! Let's reply with the array
-      futureUsersList.map { persons =>
-        Ok(persons.toString)
-      }
-    }
-  }
-  */
-  /*
-  /**
-   * Find all the messages.
-   *
-   * @param page The page to retrieve, 0 based.
-   * @param perPage The number of results per page.
-   * @return All of the messages.
-   */
-  def findAll(page: Int, perPage: Int): Future[Seq[Message]] = {
-    collection.find(Json.obj())
-      .options(QueryOpts(skipN = page * perPage))
-      .sort(Json.obj("_id" -> -1))
-      .cursor[Message]
-      .toList(perPage)
-  }
-
-
-
-  
-  
-  
-  
-  
-  * */
 
 }

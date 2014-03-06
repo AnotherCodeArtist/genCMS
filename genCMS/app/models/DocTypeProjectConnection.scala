@@ -10,24 +10,8 @@ case class DocTypeProjectConnection(
   name: String,
   description: String,
   active: Boolean,
-  var docTypeId : Option[String]
-  ) {
-  /*
-    
-   override def toString() = {
-    if (typ == "container" || typ == "row" || typ == "column") {
-      "<div class=" + classes + ">" +  ""+ "</div>"
-    } else if (typ == "element") {
-      "<span class=" + classes + ">{{" + field + "}}</span>"
-    } else if (typ == "label") {
-      "<span class=" + classes + ">{{" + field + "}}</span>"
-    } else {
-      ""
-    }
-  }
+  var docTypeId: Option[String]) {
 
-* 
-*/
 }
 
 object DocTypeProjectConnection {
