@@ -9,6 +9,7 @@ genCMS.sidebar.tags=Themen
 genCMS.sidebar.jobDocument=Meine Aufgabe
 
 # Header
+genCMS.header.brand=genCMS
 genCMS.header.title=Anmeldung
 genCMS.header.selectProject=Projekt wählen
 genCMS.header.manageDocTypes=Dokumenttypen verwalten
@@ -59,6 +60,25 @@ genCMS.project.role.notEmtpy=Der Rollen Name muss ausgefüllt werden
 genCMS.project.role.unique=Der Rollen Name muss einzigartig sein
 genCMS.project.role.noJobDesc=Keine Aufgabe gesetzt
 genCMS.project.role.openJobDesc=Aufgabe öffnen
+genCMS.project.role.job=Rollen Aufgabe
+
+# Project Basic Settings
+genCMS.project.basic.pTitle=Projekt Titel
+genCMS.project.basic.desc=Beschreibung
+genCMS.project.basic.lang=Sprache
+genCMS.project.basic.directPub=Direkte Publizierung
+genCMS.project.basic.public=Öffentlich
+genCMS.project.basic.editable=Bearbeitbar
+genCMS.project.basic.save=Grundeinstellungen speichern
+
+# Project New
+genCMS.project.new.create=Neues Projekt erstellen:
+genCMS.project.new.name=Projektname
+genCMS.project.new.create=Erstelle neues Projekt
+genCMS.project.new.cancel=Abbrechen
+
+# Project List
+genCMS.project.list.title=Verfügbare Projekte:
 
 # User
 genCMS.user.listTitle=User verwalten
@@ -119,6 +139,11 @@ genCMS.document.docTitle=Titel
 genCMS.document.project=Projekt
 genCMS.document.modDate=Letzte Änderung
 genCMS.document.createDate=Erstellt
+
+# Document New
+genCMS.docNew.titleLinked=Wähle einen Typ für deinen neuen verlinkten Artikel
+genCMS.docNew.titleUnlinked=Wähle einen Typ für deinen neuen Artikel
+genCMS.docNew.noDocTypes=Im Moment können leider keine Artikel erstellt werden
 
 # Document Edit
 genCMS.docView.adminSection=Administrations Bereich

@@ -1,6 +1,15 @@
 genCMS.locale=fr
+genCMS.validationFailed=Echec de la validation
+
+# sidebar
+genCMS.sidebar.title=Filtrer les documents
+genCMS.sidebar.map=Recherche sur la Carte
+genCMS.sidebar.typ=Type de document
+genCMS.sidebar.tags=Sujets
+genCMS.sidebar.jobDocument=mon Groupe
 
 # Header
+genCMS.header.brand=genCMS
 genCMS.header.title=Connexion
 genCMS.header.selectProject=Sélectionner un projet
 genCMS.header.manageDocTypes=Gérer les types de documents
@@ -16,6 +25,98 @@ genCMS.header.manageUsers=Gérer les utilisateurs
 genCMS.header.changePassword=changer mot de passe
 genCMS.header.logout=Déconnexion
 genCMS.header.project=Projet
+genCMS.header.navigation=Articles
+
+# Project Settings
+genCMS.project.settings.title=projet
+genCMS.project.settings.basicSettings=Paramètres de base
+genCMS.project.settings.tags=Sujets
+genCMS.project.settings.authorRoles=Auteur Rôles
+genCMS.project.settings.members=Membres du projet
+genCMS.project.settings.reportedContent=contenu Signalé
+genCMS.project.settings.projectStyle=Style Project
+genCMS.project.settings.docStyles=Format Styles
+
+# Project Tags
+genCMS.project.tags.tags=Sujets
+genCMS.project.tags.tagName=Sujet
+genCMS.project.tags.removeTag=Supprimer sujet
+genCMS.project.tags.addTag=Ajouter un sujet
+genCMS.project.tags.saveTag=Sauvegarder Menue Structure
+
+# Project Styles
+genCMS.project.styles.styleName=Nom du style
+genCMS.project.styles.addStyle=Liste
+Propriétés genCMS.project.styles.style=style
+genCMS.project.styles.save=Enregistrer
+genCMS.project.styles.delete=Supprimer
+
+# Project Roles
+genCMS.project.role.name=Rôle Nom
+genCMS.project.role.jobDesc=Description du poste
+genCMS.project.role.remove=Supprimer Rôle
+genCMS.project.role.add=Ajouter un rôle
+genCMS.project.role.notEmtpy=Le Rôle Nom ne doit pas être vide
+genCMS.project.role.unique=Le Rôle Nom doit être unique
+genCMS.project.role.noJobDesc=Non Description ensemble
+genCMS.project.role.openJobDesc=Ouvert Description du poste
+genCMS.project.role.job=Description du poste
+
+# Project Basic Settings
+genCMS.project.basic.pTitle=Titre du projet
+genCMS.project.basic.desc=Description
+genCMS.project.basic.lang=Langue
+genCMS.project.basic.directPub=Direct Publishing
+genCMS.project.basic.public=Public
+genCMS.project.basic.editable=modifiable
+genCMS.project.basic.save=Enregistrer les paramètres de base
+
+# Project New
+genCMS.project.new.create=Créer un nouveau projet :
+genCMS.project.new.name=NomProjet
+genCMS.project.new.create=Créer un nouveau projet
+genCMS.project.new.cancel=Annuler & Retour
+
+# Project List
+genCMS.project.list.title=Projets disponibles:
+
+# User
+genCMS.user.listTitle=Gérer les utilisateurs
+genCMS.user.projectOnly=Branché projet ne
+genCMS.user.filterOpts=Options de filtrage
+genCMS.user.textFilters=Filtre de texte
+genCMS.user.unfiltered=Non Filtré
+genCMS.user.admin=admin uniquement
+genCMS.user.projectAdmin=Administration de projet seulement
+genCMS.user.author=Auteur Seulement
+genCMS.user.lbl.userid=Email
+genCMS.user.lbl.admin=admin
+genCMS.user.lbl.projectAdmin=Administration de projet
+genCMS.user.lbl.author=Auteur
+genCMS.user.lbl.firstname=Prénom
+genCMS.user.lbl.lastname=Nom
+genCMS.user.lbl.lastlogin=Dernier Login
+genCMS.user.role.admin=admin
+genCMS.user.role.projectAdmin=ProjectAdmin
+genCMS.user.role.author=Auteur
+genCMS.user.search=Recherche
+genCMS.user.accountSettings=Paramètres du compte de l'utilisateur
+genCMS.user.lbl.changePWD=Changer mot de passe
+genCMS.user.save=Enregistrer les modifications
+genCMS.user.lbl.avatar=Avatar
+genCMS.user.mgmt.author=Auteur de gestion
+genCMS.user.mgmt.projectadmin=gestion de projet d'administration
+genCMS.user.mgmt.admin=Gestion Admin
+genCMS.user.lbl.isAdmin=L'utilisateur est admin
+genCMS.user.lbl.makeAdmin=Ajouter aux Administrateurs
+genCMS.user.lbl.removeAdmin=Retirer des Administrateurs
+genCMS.user.lbl.removePrAdmin=Retirer des Administrateurs projet
+genCMS.user.lbl.addPrAdmin=Ajouter aux admins projet
+genCMS.user.lbl.project=Projet
+genCMS.user.lbl.authorRole=Auteur Rôle
+genCMS.user.lbl.removeAuthor=Supprimer des auteurs
+genCMS.user.lbl.addAuthor=Ajouter aux auteurs
+genCMS.user.lbl.projectroles=Rôles dans le projet
 
 # Document
 genCMS.document.listTitle=mes Documents
@@ -39,6 +140,27 @@ genCMS.document.project=projet
 genCMS.document.modDate=dernière édition
 genCMS.document.createDate=établi
 
+# Document New
+genCMS.docNew.titleLinked=Choisissez un type pour votre nouvel article lié
+genCMS.docNew.titleUnlinked=Choisissez un type pour votre nouvel article
+genCMS.docNew.noDocTypes=Il n'y a pas Types de documents à choisir 
+
+# Document View
+genCMS.docView.adminSection=Zone d'administration
+genCMS.docView.isEditorial=document est Editorial
+genCMS.docView.setEditorial=Définir comme éditorial
+genCMS.docView.editorial=éditorial
+genCMS.docView.authorJob=Auteur Rôle
+genCMS.docView.setAuthorJob=Set Description du poste
+genCMS.docView.clearFilter=Supprimer le filtre
+genCMS.docView.geoLoc.select=Ouvrir l'article
+genCMS.docView.newestDocs=articles récemment publiés
+genCMS.docView.newestDocsPreTag=articles récemment parus dans la catégorie "
+genCMS.docView.newestDocsPostTag=":
+genCMS.docView.editDoc=Modifier le document
+genCMS.docView.connectedDocuments=articles Connecté
+genCMS.docView.createConnectedDocument=Créer l'article Connected
+
 # Document Edit
 genCMS.docEdit.title=Modifier le document
 genCMS.docEdit.docName=Nom du document
@@ -57,6 +179,7 @@ genCMS.docEdit.geoLoc.select=sélectionner
 genCMS.docEdit.geoLoc.show=montrer
 genCMS.docEdit.geoLoc.lookup=Chercher une adresse
 genCMS.docEdit.geoLoc.takeCords=Prenez Coordonnées
+genCMS.docEdit.geoLoc.showCurrPos=Afficher Situation actuelle
 genCMS.docEdit.previewDoc=Aperçu du document
 genCMS.docEdit.previewDocList=Aperçu du document Liste
 genCMS.docEdit.save=enregistrer le document
@@ -66,6 +189,16 @@ genCMS.docEdit.backEdit=Retour à Modifier
 genCMS.docEdit.geoLoc.searchAdr=Recherche d'adresses
 genCMS.docEdit.geoLoc.noMatches=Désolé , aucun résultat trouvé
 genCMS.docEdit.geoLoc.noLatLon=Doit être "de latitude, longitude" (par exemple "47,0786521 , 15,4070155")
+genCMS.docEdit.status=Statut du document
+genCMS.docEdit.statusEdit=document est modifiable
+genCMS.docEdit.statusPub=document est publié - Montage pas possible
+genCMS.docEdit.statusWaitPub=document est en attente d'approbation - Montage pas possible
+genCMS.docEdit.release=document de sortie
+genCMS.docEdit.unrelease=Annuler sortie de documents
+genCMS.docEdit.reject=Rejeter sortie
+genCMS.docEdit.rejectMsg=Rejeter message
+genCMS.docEdit.confirm=Confirmez sortie
+genCMS.docEdit.rejectConfirm=confirmer ou d'infirmer la sortie
 
 # Doc Type
 genCMS.doctype.listTitle=Types de documents disponibles
@@ -108,6 +241,8 @@ genCMS.doctype.save=Enregistrer Type de document
 genCMS.doctype.discardBack=Ignorer les modifications / Retour
 genCMS.doctype.delete=Supprimer Type de document
 genCMS.doctype.addField=Ajouter un champ
+genCMS.doctype.turnGEO=Ajouter Géolocalisation
+genCMS.doctype.fieldtype=Type de stage
 
 # DocTypeDesign
 genCMS.docTypeDesign.title=Modifier le type de document de conception
@@ -143,11 +278,6 @@ genCMS.forbidden.title=Interdit
 genCMS.forbidden.loginMsg=La page que vous souhaitez afficher n'est accessible que pour les utilisateurs connectés! S'il vous plaît Identifiez-vous!
 genCMS.forbidden.authorizationMsg=Vous n'êtes pas autorisé à visiter la page! S'il vous plaît contacter un administrateur si vous avez besoin d'aide!
 
-
-
-
-hello.world=Bonjour tout le monde
-genCMS.index.title=Bonjour tout le monde
 
 # App name
 securesocial.appName=SecureSocial 2
@@ -222,6 +352,8 @@ mails.passwordResetOk.subject=Confirmation du changement de mot de passe
 
 # --- Constraints
 constraint.required=requis
+constraint.unique=doit être unique
+constraint.uniqueAndAZ=doit être unique et lettres seulement!
 constraint.min=Valeur minimale: {0}
 constraint.max=Valeur maximale: {0}
 constraint.minLength=Durée minimale: {0}

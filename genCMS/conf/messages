@@ -9,6 +9,7 @@ genCMS.sidebar.tags=Topics
 genCMS.sidebar.jobDocument=My Task
 
 # Header
+genCMS.header.brand=genCMS
 genCMS.header.title=Login
 genCMS.header.selectProject=Select a Project
 genCMS.header.manageDocTypes=Manage Document Types
@@ -23,7 +24,7 @@ genCMS.header.accountSettings=Account Settings
 genCMS.header.manageUsers=Manage Users
 genCMS.header.changePassword=Change Password
 genCMS.header.logout=Logout
-genCMS.header.project=Projekt
+genCMS.header.project=Project
 genCMS.header.navigation=Articles
 
 # Project Settings
@@ -59,6 +60,25 @@ genCMS.project.role.notEmtpy=The Role Name must not be empty
 genCMS.project.role.unique=The Role Name has to be unique
 genCMS.project.role.noJobDesc=No Description set
 genCMS.project.role.openJobDesc=Open Job Description
+genCMS.project.role.job=Job Description
+
+# Project Basic Settings
+genCMS.project.basic.pTitle=Project Title
+genCMS.project.basic.desc=Description
+genCMS.project.basic.lang=Language
+genCMS.project.basic.directPub=Direct Publishing
+genCMS.project.basic.public=Public
+genCMS.project.basic.editable=Editable
+genCMS.project.basic.save=Save Basic Settings
+
+# Project New
+genCMS.project.new.create=Create New Project:
+genCMS.project.new.name=Projectname
+genCMS.project.new.create=Create New Project
+genCMS.project.new.cancel=Cancel & Back
+
+# Project List
+genCMS.project.list.title=Available Projects:
 
 # User
 genCMS.user.listTitle=Manage Users
@@ -96,6 +116,7 @@ genCMS.user.lbl.project=Project
 genCMS.user.lbl.authorRole=Author Role
 genCMS.user.lbl.removeAuthor=Remove From Authors
 genCMS.user.lbl.addAuthor=Add To Authors
+genCMS.user.lbl.projectroles=Roles in Project
 
 # Document
 genCMS.document.listTitle=My Documents
