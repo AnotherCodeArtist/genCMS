@@ -46,8 +46,8 @@ genCMS.project.tags.saveTag=Sauvegarder Menue Structure
 
 # Project Styles
 genCMS.project.styles.styleName=Nom du style
-genCMS.project.styles.addStyle=Liste
-Propriétés genCMS.project.styles.style=style
+genCMS.project.styles.addStyle=ajouter du style
+genCMS.project.styles.style=style
 genCMS.project.styles.save=Enregistrer
 genCMS.project.styles.delete=Supprimer
 
